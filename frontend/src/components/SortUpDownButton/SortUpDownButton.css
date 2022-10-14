@@ -1,0 +1,25 @@
+.SortUpDownButton-down > button,
+.SortUpDownButton-up > button {
+  float: none;
+
+  margin-left: 1rem;
+
+  border: 2px solid gray;
+  border-radius: 6px;
+
+  text-align: center;
+}
+
+.SortUpDownButton-down img,
+.SortUpDownButton-up img {
+  width: 100%;
+  height: 100%;
+}
+
+.SortUpDownButton-down img {
+  transform: rotate(270deg);
+}
+
+.SortUpDownButton-up img {
+  transform: rotate(90deg);
+}

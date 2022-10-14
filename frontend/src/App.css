@@ -1,0 +1,12 @@
+.App {
+  overflow-x: hidden;
+}
+
+.Content {
+  min-height: calc(100vh - 45px - 120px);
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}

@@ -1,0 +1,55 @@
+.ApiaryView {
+  height: 100%;
+  padding: 20px;
+}
+
+.ApiaryView h1 {
+  padding-bottom: 12px;
+  margin: 0;
+  padding-top: 20px;
+}
+
+.ApiaryView > button {
+  float: right;
+}
+
+.ApiaryTableContainer {
+  margin-top: 20px;
+  flex: 1;
+  align-self: stretch;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.ApiaryTable {
+  width: 100%;
+  text-align: center;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.ApiaryTable th {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333333;
+  border-left: 2px solid #333333;
+  border-bottom: 4px solid #333333;
+}
+
+.ApiaryTable td {
+  border-left: 1px solid black;
+  padding: 9px 6px;
+}
+
+.ApiaryTable tbody td {
+  font-size: 1.5rem;
+}
+
+.ApiaryTable tr:nth-child(even) {
+  background-color: #f0f0d1;
+}
+
+.ApiaryTable th:first-child,
+.ApiaryTable td:first-child {
+  border-left: none;
+}

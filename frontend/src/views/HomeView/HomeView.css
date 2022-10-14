@@ -1,0 +1,10 @@
+.HomeView {
+  height: 100%;
+  padding-left: 20px;
+}
+
+.HomeView h1 {
+  padding: 0;
+  margin: 0;
+  padding-top: 20px;
+}

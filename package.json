@@ -1,0 +1,12 @@
+{
+  "name": "fullstack",
+  "version": "0.0.0",
+  "description": "SaaS Native recruitment task; API dla systemu zarządzania pasiekami",
+  "author": "Szymon Hutnik",
+  "private": true,
+  "scripts": {
+    "preinstall": "scripts/install.sh",
+    "build": "scripts/build.sh",
+    "start": "scripts/start.sh"
+  }
+}
