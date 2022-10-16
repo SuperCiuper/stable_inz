@@ -1,0 +1,40 @@
+.TextBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-end;
+
+  width: 100%;
+  height: 100%;
+
+  border-bottom: 2px solid;
+}
+
+.TextBlock:last-child {
+  border: none;
+}
+
+.TextBlock .Description {
+  width: 100%;
+
+  margin-left: 6%;
+  margin-right: 6%;
+  padding: 1rem;
+
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.TextBlock .ImageBlock {
+  min-width: 50%;
+  display: flex;
+  align-items: center;
+  
+  font-size: 0.9rem;
+}
+
+.TextBlock .ImageBlock img {
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+}

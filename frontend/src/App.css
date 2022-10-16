@@ -3,7 +3,9 @@
 }
 
 .Content {
-  min-height: calc(100vh - 45px - 120px);
+  min-height: calc(100vh - 64px - 120px);
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 a {

@@ -1,4 +1,4 @@
-# Praca inżynierska
+# Stable web application
 
 Projekt realizowany w ramach pracy inżynierskiej
 
@@ -11,7 +11,7 @@ Install before running:
 
 ### Fullstack
 
-Prepare database connection:
+Prepare database connection, e.g.:
 
 ```sh
   export PGDATABASE=db

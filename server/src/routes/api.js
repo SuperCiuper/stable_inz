@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var databaseConnector = require("../databaseConnector");
+const path = require("path");
+const fs = require("fs");
 
 var apiaryList = [];
 
@@ -8,8 +10,25 @@ router.get("/", function (req, res, next) {
 	res.render("index", { title: "Apiary API" });
 });
 
-router.get("/main", (req, res, next) => {
+router.get("/mainInfo", (req, res, next) => {
 	return res.json(databaseConnector.getMainInfo());
+});
+
+router.get("/textBlock", (req, res, next) => {
+	return res.json(databaseConnector.getTextBlockList());
+});
+
+router.get("/image/:id", (req, res, next) => {
+	image = parseInt(req.params.id);
+	imageName = databaseConnector.getImageIdList().find((item) => item.id === image).name;
+
+	if (imageName == null) return res.status(406).json("Image does not exist");
+
+	try {
+		res.sendFile(path.join(__dirname, "../../public/api/image/", `${imageName}`));
+	} catch {
+		res.status(500).json("Internal server error");
+	}
 });
 
 router.get("/horse", (req, res, next) => {
@@ -18,11 +37,12 @@ router.get("/horse", (req, res, next) => {
 
 router.post("/horse", (req, res, next) => {
 	let newHorse = req.body;
+	newHorse.image = parseInt(newHorse.image);
 
 	if (!newHorse.hasOwnProperty("name") || !newHorse.hasOwnProperty("description") || !newHorse.hasOwnProperty("image"))
 		return res.status(406).json("Object lacks mandatory fields");
 	if (newHorse.getHorseList().find((item) => item.name === newHorse.name)) return res.status(406).json("Name taken");
-	if (newHorse.image != null && !databaseConnector.getImageList().find((item) => item.image === newHorse.image))
+	if (newHorse.image != null && !databaseConnector.getImageIdList().find((item) => item.id === newHorse.image))
 		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.createHorse(newHorse)) res.status(500).json("Unknown error during code generation");
@@ -31,10 +51,11 @@ router.post("/horse", (req, res, next) => {
 
 router.patch("/horse/:name", (req, res, next) => {
 	let updatedHorse = req.body;
+	newHorse.image = parseInt(newHorse.image);
 	updatedHorse.name = req.params.name;
 
 	if (!updatedHorse.hasOwnProperty("description") || !updatedHorse.hasOwnProperty("image")) return res.status(406).json("Object lacks mandatory fields");
-	if (newHorse.image != null && !databaseConnector.getImageList().find((item) => item.image === updatedHorse.image))
+	if (newHorse.image != null && !databaseConnector.getImageIdList().find((item) => item.id === updatedHorse.image))
 		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.updatHorse(updatedHorse)) res.status(500).json("Unknown error during code generation");
