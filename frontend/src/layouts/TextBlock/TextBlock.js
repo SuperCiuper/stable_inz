@@ -16,9 +16,9 @@ const TextBlock = ({ index, image, children }) => {
 
 	return (
 		<div className='TextBlock' style={{ borderColor: `#${colorContext.detailRGB}` }}>
-			{image && index % 2 == 1 ? <ImageBlock image={image} /> : ""}
+			{image && index % 2 === 1 ? <ImageBlock image={image} /> : ""}
 			<p className='Description'>{children}</p>
-			{image && index % 2 == 0 ? <ImageBlock image={image} /> : ""}
+			{image && index % 2 === 0 ? <ImageBlock image={image} /> : ""}
 		</div>
 	);
 };
