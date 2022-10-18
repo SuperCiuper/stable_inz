@@ -34,11 +34,11 @@ const Header = () => {
 
 	return (
 		<div className='Header' style={{ backgroundColor: `#${colorContext.supportRGB}` }}>
-			<Link to='/'>
-				<div className='Logo'>
-					<img src='logo.png' alt='Stajnia Malta' />
-				</div>
-			</Link>
+			<div className='Logo'>
+				<Link to='/'>
+					<img src='logo.png' alt='Stajnia Malta' />{" "}
+				</Link>
+			</div>
 			<div className='ButtonBar'>
 				<Item pathName={"/horses"} buttonName={"Konie"} />
 				<Item pathName={"/offer"} buttonName={"Oferta"} />

@@ -18,17 +18,9 @@ router.get("/textBlock", (req, res, next) => {
 	return res.json(databaseConnector.getTextBlockList());
 });
 
-router.get("/image/:id", (req, res, next) => {
-	image = parseInt(req.params.id);
-	imageName = databaseConnector.getImageIdList().find((item) => item.id === image).name;
-
-	if (imageName == null) return res.status(406).json("Image does not exist");
-
-	try {
-		res.sendFile(path.join(__dirname, "../../public/api/image/", `${imageName}`));
-	} catch {
-		res.status(500).json("Internal server error");
-	}
+router.get("/image", (req, res, next) => {
+	console.log(databaseConnector.getImageList());
+	return res.json(databaseConnector.getImageList());
 });
 
 router.get("/horse", (req, res, next) => {
@@ -42,7 +34,7 @@ router.post("/horse", (req, res, next) => {
 	if (!newHorse.hasOwnProperty("name") || !newHorse.hasOwnProperty("description") || !newHorse.hasOwnProperty("image"))
 		return res.status(406).json("Object lacks mandatory fields");
 	if (newHorse.getHorseList().find((item) => item.name === newHorse.name)) return res.status(406).json("Name taken");
-	if (newHorse.image != null && !databaseConnector.getImageIdList().find((item) => item.id === newHorse.image))
+	if (newHorse.image != null && !databaseConnector.getImageList().find((item) => item.id === newHorse.image))
 		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.createHorse(newHorse)) res.status(500).json("Unknown error during code generation");
@@ -55,7 +47,7 @@ router.patch("/horse/:name", (req, res, next) => {
 	updatedHorse.name = req.params.name;
 
 	if (!updatedHorse.hasOwnProperty("description") || !updatedHorse.hasOwnProperty("image")) return res.status(406).json("Object lacks mandatory fields");
-	if (newHorse.image != null && !databaseConnector.getImageIdList().find((item) => item.id === updatedHorse.image))
+	if (newHorse.image != null && !databaseConnector.getImageList().find((item) => item.id === updatedHorse.image))
 		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.updatHorse(updatedHorse)) res.status(500).json("Unknown error during code generation");

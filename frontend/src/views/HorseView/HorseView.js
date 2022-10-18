@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from "react";
 import "./HorseView.css";
 import { API_URL } from "../../constants";
-import { BiographyBlock } from "../../layouts";
+import { PersonalCard } from "../../components";
 
 const HorseView = () => {
-	const [textBlockList, setTextBlockList] = useState([]);
+	const [horseList, setHorseList] = useState([]);
 
 	useEffect(() => {
-		fetch(API_URL + "textBlock")
+		fetch(API_URL + "horse")
 			.then((response) => (response.ok ? response.json() : Promise.reject("Response not ok")))
 			.then((response) => {
-				setTextBlockList(response);
+				setHorseList(response);
 			});
 	}, []);
 
-	console.log(textBlockList);
+	console.log(horseList);
 
 	return (
 		<div className='HorseView'>
-			{textBlockList.map((item, index) => (
-				<BiographyBlock key={index} index={index} image={item.image}>
+			{horseList.map((item, index) => (
+				<PersonalCard title={item.name} images={item.images}>
 					{item.description}
-				</BiographyBlock>
+				</PersonalCard>
 			))}
 		</div>
 	);

@@ -6,7 +6,7 @@ import { API_URL } from "../../constants";
 const ImageBlock = ({ image }) => {
 	return (
 		<div className='ImageBlock'>
-			<img src={`${API_URL}image/${image}`} alt={`Image_${image}`}></img>
+			<img src={`${API_URL}image/${image.name}`} alt={`Image ${image.id}`}></img>
 		</div>
 	);
 };
