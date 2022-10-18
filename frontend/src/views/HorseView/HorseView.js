@@ -19,7 +19,11 @@ const HorseView = () => {
 	return (
 		<div className='HorseView'>
 			{horseList.map((item, index) => (
+<<<<<<< HEAD
 				<PersonalCard key={index} title={item.name} images={item.images}>
+=======
+				<PersonalCard title={item.name} images={item.images}>
+>>>>>>> 32f4b74b3824269bcfddbf1eafe1cc834102d0dd
 					{item.description}
 				</PersonalCard>
 			))}

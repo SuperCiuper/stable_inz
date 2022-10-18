@@ -20,13 +20,39 @@ const getHorseList = () => {
 			name: "Malta",
 			description:
 				"Super konica. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+<<<<<<< HEAD
 			images: ["1.jpg", "2.webp"],
+=======
+			images: [
+				{
+					id: 1,
+					name: "1.jpg",
+				},
+				{
+					id: 2,
+					name: "2.webp",
+				},
+			],
+>>>>>>> 32f4b74b3824269bcfddbf1eafe1cc834102d0dd
 		},
 		{
 			name: "Super koń",
 			description:
 				"Super koń. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+<<<<<<< HEAD
 			images: ["2.webp", "1.jpg"],
+=======
+			images: [
+				{
+					id: 2,
+					name: "2.webp",
+				},
+				{
+					id: 1,
+					name: "1.jpg",
+				},
+			],
+>>>>>>> 32f4b74b3824269bcfddbf1eafe1cc834102d0dd
 		},
 	];
 };
@@ -102,8 +128,25 @@ const dummyDescription =
 const getTextBlockList = () => {
 	//return textBlockList;
 	return [
+<<<<<<< HEAD
 		{ description: `1${dummyDescription}`, image: "1.jpg" },
 		{ description: `2${dummyDescription}`, image: "2.webp" },
+=======
+		{
+			description: `1${dummyDescription}`,
+			image: {
+				id: 1,
+				name: "1.jpg",
+			},
+		},
+		{
+			description: `2${dummyDescription}`,
+			image: {
+				id: 2,
+				name: "2.webp",
+			},
+		},
+>>>>>>> 32f4b74b3824269bcfddbf1eafe1cc834102d0dd
 		{ description: `3${dummyDescription}`, image: null },
 	];
 };

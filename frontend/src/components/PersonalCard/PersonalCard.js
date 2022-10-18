@@ -11,9 +11,15 @@ const PersonalCard = ({ title, images, children }) => {
 		console.log(image);
 		return (
 			<img
+<<<<<<< HEAD
 				src={`${API_URL}image/${image}`}
 				onError={(e) => (e.target.src = "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")}
 				alt={`${image} not found`}
+=======
+				src={`${API_URL}image/${image.name}`}
+				onError={(e) => (e.target.src = "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")}
+				alt={`Image ${image.id}`}
+>>>>>>> 32f4b74b3824269bcfddbf1eafe1cc834102d0dd
 				style={{ width: "100%", display: "block" }}
 			/>
 		);
