@@ -1,4 +1,7 @@
 .HorseView {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+
   height: 100%;
-  padding-top: 6rem;
 }

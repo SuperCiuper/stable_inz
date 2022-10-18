@@ -3,7 +3,7 @@ const pool = new Pool();
 
 var mainInfo = {};
 var horseList = [];
-var imageIdList = [];
+var imageList = [];
 var textBlockList = [];
 const DEFAULT_IMAGE = 0;
 
@@ -20,13 +20,13 @@ const getHorseList = () => {
 			name: "Malta",
 			description:
 				"Super konica. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-			images: [1, 2],
+			images: ["1.jpg", "2.webp"],
 		},
 		{
 			name: "Super koń",
 			description:
 				"Super koń. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-			images: [2, 1],
+			images: ["2.webp", "1.jpg"],
 		},
 	];
 };
@@ -45,12 +45,12 @@ const createHorse = (newHorse) => {
 };
 
 const updateHorse = (updatedHorse) => {
-	if (updateHorse.image === null) {
-		updateHorse.image = DEFAULT_IMAGE;
+	if (updatedHorse.image === null) {
+		updatedHorse.image = DEFAULT_IMAGE;
 	}
 	pool.query(
 		"UPDATE horse SET profile_image_id = $2, description = $3 WHERE name = $1",
-		[updateHorse.name, updateHorse.image, updateHorse.description],
+		[updatedHorse.name, updatedHorse.image, updatedHorse.description],
 		(err, res) => {
 			if (err) {
 				console.log(err.stack);
@@ -71,12 +71,18 @@ const deleteHorse = (horseName) => {
 	updateFromDatabase();
 };
 
-const getImageIdList = () => {
-	//return imageIdList;
-	return [
-		{ id: 1, name: "1.jpg" },
-		{ id: 2, name: "2.webp" },
+const getImageList = () => {
+	imageList = [
+		{
+			id: 1,
+			name: "1.jpg",
+		},
+		{
+			id: 2,
+			name: "2.webp",
+		},
 	];
+	return imageList;
 };
 
 const getMainInfo = () => {
@@ -96,8 +102,8 @@ const dummyDescription =
 const getTextBlockList = () => {
 	//return textBlockList;
 	return [
-		{ description: `1${dummyDescription}`, image: "1" },
-		{ description: `2${dummyDescription}`, image: "2" },
+		{ description: `1${dummyDescription}`, image: "1.jpg" },
+		{ description: `2${dummyDescription}`, image: "2.webp" },
 		{ description: `3${dummyDescription}`, image: null },
 	];
 };
@@ -109,7 +115,7 @@ module.exports = {
 	createHorse,
 	updateHorse,
 	deleteHorse,
-	getImageIdList,
+	getImageList,
 	getMainInfo,
 	getTextBlockList,
 };
