@@ -4,22 +4,42 @@ import "./App.css";
 import { Footer, Header } from "./layouts";
 import { API_URL } from "./constants";
 
-export const ColorContext = React.createContext({
-	stableName: "Super stable",
+const defaultColors = {
 	mainRGB: "fff6de",
 	supportRGB: "d19b5e",
 	backgroundRGB: "fdffe8",
 	detailRGB: "111111",
-});
+	buttonsRGB: "000000",
+	highlightRGB: "FFFF82",
+};
+
+export const ColorContext = React.createContext(defaultColors);
+
+export const useWindowDimensions = () => {
+	const [windowDimensions, setWindowDimensions] = useState({
+		dynamicWidth: window.innerWidth,
+		dynamicHeight: window.innerHeight,
+	});
+
+	const setDimensions = () => {
+		setWindowDimensions({
+			dynamicWidth: window.innerWidth,
+			dynamicHeight: window.innerHeight,
+		});
+	};
+
+	useEffect(() => {
+		window.addEventListener("resize", setDimensions);
+		return () => window.removeEventListener("resize", setDimensions);
+	}, [windowDimensions]);
+
+	return windowDimensions;
+};
 
 const App = () => {
-	const [mainInfo, setMainInfo] = useState({
-		stableName: "Super stable",
-		mainRGB: "fff6de",
-		supportRGB: "d19b5e",
-		backgroundRGB: "fdffe8",
-		detailRGB: "111111",
-	});
+	const [mainInfo, setMainInfo] = useState(defaultColors);
+
+	console.log(useWindowDimensions);
 
 	useEffect(() => {
 		fetch(API_URL + "mainInfo")

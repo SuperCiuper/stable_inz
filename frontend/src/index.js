@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import { HomeView, HorseView, OfferView, PriceListView } from "./views";
+import { ContactView, HomeView, HorseView, OfferView, PriceListView } from "./views";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -14,6 +14,7 @@ root.render(
 					<Route path='/horses' element={<HorseView />} />
 					<Route path='/offer' element={<OfferView />} />
 					<Route path='/prices' element={<PriceListView />} />
+					<Route path='/contact' element={<ContactView />} />
 					<Route index element={<HomeView />} />
 				</Route>
 			</Routes>

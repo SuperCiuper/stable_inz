@@ -1,4 +1,4 @@
-.TextBlock {
+.BiographyBlock {
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -10,11 +10,11 @@
   border-bottom: 2px solid;
 }
 
-.TextBlock:last-child {
+.BiographyBlock:last-child {
   border: none;
 }
 
-.TextBlock .Description {
+.BiographyBlock .Description {
   width: 100%;
 
   margin-left: 6%;
@@ -27,7 +27,7 @@
   font-weight: 360;
 }
 
-.TextBlock .ImageBlock {
+.BiographyBlock .ImageBlock {
   min-width: 50%;
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@
   font-size: 0.9rem;
 }
 
-.TextBlock .ImageBlock img {
+.BiographyBlock .ImageBlock img {
   min-width: 100%;
   min-height: 100%;
   object-fit: cover;

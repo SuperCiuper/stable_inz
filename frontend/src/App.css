@@ -1,10 +1,10 @@
 .App {
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: hidden;
 }
 
 .Content {
-  min-height: calc(100vh - 64px - 120px);
+  min-height: calc(100vh - 2.688rem - 5.75rem - 4px);
   margin-left: 10%;
   margin-right: 10%;
 }

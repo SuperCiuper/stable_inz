@@ -7,16 +7,12 @@ const Footer = () => {
 
 	return (
 		<footer className='Footer' style={{ backgroundColor: `#${colorContext.supportRGB}` }}>
-			<div className='Item'>
-				<h3> Task </h3>
-				<p> SaaS Native recruitment task </p>
+			<div className='Item' style={{ color: `#${colorContext.buttonsRGB}` }}>
+				SaaS Native recruitment task
 			</div>
-			<div className='Item'>
-				<h3> Contact </h3>
-				<p>
-					Szymon Hutnik - &nbsp;
-					<a href='https://github.com/SuperCiuper/SaaS-Native-recruitment-task'>Github</a>
-				</p>
+			<div className='Item' style={{ color: `#${colorContext.buttonsRGB}` }}>
+				Szymon Hutnik - &nbsp;
+				<a href='https://github.com/SuperCiuper/SaaS-Native-recruitment-task'>Github</a>
 			</div>
 		</footer>
 	);

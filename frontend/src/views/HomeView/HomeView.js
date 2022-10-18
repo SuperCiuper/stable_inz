@@ -14,12 +14,10 @@ const HomeView = () => {
 			});
 	}, []);
 
-	console.log(textBlockList);
-
 	return (
 		<div className='HomeView'>
 			{textBlockList.map((item, index) => (
-				<TextBlock key={index} image={item.image}>
+				<TextBlock key={index} index={index} image={item.image}>
 					{item.description}
 				</TextBlock>
 			))}

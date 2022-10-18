@@ -13,7 +13,22 @@ pool.query("SELECT NOW()", (err, res) => {
 });
 
 const getHorseList = () => {
-	return horseList;
+	//return horseList;
+
+	return [
+		{
+			name: "Malta",
+			description:
+				"Super konica. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+			images: [1, 2],
+		},
+		{
+			name: "Super koń",
+			description:
+				"Super koń. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+			images: [2, 1],
+		},
+	];
 };
 
 const createHorse = (newHorse) => {
@@ -67,11 +82,12 @@ const getImageIdList = () => {
 const getMainInfo = () => {
 	//return mainInfo;
 	return {
-		stableName: "Super stable",
 		mainRGB: "fff6de",
 		supportRGB: "d19b5e",
 		backgroundRGB: "fdffe8",
 		detailRGB: "111111",
+		buttonsRGB: "000000",
+		highlightRGB: "FFFF82",
 	};
 };
 
