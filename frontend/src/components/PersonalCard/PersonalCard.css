@@ -1,20 +1,19 @@
 @media screen and (min-width: 640px) {
-  .PersonalCard {
+  .personal-card {
     width: 40%; 
   }
 }
 
 @media screen and (max-width: 640px) {
-  .PersonalCard {
+  .personal-card {
     width: 80%; 
   }
 }
 
-.PersonalCard {
+.personal-card {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-end;
+  justify-content: flex-start;
 
   margin-top: 4rem;
   
@@ -22,7 +21,7 @@
   border-radius: 5px;
 }
 
-.PersonalCard h2 {
+.personal-card h2 {
   margin: 0;
   margin-top: 1rem;
   padding-left: 2rem;
@@ -30,7 +29,7 @@
   text-align: left;
 }
 
-.PersonalCard .Description {
+.personal-card .description {
   margin: 0;
   padding: 1rem;
   padding-top: 0.5rem;
@@ -41,10 +40,82 @@
   font-weight: 360;
 }
 
-.PersonalCard .ImageBlock {
+.personal-card .custom-galleria {
+  height: 16rem;
+}
+
+.p-galleria-content, .p-galleria-item-wrapper, .p-galleria-item-container, .p-galleria-item {
+  min-height: 100%;
+  max-height: 100%;
   min-width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  background-color: black;
+}
+
+.p-galleria .p-galleria-item-nav {
+  width: 2rem;
+  height: 2rem;
+}
+
+.image-block {
+  height: 100%;
   display: flex;
   align-items: center;
+}
+
+.image-block img {
+  min-height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.image-block .fullscreen-button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  width: 1rem;
+  height: 1rem;
   
-  font-size: 0.9rem;
+  padding: 0.7rem;
+
+  background-color: transparent;
+  color: #fff;
+  border: 0 none;
+  border-radius: 0;
+}
+
+.image-block .fullscreen-button:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.personal-card .custom-galleria.fullscreen {
+  display: flex;
+  flex-direction: column;
+}
+
+.personal-card .custom-galleria.fullscreen .p-galleria-content {
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.custom-galleria.fullscreen .image-block img {
+  object-fit: scale-down;
+}
+
+.custom-galleria.fullscreen .image-block .fullscreen-button {
+  width: 2rem;
+  height: 2rem;
+  
+  padding: 1.4rem;
+
+  background-color: transparent;
+  color: #fff;
+  border: 0 none;
+  border-radius: 0;
 }
