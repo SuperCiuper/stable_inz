@@ -35,3 +35,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+*:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.p-link:focus, .p-button:focus, .p-accordion .p-accordion-header:not(.p-disabled) .p-accordion-header-link:focus {
+  outline: none;
+  box-shadow: none;
+}

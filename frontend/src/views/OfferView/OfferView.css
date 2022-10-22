@@ -1,10 +1,29 @@
-.OfferView {
+.offer-view {
   height: 100%;
-  padding-left: 20px;
+  padding: 4rem;
 }
 
-.OfferView h1 {
-  padding: 0;
+.offer-view p {
   margin: 0;
-  padding-top: 20px;
+  margin-top: 0.5rem;
+  padding: 0;
+}
+
+.offer-view .description {
+  margin-top: 0;
+  margin-bottom: 1rem;
+
+  text-align: justify;
+}
+
+.p-accordion .p-accordion-header .p-accordion-header-link, .p-accordion .p-accordion-header:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link, .p-accordion .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+  background-color: inherit;
+  border-color: inherit;
+}
+
+.p-accordion .p-accordion-header:not(.p-disabled).p-highlight:hover .p-accordion-header-link {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-color: inherit;
+
+  transition: opacity .3s;
 }

@@ -6,9 +6,13 @@ import { Galleria } from "primereact/galleria";
 import { classNames } from "primereact/utils";
 import { API_URL } from "../../constants";
 
-const PersonalCard = ({ title, images, children }) => {
+const PersonalCard = ({ title, images, children, index }) => {
 	const colorContext = useContext(ColorContext);
 	const [isFullScreen, setFullScreen] = useState(false);
+
+	const onFullScreenChange = () => {
+		setFullScreen((current) => !current);
+	};
 
 	useEffect(() => {
 		const bindDocumentListeners = () => {
@@ -30,20 +34,21 @@ const PersonalCard = ({ title, images, children }) => {
 		return () => unbindDocumentListeners();
 	}, []);
 
-	const toggleFullScreen = () => {
-		if (isFullScreen) {
-			closeFullScreen();
-		} else {
-			openFullScreen();
+	const closeFullScreen = () => {
+		if (document.exitFullscreen) {
+			document.exitFullscreen();
+		} else if (document.mozCancelFullScreen) {
+			document.mozCancelFullScreen();
+		} else if (document.webkitExitFullscreen) {
+			document.webkitExitFullscreen();
+		} else if (document.msExitFullscreen) {
+			document.msExitFullscreen();
 		}
 	};
 
-	const onFullScreenChange = () => {
-		setFullScreen((prevState) => !prevState);
-	};
-
 	const openFullScreen = () => {
-		let elem = document.querySelector(".custom-galleria");
+		let elem = document.querySelector(`#galleria-${index}`);
+
 		if (elem.requestFullscreen) {
 			elem.requestFullscreen();
 		} else if (elem.mozRequestFullScreen) {
@@ -58,16 +63,8 @@ const PersonalCard = ({ title, images, children }) => {
 		}
 	};
 
-	const closeFullScreen = () => {
-		if (document.exitFullscreen) {
-			document.exitFullscreen();
-		} else if (document.mozCancelFullScreen) {
-			document.mozCancelFullScreen();
-		} else if (document.webkitExitFullscreen) {
-			document.webkitExitFullscreen();
-		} else if (document.msExitFullscreen) {
-			document.msExitFullscreen();
-		}
+	const toggleFullScreen = () => {
+		isFullScreen ? closeFullScreen() : openFullScreen();
 	};
 
 	const fullscreenButton = () => {
@@ -79,18 +76,6 @@ const PersonalCard = ({ title, images, children }) => {
 	};
 
 	const renderImage = (image) => {
-		if (isFullScreen) {
-			return (
-				<div className='image-block'>
-					<img
-						src={`${API_URL}image/${image}`}
-						onError={(e) => (e.target.src = "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")}
-						alt={`${image} not found`}
-					/>
-					{fullscreenButton()}
-				</div>
-			);
-		}
 		return (
 			<div className='image-block'>
 				{/* eslint-disable-next-line */}
@@ -104,19 +89,20 @@ const PersonalCard = ({ title, images, children }) => {
 		);
 	};
 
-	const galleriaClassName = classNames("custom-galleria", {
+	const galleriaClassName = classNames(`custom-galleria`, {
 		fullscreen: isFullScreen,
 	});
 
 	return (
 		<div className='personal-card' style={{ borderColor: `#${colorContext.detailRGB}` }}>
-			{images ? (
+			{images ? ( // TODO: add thumbnails in fullscreen mode
 				<Galleria
+					id={`galleria-${index}`}
 					className={galleriaClassName}
 					value={images}
 					item={renderImage}
 					circular
-					showItemNavigators
+					showItemNavigators // https://stackoverflow.com/questions/42036865/react-how-to-navigate-through-list-by-arrow-keys
 					showItemNavigatorsOnHover
 					showThumbnails={false}
 				/>

@@ -1,10 +1,79 @@
 const Pool = require("pg").Pool;
 const pool = new Pool();
 
-var mainInfo = {};
-var horseList = [];
-var imageList = [];
-var textBlockList = [];
+const dummyDescription =
+	"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.";
+
+var mainInfo = {
+	mainRGB: "fff6de",
+	supportRGB: "d19b5e",
+	backgroundRGB: "fdffe8",
+	detailRGB: "111111",
+	buttonsRGB: "000000",
+	highlightRGB: "FFFF82",
+};
+var textBlockList = [
+	{ description: `1${dummyDescription}`, image: "1.jpg" },
+	{ description: `2${dummyDescription}`, image: "2.webp" },
+	{ description: `3${dummyDescription}`, image: null },
+];
+var imageList = [
+	{
+		id: 1,
+		name: "1.jpg",
+	},
+	{
+		id: 2,
+		name: "2.webp",
+	},
+];
+var horseList = [
+	{
+		name: "Malta",
+		description:
+			"Super konica. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+		images: ["1.jpg", "2.webp"],
+	},
+	{
+		name: "Super koń",
+		description:
+			"Super koń. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+		images: ["2.webp", "1.jpg"],
+	},
+	{
+		name: "Super koń v2",
+		description:
+			"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+		images: ["2.webp", "1.jpg"],
+	},
+	{
+		name: "Super koń v2",
+		description:
+			"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+		images: ["2.webp", "1.jpg"],
+	},
+	{
+		name: "Super koń v2",
+		description:
+			"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+		images: ["2.webp", "1.jpg"],
+	},
+];
+var offerList = [
+	{
+		item: "Jazda indywidualna",
+		forWhom: "Dla każdego",
+		description: "Jazdy indywidualne dopasowane do umiejętności jeźdźca",
+		proposedPrice: "70 zł/h",
+	},
+	{
+		item: "Jazda terenowa",
+		forWhom: "Dla ośób jeżdżących samodzielnie w 3 stylach",
+		description: "Jazda terenowa w grupach od 3 do 10 osób. Czas trwania od 2 do 4 godzin.",
+		proposedPrice: "200 zł",
+	},
+];
+
 const DEFAULT_IMAGE = 0;
 
 pool.query("SELECT NOW()", (err, res) => {
@@ -12,41 +81,20 @@ pool.query("SELECT NOW()", (err, res) => {
 	pool.end();
 });
 
-const getHorseList = () => {
-	//return horseList;
+const getMainInfo = () => {
+	return mainInfo;
+};
 
-	return [
-		{
-			name: "Malta",
-			description:
-				"Super konica. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-			images: ["1.jpg", "2.webp"],
-		},
-		{
-			name: "Super koń",
-			description:
-				"Super koń. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-			images: ["2.webp", "1.jpg"],
-		},
-		{
-			name: "Super koń v2",
-			description:
-				"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-			images: ["2.webp", "1.jpg"],
-		},
-		{
-			name: "Super koń v2",
-			description:
-				"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-			images: ["2.webp", "1.jpg"],
-		},
-		{
-			name: "Super koń v2",
-			description:
-				"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-			images: ["2.webp", "1.jpg"],
-		},
-	];
+const getTextBlockList = () => {
+	return textBlockList;
+};
+
+const getImageList = () => {
+	return imageList;
+};
+
+const getHorseList = () => {
+	return horseList;
 };
 
 const createHorse = (newHorse) => {
@@ -89,41 +137,8 @@ const deleteHorse = (horseName) => {
 	updateFromDatabase();
 };
 
-const getImageList = () => {
-	imageList = [
-		{
-			id: 1,
-			name: "1.jpg",
-		},
-		{
-			id: 2,
-			name: "2.webp",
-		},
-	];
-	return imageList;
-};
-
-const getMainInfo = () => {
-	//return mainInfo;
-	return {
-		mainRGB: "fff6de",
-		supportRGB: "d19b5e",
-		backgroundRGB: "fdffe8",
-		detailRGB: "111111",
-		buttonsRGB: "000000",
-		highlightRGB: "FFFF82",
-	};
-};
-
-const dummyDescription =
-	"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.";
-const getTextBlockList = () => {
-	//return textBlockList;
-	return [
-		{ description: `1${dummyDescription}`, image: "1.jpg" },
-		{ description: `2${dummyDescription}`, image: "2.webp" },
-		{ description: `3${dummyDescription}`, image: null },
-	];
+const getOfferList = () => {
+	return offerList;
 };
 
 const updateFromDatabase = () => {};
@@ -136,4 +151,5 @@ module.exports = {
 	getImageList,
 	getMainInfo,
 	getTextBlockList,
+	getOfferList,
 };

@@ -58,6 +58,10 @@ router.delete("/horse/:name", (req, res, next) => {
 	return res.json(databaseConnector.getHorseList());
 });
 
+router.get("/offer", (req, res, next) => {
+	return res.json(databaseConnector.getOfferList());
+});
+
 router.post("/apiaries", (req, res, next) => {
 	let newApiary = req.body;
 
