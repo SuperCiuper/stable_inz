@@ -10,21 +10,21 @@ const PersonalCard = ({ title, images, children }) => {
 	const colorContext = useContext(ColorContext);
 	const [isFullScreen, setFullScreen] = useState(false);
 
-	const bindDocumentListeners = () => {
-		document.addEventListener("fullscreenchange", onFullScreenChange);
-		document.addEventListener("mozfullscreenchange", onFullScreenChange);
-		document.addEventListener("webkitfullscreenchange", onFullScreenChange);
-		document.addEventListener("msfullscreenchange", onFullScreenChange);
-	};
-
-	const unbindDocumentListeners = () => {
-		document.removeEventListener("fullscreenchange", onFullScreenChange);
-		document.removeEventListener("mozfullscreenchange", onFullScreenChange);
-		document.removeEventListener("webkitfullscreenchange", onFullScreenChange);
-		document.removeEventListener("msfullscreenchange", onFullScreenChange);
-	};
-
 	useEffect(() => {
+		const bindDocumentListeners = () => {
+			document.addEventListener("fullscreenchange", onFullScreenChange);
+			document.addEventListener("mozfullscreenchange", onFullScreenChange);
+			document.addEventListener("webkitfullscreenchange", onFullScreenChange);
+			document.addEventListener("msfullscreenchange", onFullScreenChange);
+		};
+
+		const unbindDocumentListeners = () => {
+			document.removeEventListener("fullscreenchange", onFullScreenChange);
+			document.removeEventListener("mozfullscreenchange", onFullScreenChange);
+			document.removeEventListener("webkitfullscreenchange", onFullScreenChange);
+			document.removeEventListener("msfullscreenchange", onFullScreenChange);
+		};
+
 		bindDocumentListeners();
 
 		return () => unbindDocumentListeners();
@@ -93,10 +93,11 @@ const PersonalCard = ({ title, images, children }) => {
 		}
 		return (
 			<div className='image-block'>
+				{/* eslint-disable-next-line */}
 				<img
 					src={`${API_URL}image/${image}`}
 					onError={(e) => (e.target.src = "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")}
-					alt={`${image} not found`}
+					alt={`Image ${image} not found`}
 				/>
 				{fullscreenButton()}
 			</div>

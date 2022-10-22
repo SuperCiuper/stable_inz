@@ -6,7 +6,8 @@ import { API_URL } from "../../constants";
 const ImageBlock = ({ image }) => {
 	return (
 		<div className='ImageBlock'>
-			<img src={`${API_URL}image/${image}`} alt={`${image} not found`}></img>
+			{/* eslint-disable-next-line */}
+			<img src={`${API_URL}image/${image}`} alt={`Image ${image} not found`}></img>
 		</div>
 	);
 };
