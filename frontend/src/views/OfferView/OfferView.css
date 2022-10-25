@@ -27,3 +27,8 @@
 
   transition: opacity .3s;
 }
+
+.p-accordion .p-accordion-content {
+  background-color: inherit;
+  border-color: inherit;
+}

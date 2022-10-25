@@ -1,10 +1,42 @@
-.PriceListView {
+.priceList-view {
   height: 100%;
-  padding-left: 20px;
+
+  padding: 20%;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+
+  font-size: 1.2rem;
 }
 
-.PriceListView h1 {
-  padding: 0;
-  margin: 0;
-  padding-top: 20px;
+.priceList-view table {
+  min-width: 100%;
+
+  border: 3px solid black;
+  border-radius: 6px;
+  border-spacing: 0;
+}
+
+.priceList-view table thead tr th {
+  padding: 1rem;
+
+  border: 1px solid black;
+}
+
+.priceList-view table tbody tr td {
+  padding: 0.5rem;
+
+  border: 1px solid black;
+}
+
+.priceList-view table thead tr th:first-of-type {
+  border-top-left-radius: 3px;
+}
+.priceList-view table thead tr th:last-of-type {
+  border-top-right-radius: 3px;
+}
+.priceList-view table tbody tr:last-of-type td:first-of-type {
+  border-bottom-left-radius: 3px;
+}
+.priceList-view table tbody tr:last-of-type td:last-of-type {
+  border-bottom-right-radius: 3px;
 }

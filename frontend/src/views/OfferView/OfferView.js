@@ -19,11 +19,12 @@ const OfferView = () => {
 	return (
 		<div className='offer-view'>
 			<Accordion>
-				{offerList.map((item) => (
+				{offerList.map((item, index) => (
 					<AccordionTab
+						key={index}
 						header={item.item}
 						headerStyle={{ borderColor: `#${colorContext.detailRGB}`, background: `#${colorContext.mainRGB}` }}
-						contentStyle={{ borderColor: `#${colorContext.detailRGB}`, background: `#${colorContext.mainRGB}` }}
+						contentStyle={{ borderColor: `#${colorContext.detailRGB}`, background: `#${colorContext.backgroundRGB}` }}
 					>
 						<p className='description'>{item.description}</p>
 						<p>

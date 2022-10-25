@@ -14,6 +14,10 @@ router.get("/mainInfo", (req, res, next) => {
 	return res.json(databaseConnector.getMainInfo());
 });
 
+router.get("/contactInfo", (req, res, next) => {
+	return res.json(databaseConnector.getContactInfo());
+});
+
 router.get("/textBlock", (req, res, next) => {
 	return res.json(databaseConnector.getTextBlockList());
 });
@@ -60,6 +64,10 @@ router.delete("/horse/:name", (req, res, next) => {
 
 router.get("/offer", (req, res, next) => {
 	return res.json(databaseConnector.getOfferList());
+});
+
+router.get("/priceList", (req, res, next) => {
+	return res.json(databaseConnector.getPriceList());
 });
 
 router.post("/apiaries", (req, res, next) => {

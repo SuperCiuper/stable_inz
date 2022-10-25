@@ -14,8 +14,6 @@ const HorseView = () => {
 			});
 	}, []);
 
-	console.log(horseList);
-
 	return (
 		<div className='HorseView'>
 			{horseList.map((item, index) => (

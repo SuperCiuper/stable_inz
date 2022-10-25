@@ -12,6 +12,15 @@ var mainInfo = {
 	buttonsRGB: "000000",
 	highlightRGB: "FFFF82",
 };
+var contactInfo = {
+	street: "Klepacka 21",
+	zipCode: "15-698",
+	city: "Biedastok",
+	phoneNumber: 123456789,
+	mail: "stajnia.malta@gmail.com",
+	gmapLat: "53.053995",
+	gmapLng: "23.095907",
+};
 var textBlockList = [
 	{ description: `1${dummyDescription}`, image: "1.jpg" },
 	{ description: `2${dummyDescription}`, image: "2.webp" },
@@ -73,6 +82,20 @@ var offerList = [
 		proposedPrice: "200 zł",
 	},
 ];
+var priceList = [
+	{
+		item: "Jazda indywidualna - godzina",
+		price: "70 zł",
+	},
+	{
+		item: "Karnet na 10 godzinnych jazd",
+		price: "600 zł",
+	},
+	{
+		item: "Jazda terenowa - od 2 do 4 godzin",
+		price: "200 zł",
+	},
+];
 
 const DEFAULT_IMAGE = 0;
 
@@ -83,6 +106,10 @@ pool.query("SELECT NOW()", (err, res) => {
 
 const getMainInfo = () => {
 	return mainInfo;
+};
+
+const getContactInfo = () => {
+	return contactInfo;
 };
 
 const getTextBlockList = () => {
@@ -141,6 +168,10 @@ const getOfferList = () => {
 	return offerList;
 };
 
+const getPriceList = () => {
+	return priceList;
+};
+
 const updateFromDatabase = () => {};
 
 module.exports = {
@@ -150,6 +181,8 @@ module.exports = {
 	deleteHorse,
 	getImageList,
 	getMainInfo,
+	getContactInfo,
 	getTextBlockList,
 	getOfferList,
+	getPriceList,
 };

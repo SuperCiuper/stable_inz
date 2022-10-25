@@ -39,7 +39,7 @@ export const useWindowDimensions = () => {
 const App = () => {
 	const [mainInfo, setMainInfo] = useState(defaultColors);
 
-	console.log(useWindowDimensions);
+	console.log(useWindowDimensions()); // check if needed
 
 	useEffect(() => {
 		fetch(API_URL + "mainInfo")
@@ -48,8 +48,6 @@ const App = () => {
 				setMainInfo(response);
 			});
 	}, []);
-
-	console.log(mainInfo);
 
 	return (
 		<div className='App' style={{ backgroundColor: `#${mainInfo.mainRGB}` }}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AddApiaryModal, SortUpDownButton } from "../../components";
+import { AddApiaryModal } from "../../components";
 import { API_URL } from "../../constants";
 import "./ApiaryView.css";
 
@@ -81,11 +81,7 @@ const ApiaryView = () => {
 						<tr>
 							<th>Name</th>
 							<th>Date</th>
-							<th>
-								<SortUpDownButton sortedDown={sortedDown} setSortedDown={setSortedDown}>
-									Number
-								</SortUpDownButton>
-							</th>
+							<th>Number</th>
 						</tr>
 					</thead>
 					<tbody>
