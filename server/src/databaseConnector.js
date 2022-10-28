@@ -22,20 +22,11 @@ var contactInfo = {
 	gmapLng: "23.095907",
 };
 var textBlockList = [
-	{ description: `1${dummyDescription}`, image: "1.jpg" },
-	{ description: `2${dummyDescription}`, image: "2.webp" },
-	{ description: `3${dummyDescription}`, image: null },
+	{ id: 1, description: `1${dummyDescription}`, image: "1.jpg" },
+	{ id: 2, description: `2${dummyDescription}`, image: "2.webp" },
+	{ id: 3, description: `3${dummyDescription}`, image: null },
 ];
-var imageList = [
-	{
-		id: 1,
-		name: "1.jpg",
-	},
-	{
-		id: 2,
-		name: "2.webp",
-	},
-];
+var imageList = ["1.jpg", "2.webp"];
 var horseList = [
 	{
 		name: "Malta",
@@ -130,6 +121,21 @@ const getTextBlockList = () => {
 	return textBlockList;
 };
 
+const updateTextBlock = (updatedTextBlock) => {
+	// pool.query(
+	// 	"UPDATE main_page_text_block SET image_name = $2, description = $3 WHERE name = $1",
+	// 	[updatedTextBlock.id, updatedTextBlock.image, updatedTextBlock.description],
+	// 	(err, res) => {
+	// 		if (err) {
+	// 			console.log(err.stack);
+	// 		}
+	// 	}
+	// );
+	textBlockList[textBlockList.findIndex((item) => item.id === updatedTextBlock.id)] = updatedTextBlock;
+
+	return updateFromDatabase();
+};
+
 const getImageList = () => {
 	return imageList;
 };
@@ -204,6 +210,7 @@ module.exports = {
 	getImageList,
 	getContactInfo,
 	getTextBlockList,
+	updateTextBlock,
 	getOfferList,
 	getPriceList,
 	getPassword,

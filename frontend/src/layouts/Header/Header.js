@@ -1,5 +1,5 @@
 import { useContext, useRef } from "react";
-import { AuthContext, ColorContext } from "../../App";
+import { AuthContext, ColorContext } from "../../contextProviders";
 import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
 import { OverlayPanel } from "primereact/overlaypanel";
@@ -38,7 +38,6 @@ const Header = () => {
 	const { colorContext } = useContext(ColorContext);
 	const colorButtonRef = useRef(null);
 
-	console.log(authContext);
 	const highlightButton = (e) => {
 		e.target.style.color = `#${colorContext.highlightRGB}`;
 	};

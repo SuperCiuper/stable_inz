@@ -5,6 +5,7 @@ import { TextBlock } from "../../layouts";
 
 const HomeView = () => {
 	const [textBlockList, setTextBlockList] = useState([]);
+	console.log(textBlockList);
 
 	useEffect(() => {
 		fetch(API_URL + "textBlock")
@@ -14,12 +15,19 @@ const HomeView = () => {
 			});
 	}, []);
 
+	const updateTextBlock = (index, newTextBlock) => {
+		console.log("XD");
+
+		setTextBlockList((prevState) => {
+			prevState[index] = newTextBlock;
+			return [...prevState];
+		});
+	};
+
 	return (
-		<div className='HomeView'>
+		<div className='home-view'>
 			{textBlockList.map((item, index) => (
-				<TextBlock key={index} index={index} image={item.image}>
-					{item.description}
-				</TextBlock>
+				<TextBlock key={index} index={index} id={item.id} image={item.image} description={item.description} updateParentCallback={updateTextBlock} />
 			))}
 		</div>
 	);

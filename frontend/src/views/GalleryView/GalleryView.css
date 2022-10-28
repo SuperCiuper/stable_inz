@@ -1,0 +1,27 @@
+.gallery-view {
+  display: flex;
+  flex-wrap: wrap;
+
+  min-width: 100%;
+}
+
+.gallery-view .image-container {
+  height: 36vh;
+  flex-grow: 1;
+}
+
+.image-container .image-item {
+  height: inherit;
+  min-width: 100%;
+}
+
+.image-container .image-item img {
+  max-height: 100%;
+  min-width: 100%;
+  object-fit: cover;
+  vertical-align: bottom;
+}
+
+.gallery-view .image-container:last-child {
+  flex-grow: 10;
+}

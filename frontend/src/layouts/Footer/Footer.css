@@ -1,4 +1,4 @@
-.Footer {
+.footer {
   display: flex;
   justify-content: right;
   align-items: stretch;
@@ -12,7 +12,7 @@
   font-size: 0.9rem;
 }
 
-.Footer .Item {
+.footer .item {
   display: flex;
   min-height: 1.25rem;
 

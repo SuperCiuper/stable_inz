@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ColorContext } from "../../App";
+import { ColorContext } from "../../contextProviders";
 import "./OfferView.css";
 import { API_URL } from "../../constants";
 import { Accordion, AccordionTab } from "primereact/accordion";

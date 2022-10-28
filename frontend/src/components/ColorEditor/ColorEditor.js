@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { AuthContext, ColorContext } from "../../App";
+import { AuthContext, ColorContext } from "../../contextProviders";
 import "./ColorEditor.css";
 import { ColorPicker } from "primereact/colorpicker";
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
@@ -10,9 +10,6 @@ const ColorEditor = () => {
 	const { colorContext, setColorContext } = useContext(ColorContext);
 	const authContext = useContext(AuthContext);
 	const [editedColors, setEditedColors] = useState({ ...colorContext });
-
-	console.log(colorContext);
-	console.log(editedColors);
 
 	const saveEditedColors = () => {
 		console.log(editedColors);
@@ -25,10 +22,8 @@ const ColorEditor = () => {
 			.then((response) => (response.ok ? response : Promise.reject("Response not ok")))
 			.then(
 				() => {
-					console.log(editedColors);
 					setColorContext({ ...editedColors });
 					authContext.showDataUpdateSuccess("Kolory zostały zapisane");
-					//forceUpdate();
 				},
 				(err) => {
 					console.log(err);

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ColorContext } from "../../App";
+import { ColorContext } from "../../contextProviders";
 import "./ContactView.css";
 import { API_URL, GMAP_API_KEY } from "../../constants";
 

@@ -1,5 +1,5 @@
-import AddApiaryModal from "./AddApiaryModal/AddApiaryModal";
 import ColorEditor from "./ColorEditor/ColorEditor";
 import PersonalCard from "./PersonalCard/PersonalCard";
+import TextEditorModal from "./TextEditorModal/TextEditorModal";
 
-export { AddApiaryModal, ColorEditor, PersonalCard };
+export { ColorEditor, PersonalCard, TextEditorModal };

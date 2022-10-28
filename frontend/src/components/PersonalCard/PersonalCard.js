@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { ColorContext } from "../../App";
+import { ColorContext } from "../../contextProviders";
 import "./PersonalCard.css";
 import { Button } from "primereact/button";
 import { Galleria } from "primereact/galleria";
@@ -95,16 +95,16 @@ const PersonalCard = ({ title, images, children, index }) => {
 
 	return (
 		<div className='personal-card' style={{ borderColor: `#${colorContext.detailRGB}` }}>
-			{images ? ( // TODO: add thumbnails in fullscreen mode
+			{images ? (
 				<Galleria
 					id={`galleria-${index}`}
 					className={galleriaClassName}
 					value={images}
 					item={renderImage}
 					circular
-					showItemNavigators // https://stackoverflow.com/questions/42036865/react-how-to-navigate-through-list-by-arrow-keys
+					showItemNavigators // TODO https://stackoverflow.com/questions/42036865/react-how-to-navigate-through-list-by-arrow-keys
 					showItemNavigatorsOnHover
-					showThumbnails={false}
+					showThumbnails={false} // TODO: add thumbnails in fullscreen mode
 				/>
 			) : (
 				""
