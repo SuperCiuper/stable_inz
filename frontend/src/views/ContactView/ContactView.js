@@ -15,7 +15,7 @@ const defaultContactInfo = {
 
 const ContactView = () => {
 	const [contactInfo, setContactInfo] = useState(defaultContactInfo);
-	const colorContext = useContext(ColorContext);
+	const { colorContext } = useContext(ColorContext);
 
 	useEffect(() => {
 		fetch(API_URL + "contactInfo")

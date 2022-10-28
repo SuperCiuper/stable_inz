@@ -1,10 +1,13 @@
-import { useContext } from "react";
-import { ColorContext } from "../../App";
+import { useContext, useRef } from "react";
+import { AuthContext, ColorContext } from "../../App";
 import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
+import { OverlayPanel } from "primereact/overlaypanel";
+import { ColorEditor } from "../../components";
 
-const Item = ({ pathName, buttonName }) => {
-	const colorContext = useContext(ColorContext);
+const HeaderButton = ({ pathName, buttonName }) => {
+	const authContext = useContext(AuthContext);
+	const { colorContext } = useContext(ColorContext);
 	const currentPath = useLocation().pathname;
 
 	const highlightButton = (e) => {
@@ -18,10 +21,11 @@ const Item = ({ pathName, buttonName }) => {
 	return (
 		<Link to={pathName}>
 			<div
-				className='Item'
+				className='header-button'
 				onMouseOver={currentPath.includes(pathName) ? undefined : highlightButton}
 				onMouseOut={currentPath.includes(pathName) ? undefined : colorButton}
 				style={{ color: `#${currentPath.includes(pathName) ? colorContext.highlightRGB : colorContext.buttonsRGB}` }}
+				onClick={buttonName === "Wyloguj" && authContext.isLogged ? () => authContext.logoutUser() : () => {}}
 			>
 				{buttonName}
 			</div>
@@ -30,7 +34,18 @@ const Item = ({ pathName, buttonName }) => {
 };
 
 const Header = () => {
-	const colorContext = useContext(ColorContext);
+	const authContext = useContext(AuthContext);
+	const { colorContext } = useContext(ColorContext);
+	const colorButtonRef = useRef(null);
+
+	console.log(authContext);
+	const highlightButton = (e) => {
+		e.target.style.color = `#${colorContext.highlightRGB}`;
+	};
+
+	const colorButton = (e) => {
+		e.target.style.color = `#${colorContext.buttonsRGB}`;
+	};
 
 	return (
 		<div className='Header' style={{ backgroundColor: `#${colorContext.supportRGB}` }}>
@@ -40,10 +55,32 @@ const Header = () => {
 				</Link>
 			</div>
 			<div className='ButtonBar'>
-				<Item pathName={"/horses"} buttonName={"Konie"} />
-				<Item pathName={"/offer"} buttonName={"Oferta"} />
-				<Item pathName={"/prices"} buttonName={"Cennik"} />
-				<Item pathName={"/contact"} buttonName={"Kontakt"} />
+				<HeaderButton pathName={"/horses"} buttonName={"Konie"} />
+				<HeaderButton pathName={"/offer"} buttonName={"Oferta"} />
+				<HeaderButton pathName={"/prices"} buttonName={"Cennik"} />
+				<HeaderButton pathName={"/gallery"} buttonName={"Galeria"} />
+				<HeaderButton pathName={"/contact"} buttonName={"Kontakt"} />
+				{authContext.isLogged ? (
+					<>
+						<div
+							className='header-button'
+							onMouseOver={highlightButton}
+							onMouseOut={colorButton}
+							onClick={(e) => colorButtonRef.current.toggle(e)}
+							aria-haspopup
+							aria-controls='overlay_panel'
+							style={{ color: `#${colorContext.buttonsRGB}` }}
+						>
+							Kolory
+						</div>{" "}
+						<OverlayPanel ref={colorButtonRef} id='overlay_panel' style={{ width: "240px" }} className='overlaypanel-demo'>
+							<ColorEditor />
+						</OverlayPanel>
+					</>
+				) : (
+					""
+				)}
+				{authContext.isLogged ? <HeaderButton pathName={"/logout"} buttonName={"Wyloguj"} /> : ""}
 			</div>
 		</div>
 	);

@@ -7,7 +7,7 @@ import { classNames } from "primereact/utils";
 import { API_URL } from "../../constants";
 
 const PersonalCard = ({ title, images, children, index }) => {
-	const colorContext = useContext(ColorContext);
+	const { colorContext } = useContext(ColorContext);
 	const [isFullScreen, setFullScreen] = useState(false);
 
 	const onFullScreenChange = () => {

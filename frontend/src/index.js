@@ -6,9 +6,9 @@ import "./index.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import App from "./App";
-import { ContactView, HomeView, HorseView, OfferView, PriceListView } from "./views";
+import { ContactView, HomeView, HorseView, LoginView, OfferView, PriceListView } from "./views";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -20,6 +20,8 @@ root.render(
 					<Route path='/offer' element={<OfferView />} />
 					<Route path='/prices' element={<PriceListView />} />
 					<Route path='/contact' element={<ContactView />} />
+					<Route path='/login' element={<LoginView />} />
+					<Route path='/*' element={<Navigate replace to='/' />} />
 					<Route index element={<HomeView />} />
 				</Route>
 			</Routes>

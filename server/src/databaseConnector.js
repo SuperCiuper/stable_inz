@@ -4,12 +4,12 @@ const pool = new Pool();
 const dummyDescription =
 	"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.";
 
-var mainInfo = {
+var colorInfo = {
 	mainRGB: "fff6de",
 	supportRGB: "d19b5e",
 	backgroundRGB: "fdffe8",
 	detailRGB: "111111",
-	buttonsRGB: "000000",
+	buttonsRGB: "FFFFFF",
 	highlightRGB: "FFFF82",
 };
 var contactInfo = {
@@ -104,8 +104,22 @@ pool.query("SELECT NOW()", (err, res) => {
 	pool.end();
 });
 
-const getMainInfo = () => {
-	return mainInfo;
+const getColorInfo = () => {
+	return colorInfo;
+};
+
+const updateColorInfo = (updatedColorInfo) => {
+	// pool.query(
+	// 	"UPDATE horse SET main_theme_rgb = $1, support_theme_rgb = $2, background_rgb = $3, details_rgb = $4, highlight_rgb = $5",
+	// 	[updatedColorInfo.name, updatedColorInfo.image, updatedColorInfo.description],
+	// 	(err, res) => {
+	// 		if (err) {
+	// 			console.log(err.stack);
+	// 		}
+	// 	}
+	// );
+	colorInfo = updatedColorInfo;
+	return updateFromDatabase();
 };
 
 const getContactInfo = () => {
@@ -172,17 +186,25 @@ const getPriceList = () => {
 	return priceList;
 };
 
-const updateFromDatabase = () => {};
+const getPassword = () => {
+	return "$2b$15$7X95ZlV0ELPq.ljtRqRFFucEZAkWY0Ga8F3sYfsW3A97z2HBZ9yia"; // "password"
+};
+
+const updateFromDatabase = () => {
+	return true;
+};
 
 module.exports = {
+	getColorInfo,
+	updateColorInfo,
 	getHorseList,
 	createHorse,
 	updateHorse,
 	deleteHorse,
 	getImageList,
-	getMainInfo,
 	getContactInfo,
 	getTextBlockList,
 	getOfferList,
 	getPriceList,
+	getPassword,
 };

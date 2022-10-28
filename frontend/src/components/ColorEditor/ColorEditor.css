@@ -1,0 +1,20 @@
+.color-editor {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
+  width: 100%;
+}
+
+.color-editor .color-item {
+  display: flex;
+  min-width: 100%;
+}
+
+.color-editor .color-item .color-name {
+  display: flex;
+
+  padding-left: 0.5rem;
+  vertical-align: middle;
+  align-items: center;
+}
+

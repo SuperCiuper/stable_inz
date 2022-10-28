@@ -5,7 +5,7 @@ import { API_URL } from "../../constants";
 
 const PriceListView = () => {
 	const [priceList, setPriceList] = useState([]);
-	const colorContext = useContext(ColorContext);
+	const { colorContext } = useContext(ColorContext);
 
 	useEffect(() => {
 		fetch(API_URL + "priceList")

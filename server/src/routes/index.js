@@ -3,8 +3,8 @@ var router = express.Router();
 const path = require("path");
 
 /* GET home page. */
-router.get("/index", function (req, res, next) {
-	res.render("index", { title: "Praca inżynierska - server" });
+router.get("/", function (req, res, next) {
+	res.render("error", { title: "Frontend not loaded" });
 });
 
 module.exports = router;

@@ -1,51 +1,93 @@
 var express = require("express");
 var router = express.Router();
 var databaseConnector = require("../databaseConnector");
-const path = require("path");
-const fs = require("fs");
+var { verifyToken } = require("../middleware/authorizator");
+var authRouter = require("./authenticator");
 
 var apiaryList = [];
 
-router.get("/", function (req, res, next) {
-	res.render("index", { title: "Apiary API" });
+router.use("/auth", authRouter);
+
+router.post("*", [verifyToken]);
+router.patch("*", [verifyToken]);
+router.delete("*", [verifyToken]);
+
+router.get("/", function (req, res) {
+	res.render("index", { title: "Praca inżynierska - REST API" });
 });
 
-router.get("/mainInfo", (req, res, next) => {
-	return res.json(databaseConnector.getMainInfo());
+router.get("/XD", [verifyToken], function (req, res) {
+	res.render("index", { title: "Praca inżynierska - REST API" });
 });
 
-router.get("/contactInfo", (req, res, next) => {
+router.get("/colorInfo", (req, res) => {
+	return res.json(databaseConnector.getColorInfo());
+});
+
+router.patch("/colorInfo", [], (req, res) => {
+	let updatedColorInfo = req.body;
+	let oldColorInfo = databaseConnector.getColorInfo();
+
+	const areValuesMatching = (oldObject, newObject) => {
+		let oldKeys = Object.keys(oldObject);
+		let newKeys = Object.keys(newObject);
+
+		if (oldKeys.length !== newKeys.length) return false;
+
+		oldKeys.forEach((key) => {
+			if (!newObject.hasOwnProperty(key)) return false;
+		});
+		return true;
+	};
+
+	if (!areValuesMatching(oldColorInfo, updatedColorInfo)) return res.status(406).json("Color info object properties does not match");
+
+	if (Object.keys(oldColorInfo).length !== Object.keys(updatedColorInfo).length || !areValuesMatching(oldColorInfo, updatedColorInfo))
+		return res.status(406).json("Color info object properties does not match");
+
+	const colorHexRegex = new RegExp("[0-9A-Fa-f]{6}");
+	Object.values(updatedColorInfo).forEach((value) => {
+		if (!colorHexRegex.test(value)) return res.status(406).json("Values are not color hex");
+	});
+
+	if (!databaseConnector.updateColorInfo(updatedColorInfo)) res.status(500).json("Unknown error during code generation");
+
+	return res.sendStatus(200);
+});
+
+router.get("/contactInfo", (req, res) => {
 	return res.json(databaseConnector.getContactInfo());
 });
 
-router.get("/textBlock", (req, res, next) => {
+router.get("/textBlock", (req, res) => {
 	return res.json(databaseConnector.getTextBlockList());
 });
 
-router.get("/image", (req, res, next) => {
+router.get("/image", (req, res) => {
 	console.log(databaseConnector.getImageList());
 	return res.json(databaseConnector.getImageList());
 });
 
-router.get("/horse", (req, res, next) => {
+router.get("/horse", (req, res) => {
 	return res.json(databaseConnector.getHorseList());
 });
 
-router.post("/horse", (req, res, next) => {
+router.post("/horse", (req, res) => {
 	let newHorse = req.body;
 	newHorse.image = parseInt(newHorse.image);
 
 	if (!newHorse.hasOwnProperty("name") || !newHorse.hasOwnProperty("description") || !newHorse.hasOwnProperty("image"))
-		return res.status(406).json("Object lacks mandatory fields");
+		return res.status(406).json("New horse object lacks mandatory fields");
 	if (newHorse.getHorseList().find((item) => item.name === newHorse.name)) return res.status(406).json("Name taken");
 	if (newHorse.image != null && !databaseConnector.getImageList().find((item) => item.id === newHorse.image))
 		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.createHorse(newHorse)) res.status(500).json("Unknown error during code generation");
-	res.status(200);
+
+	return res.sendStatus(200);
 });
 
-router.patch("/horse/:name", (req, res, next) => {
+router.patch("/horse/:name", (req, res) => {
 	let updatedHorse = req.body;
 	newHorse.image = parseInt(newHorse.image);
 	updatedHorse.name = req.params.name;
@@ -55,22 +97,22 @@ router.patch("/horse/:name", (req, res, next) => {
 		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.updatHorse(updatedHorse)) res.status(500).json("Unknown error during code generation");
-	res.status(200);
+	res.sendStatus(200);
 });
 
-router.delete("/horse/:name", (req, res, next) => {
+router.delete("/horse/:name", (req, res) => {
 	return res.json(databaseConnector.getHorseList());
 });
 
-router.get("/offer", (req, res, next) => {
+router.get("/offer", (req, res) => {
 	return res.json(databaseConnector.getOfferList());
 });
 
-router.get("/priceList", (req, res, next) => {
+router.get("/priceList", (req, res) => {
 	return res.json(databaseConnector.getPriceList());
 });
 
-router.post("/apiaries", (req, res, next) => {
+router.post("/apiaries", (req, res) => {
 	let newApiary = req.body;
 
 	try {

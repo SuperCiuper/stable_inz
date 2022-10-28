@@ -6,7 +6,7 @@ import { Accordion, AccordionTab } from "primereact/accordion";
 
 const OfferView = () => {
 	const [offerList, setOfferList] = useState([]);
-	const colorContext = useContext(ColorContext);
+	const { colorContext } = useContext(ColorContext);
 
 	useEffect(() => {
 		fetch(API_URL + "offer")

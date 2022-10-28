@@ -1,6 +1,6 @@
 .Footer {
   display: flex;
-  justify-content: center;
+  justify-content: right;
   align-items: stretch;
 
   width: 100vw;

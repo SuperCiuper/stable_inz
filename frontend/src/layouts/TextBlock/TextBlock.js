@@ -13,7 +13,7 @@ const ImageBlock = ({ image }) => {
 };
 
 const TextBlock = ({ index, image, children }) => {
-	const colorContext = useContext(ColorContext);
+	const { colorContext } = useContext(ColorContext);
 
 	return (
 		<div className='TextBlock' style={{ borderColor: `#${colorContext.detailRGB}` }}>
