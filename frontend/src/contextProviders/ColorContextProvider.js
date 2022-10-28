@@ -10,7 +10,7 @@ const defaultColors = {
 	highlightRGB: "FFFF82",
 };
 
-export const ColorContext = createContext(defaultColors);
+export const ColorContext = createContext({ colorContext: { ...defaultColors } });
 
 export const ColorContextProvider = ({ children }) => {
 	const [colorContext, setColorContext] = useState(defaultColors);

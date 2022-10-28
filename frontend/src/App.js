@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import "./App.css";
 import { Footer, Header } from "./layouts";
-import { AuthContextProvider, ColorContext, ColorContextProvider } from "./contextProviders";
+import { ColorContext } from "./contextProviders";
 
 export const useWindowDimensions = () => {
 	const [windowDimensions, setWindowDimensions] = useState({
@@ -26,23 +26,18 @@ export const useWindowDimensions = () => {
 };
 
 const App = () => {
-	const colorContext = useContext(ColorContext);
-
-	console.log(colorContext);
+	const { colorContext } = useContext(ColorContext);
 	console.log(useWindowDimensions()); // TODO check if needed
 
+	console.log(colorContext);
 	return (
-		<AuthContextProvider>
-			<ColorContextProvider>
-				<div className='App' style={{ backgroundColor: `#${colorContext.mainRGB}` }}>
-					<Header />
-					<div className='Content' style={{ backgroundColor: `#${colorContext.backgroundRGB}` }}>
-						<Outlet />
-					</div>
-					<Footer />
-				</div>
-			</ColorContextProvider>{" "}
-		</AuthContextProvider>
+		<div className='App' style={{ backgroundColor: `#${colorContext.mainRGB}` }}>
+			<Header />
+			<div className='Content' style={{ backgroundColor: `#${colorContext.backgroundRGB}` }}>
+				<Outlet />
+			</div>
+			<Footer />
+		</div>
 	);
 };
 
