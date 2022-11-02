@@ -12,13 +12,7 @@ const TextEditorModal = ({ visibilityToggle, visible, subtitle = "subtitle", tex
 	};
 
 	return (
-		<div
-			className='text-editor-modal'
-			style={{ visibility: visible ? "visible" : "hidden" }}
-			onClick={() => {
-				visibilityToggle();
-			}}
-		>
+		<div className='text-editor-modal' style={{ visibility: visible ? "visible" : "hidden" }} onClick={visibilityToggle}>
 			<div className='modal-window' onClick={(event) => event.stopPropagation()}>
 				<h1 className='title'>Text Editor</h1>
 				<h2 className='subtitle'>{subtitle}</h2>

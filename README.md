@@ -32,6 +32,12 @@ Deploy:
 
 Default address is http://localhost:3001
 
+ESlint on server:
+
+```sh
+  eslint "**/*.js"
+```
+
 ## Dokumentacja
 
 Dodać załącznik jak napiszę

@@ -5,6 +5,7 @@ var { verifyToken } = require("../middleware/authorizator");
 var authRouter = require("./authenticator");
 
 var apiaryList = [];
+const DUMMY_IMAGE = "dummyImage.jpg";
 
 router.use("/auth", authRouter);
 
@@ -35,7 +36,7 @@ router.patch("/colorInfo", [], (req, res) => {
 		if (oldKeys.length !== newKeys.length) return false;
 
 		oldKeys.forEach((key) => {
-			if (!newObject.hasOwnProperty(key)) return false;
+			if (!Object.prototype.hasOwnProperty.call(newObject, key)) return false;
 		});
 		return true;
 	};
@@ -63,15 +64,38 @@ router.get("/textBlock", (req, res) => {
 	return res.json(databaseConnector.getTextBlockList());
 });
 
+router.post("/textBlock", (req, res) => {
+	let newTextBlock = req.body;
+
+	if (!Object.prototype.hasOwnProperty.call(newTextBlock, "description") || !Object.prototype.hasOwnProperty.call(newTextBlock, "image"))
+		return res.status(406).json("Object lacks mandatory fields");
+	if (newTextBlock.image != null && !databaseConnector.getImageList().find((item) => item === newTextBlock.image))
+		return res.status(406).json("Image does not exist");
+
+	if (!databaseConnector.createTextBlock(newTextBlock)) res.status(500).json("Unknown error during code generation");
+	return res.sendStatus(200);
+});
+
 router.patch("/textBlock/:id", (req, res) => {
 	let updatedTextBlock = req.body;
 	updatedTextBlock.id = parseInt(req.params.id);
-	if (!updatedTextBlock.hasOwnProperty("description") || !updatedTextBlock.hasOwnProperty("image"))
+
+	if (databaseConnector.getTextBlockList().find((item) => item.id === updatedTextBlock.id) === undefined) return res.status(406).json("Wrong textBlock id");
+	if (!Object.prototype.hasOwnProperty.call(updatedTextBlock, "description") || !Object.prototype.hasOwnProperty.call(updatedTextBlock, "image"))
 		return res.status(406).json("Object lacks mandatory fields");
 	if (updatedTextBlock.image != null && !databaseConnector.getImageList().find((item) => item === updatedTextBlock.image))
 		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.updateTextBlock(updatedTextBlock)) res.status(500).json("Unknown error during code generation");
+	return res.sendStatus(200);
+});
+
+router.delete("/textBlock/:id", (req, res) => {
+	let id = parseInt(req.params.id);
+
+	if (databaseConnector.getTextBlockList().find((item) => item.id === id) === undefined) return res.status(406).json("Wrong textBlock id");
+
+	if (!databaseConnector.deleteTextBlock(id)) res.status(500).json("Unknown error during code generation");
 	return res.sendStatus(200);
 });
 
@@ -86,7 +110,11 @@ router.get("/horse", (req, res) => {
 router.post("/horse", (req, res) => {
 	let newHorse = req.body;
 
-	if (!newHorse.hasOwnProperty("name") || !newHorse.hasOwnProperty("description") || !newHorse.hasOwnProperty("image"))
+	if (
+		!Object.prototype.hasOwnProperty.call(newHorse, "name") ||
+		!Object.prototype.hasOwnProperty.call(newHorse, "description") ||
+		!Object.prototype.hasOwnProperty.call(newHorse, "image")
+	)
 		return res.status(406).json("New horse object lacks mandatory fields");
 	if (newHorse.getHorseList().find((item) => item.name === newHorse.name)) return res.status(406).json("Name taken");
 	if (newHorse.image != null && !databaseConnector.getImageList().find((item) => item === newHorse.image)) return res.status(406).json("Image does not exist");
@@ -100,7 +128,8 @@ router.patch("/horse/:name", (req, res) => {
 	let updatedHorse = req.body;
 	updatedHorse.name = req.params.name;
 
-	if (!updatedHorse.hasOwnProperty("description") || !updatedHorse.hasOwnProperty("image")) return res.status(406).json("Object lacks mandatory fields");
+	if (!Object.prototype.hasOwnProperty.call(updatedHorse, "description") || !Object.prototype.hasOwnProperty.call(updatedHorse, "image"))
+		return res.status(406).json("Object lacks mandatory fields");
 	if (updatedHorse.image != null && !databaseConnector.getImageList().find((item) => item === updatedHorse.image))
 		return res.status(406).json("Image does not exist");
 

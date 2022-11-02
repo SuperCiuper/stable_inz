@@ -1,0 +1,78 @@
+.image-selector-modal {
+	position: fixed;
+	z-index: 1;
+
+	left: 0;
+	top: 0;
+
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+.image-selector-modal .modal-window {
+	margin: 15% auto;
+	margin-top: 16rem;
+	padding: 1.5rem;
+
+	width: 36rem;
+
+	background-color: #fefefe;
+	border: 2px solid #888;
+	border-radius: 6px;
+}
+
+.image-selector-modal .modal-window .title {
+	padding: 0;
+	margin: 0;
+	margin-bottom: 1.6rem;
+
+	text-align: center;
+}
+
+.image-selector-modal .modal-window .image-gallery {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 3.33%;
+	min-width: 100%;
+}
+
+.image-selector-modal .modal-window .image-gallery .image-container {
+	min-width: 30%;
+  max-width: 30%;
+  min-height: 30%;
+  max-height: 30%;
+}
+
+.image-selector-modal .modal-window .image-gallery .image-container:hover {
+	cursor: pointer;
+}
+
+.image-selector-modal .modal-window .image-gallery .image-container .selected-image{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  position: relative;
+  top: -102%;
+
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.image-selector-modal .modal-window .image-gallery .image-container img {
+	min-width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  max-height: 100%;
+}
+
+.image-selector-modal .modal-window .save-text-btn {
+	min-width: 100%;
+
+	margin-top: 0.5rem;
+}

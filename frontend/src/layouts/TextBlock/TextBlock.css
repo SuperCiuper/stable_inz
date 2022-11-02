@@ -1,4 +1,4 @@
-.TextBlock {
+.text-block {
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -10,15 +10,25 @@
   border-bottom: 2px solid;
 }
 
-.TextBlock:last-child {
+.text-block:last-child {
   border: none;
 }
 
-.TextBlock .Description {
+.text-block .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   width: 100%;
 
-  margin-left: 6%;
-  margin-right: 6%;
+  margin-left: 4%;
+  margin-right: 4%;
+  padding: 1rem;
+}
+
+.text-block .content .description {
+  width: 100%;
+
+  margin: 0;
   padding: 1rem;
 
   text-align: center;
@@ -27,7 +37,22 @@
   font-weight: 360;
 }
 
-.TextBlock .ImageBlock {
+.text-block .content .button-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  column-gap: 2rem;
+  width: 100%;
+}
+
+.button-bar .edit-image-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.text-block .ImageBlock {
   min-width: 50%;
   display: flex;
   align-items: center;
@@ -35,7 +60,7 @@
   font-size: 0.9rem;
 }
 
-.TextBlock .ImageBlock img {
+.text-block .ImageBlock img {
   min-width: 100%;
   min-height: 100%;
   object-fit: cover;

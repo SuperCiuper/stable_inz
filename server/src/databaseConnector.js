@@ -46,18 +46,6 @@ var horseList = [
 			"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
 		images: ["2.webp", "1.jpg"],
 	},
-	{
-		name: "Super koń v2",
-		description:
-			"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-		images: ["2.webp", "1.jpg"],
-	},
-	{
-		name: "Super koń v2",
-		description:
-			"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-		images: ["2.webp", "1.jpg"],
-	},
 ];
 var offerList = [
 	{
@@ -121,6 +109,24 @@ const getTextBlockList = () => {
 	return textBlockList;
 };
 
+const createTextBlock = (newTextBlock) => {
+	// if newTextBlock.image === null => inster NULL
+
+	// pool.query(
+	// 	"INSERT INTO main_page_text_block (description, image_name) VALUES $1 $2",
+	// 	[newTextBlock.description, newTextBlock.image],
+	// 	(err, res) => {
+	// 		if (err) {
+	// 			console.log(err.stack);
+	// 		}
+	// 	}
+	// );
+	const id = Math.max(...textBlockList.map((item) => item.id)) + 1;
+	textBlockList.push({ ...newTextBlock, id: id });
+
+	return updateFromDatabase();
+};
+
 const updateTextBlock = (updatedTextBlock) => {
 	// pool.query(
 	// 	"UPDATE main_page_text_block SET image_name = $2, description = $3 WHERE name = $1",
@@ -132,6 +138,18 @@ const updateTextBlock = (updatedTextBlock) => {
 	// 	}
 	// );
 	textBlockList[textBlockList.findIndex((item) => item.id === updatedTextBlock.id)] = updatedTextBlock;
+
+	return updateFromDatabase();
+};
+
+const deleteTextBlock = (textBlockId) => {
+	// pool.query("DELETE FROM main_page_text_block WHERE id = $1", [textBlockId], (err) => {
+	// 	if (err) {
+	// 		console.log(err.stack);
+	// 	}
+	// });
+
+	textBlockList = textBlockList.filter((item) => item.id !== textBlockId);
 
 	return updateFromDatabase();
 };
@@ -148,7 +166,7 @@ const createHorse = (newHorse) => {
 	if (newHorse.image === null) {
 		newHorse.image = DEFAULT_IMAGE;
 	}
-	pool.query("INSERT INTO horse VALUES ($1, $2, $3)", [newHorse.name, newHorse.image, newHorse.description], (err, res) => {
+	pool.query("INSERT INTO horse VALUES ($1, $2, $3)", [newHorse.name, newHorse.image, newHorse.description], (err) => {
 		if (err) {
 			console.log(err.stack);
 		}
@@ -164,7 +182,7 @@ const updateHorse = (updatedHorse) => {
 	pool.query(
 		"UPDATE horse SET profile_image_id = $2, description = $3 WHERE name = $1",
 		[updatedHorse.name, updatedHorse.image, updatedHorse.description],
-		(err, res) => {
+		(err) => {
 			if (err) {
 				console.log(err.stack);
 			}
@@ -175,7 +193,7 @@ const updateHorse = (updatedHorse) => {
 };
 
 const deleteHorse = (horseName) => {
-	pool.query("DELETE FROM horse WHERE id = $1", [horseName], (err, res) => {
+	pool.query("DELETE FROM horse WHERE id = $1", [horseName], (err) => {
 		if (err) {
 			console.log(err.stack);
 		}
@@ -210,7 +228,9 @@ module.exports = {
 	getImageList,
 	getContactInfo,
 	getTextBlockList,
+	createTextBlock,
 	updateTextBlock,
+	deleteTextBlock,
 	getOfferList,
 	getPriceList,
 	getPassword,
