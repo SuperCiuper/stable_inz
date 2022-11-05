@@ -1,9 +1,7 @@
-import { useContext, useState } from "react";
-import { ColorContext } from "../../contextProviders";
+import { useContext } from "react";
 import "./TextBlock.css";
 import { API_URL, checkResponseOk } from "../../constants";
-import { AuthContext } from "../../contextProviders";
-import { ImageSelectorModal, TextEditorModal } from "../../components";
+import { AuthContext, ColorContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
 import { Button } from "primereact/button";
 
 const ImageBlock = ({ image }) => {
@@ -16,18 +14,10 @@ const ImageBlock = ({ image }) => {
 };
 
 const TextBlock = ({ index, id, image, description, updateParentCallback = () => {} }) => {
-	const { colorContext } = useContext(ColorContext);
 	const authContext = useContext(AuthContext);
-	const [imageSelectorModalVisibility, setImageSelectorModalVisibility] = useState(false);
-	const [textEditorModalVisibility, setTextEditorModalVisibility] = useState(false);
-
-	const toggleImageSelectorModal = () => {
-		setImageSelectorModalVisibility((prevState) => !prevState);
-	};
-
-	const toggleTextEditorModal = () => {
-		setTextEditorModalVisibility((prevState) => !prevState);
-	};
+	const { colorContext } = useContext(ColorContext);
+	const { openImageSelector } = useContext(ImageSelectorContext);
+	const openTextEditor = useContext(TextEditorContext);
 
 	const handleFetch = (method, body) => {
 		fetch(API_URL + "textBlock", {
@@ -51,8 +41,16 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
 		handleFetch("PATCH", { id: id, description: description, image: newImage });
 	};
 
-	const saveText = (newDescription = description) => {
+	const editImage = () => {
+		openImageSelector(`Wybierz obrazek dla ${index + 1}. bloku`, [image], saveImage, true);
+	};
+
+	const saveDescription = (newDescription = description) => {
 		handleFetch("PATCH", { id: id, description: newDescription, image: image });
+	};
+
+	const editDescription = () => {
+		openTextEditor(undefined, `Opis bloku ${index + 1}`, description, saveDescription);
 	};
 
 	const deleteBlock = () => {
@@ -61,40 +59,14 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
 
 	return (
 		<div className='text-block' style={{ borderColor: `#${colorContext.detailRGB}` }}>
-			{authContext.isLogged ? (
-				<>
-					<ImageSelectorModal
-						visibilityToggle={toggleImageSelectorModal}
-						visible={imageSelectorModalVisibility}
-						title={`Wybierz obrazek dla ${index + 1}. bloku `}
-						images={[image]}
-						returnImageCallback={saveImage}
-						singleImage={true}
-					></ImageSelectorModal>
-					<TextEditorModal
-						visibilityToggle={toggleTextEditorModal}
-						visible={textEditorModalVisibility}
-						subtitle={`Opis bloku ${index + 1}`}
-						text={description}
-						saveText={saveText}
-					></TextEditorModal>
-				</>
-			) : (
-				""
-			)}
-
 			{image && index % 2 === 1 ? <ImageBlock image={image} /> : ""}
 			<div className='content'>
-				<p
-					className='description'
-					onClick={authContext.isLogged ? toggleTextEditorModal : () => {}}
-					style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}
-				>
+				<p className='description' onClick={authContext.isLogged ? editDescription : () => {}} style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}>
 					{description}
 				</p>
 				{authContext.isLogged ? (
 					<div className='button-bar'>
-						<Button className='btn p-button-sm p-button-warning' onClick={toggleImageSelectorModal} icon='pi pi-images' label='Ustaw zdjęcie'></Button>
+						<Button className='btn p-button-sm p-button-warning' onClick={editImage} icon='pi pi-images' label='Ustaw zdjęcie'></Button>
 						<Button className='btn p-button-sm p-button-danger' onClick={deleteBlock} icon='pi pi-trash' label='Usuń blok'></Button>
 					</div>
 				) : (

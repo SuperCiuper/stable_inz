@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../constants";
+import { API_URL } from "../../constants";
 import { Toast } from "primereact/toast";
 
 const EXPIRATION_TIME = 2 * 60 * 60 * 1000; // 2 hours

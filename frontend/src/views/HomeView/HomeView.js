@@ -2,18 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import "./HomeView.css";
 import { API_URL, checkResponseOk } from "../../constants";
 import { TextBlock } from "../../layouts";
-import { AuthContext } from "../../contextProviders";
+import { AuthContext, TextEditorContext } from "../../contextProviders";
 import { Button } from "primereact/button";
-import { TextEditorModal } from "../../components";
 
 const HomeView = () => {
 	const [textBlockList, setTextBlockList] = useState([]);
-	const [textEditorModalVisibility, setTextEditorModalVisibility] = useState(false);
 	const authContext = useContext(AuthContext);
-
-	const toggleTextEditorModal = () => {
-		setTextEditorModalVisibility((prevState) => !prevState);
-	};
+	const openTextEditor = useContext(TextEditorContext);
 
 	useEffect(() => {
 		fetchTextBlockList();
@@ -47,24 +42,19 @@ const HomeView = () => {
 			});
 	};
 
+	const createNewBlock = () => {
+		openTextEditor(undefined, "Nowy blok", "Nowy_tekst", addNewTextBlock);
+	};
+
 	return (
 		<div className='home-view'>
 			{textBlockList.map((item, index) => (
 				<TextBlock key={index} index={index} id={item.id} image={item.image} description={item.description} updateParentCallback={fetchTextBlockList} />
 			))}
 			{authContext.isLogged ? (
-				<>
-					<TextEditorModal
-						visibilityToggle={toggleTextEditorModal}
-						visible={textEditorModalVisibility}
-						subtitle={`Nowy blok`}
-						text='Nowy tekst'
-						saveText={addNewTextBlock}
-					></TextEditorModal>
-					<div className='new-block'>
-						<Button className='add-block-btn p-button-sm p-button-secondary' onClick={toggleTextEditorModal} label='Dodaj nowy blok'></Button>
-					</div>
-				</>
+				<div className='new-block'>
+					<Button className='add-block-btn p-button-sm p-button-secondary' onClick={createNewBlock} label='Dodaj nowy blok'></Button>
+				</div>
 			) : (
 				""
 			)}

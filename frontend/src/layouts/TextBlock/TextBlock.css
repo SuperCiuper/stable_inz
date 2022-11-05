@@ -17,7 +17,6 @@
 .text-block .content {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   width: 100%;
 
   margin-left: 4%;
@@ -42,7 +41,10 @@
   flex-direction: row;
   justify-content: space-between;
   column-gap: 2rem;
+
   width: 100%;
+
+  margin-top: auto;
 }
 
 .button-bar .btn {

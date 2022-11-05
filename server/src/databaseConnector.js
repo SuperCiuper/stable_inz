@@ -54,12 +54,14 @@ var offerList = [
 		forWhom: "Dla każdego",
 		description: "Jazdy indywidualne dopasowane do umiejętności jeźdźca",
 		proposedPrice: "70 zł/h",
+		images: ["2.webp", "1.jpg"],
 	},
 	{
 		item: "Jazda terenowa",
 		forWhom: "Dla ośób jeżdżących samodzielnie w 3 stylach",
 		description: "Jazda terenowa w grupach od 3 do 10 osób. Czas trwania od 2 do 4 godzin.",
 		proposedPrice: "200 zł",
+		images: [],
 	},
 ];
 var priceList = [
@@ -200,12 +202,51 @@ const deleteHorse = (horseName) => {
 	return updateFromDatabase();
 };
 
-const getImageList = () => {
-	return imageList;
-};
-
 const getOfferList = () => {
 	return offerList;
+};
+
+const createOffer = (newOffer) => {
+	if (newOffer.image === null) newOffer.image = DEFAULT_IMAGE;
+
+	// pool.query("INSERT INTO offer VALUES ($1, $2, $3, $4)", [newOffer.item, newOffer.forWhom, newOffer.description, newOffer.proposedPrice], (err) => {
+	// 	if (err) {
+	// 		console.log(err.stack);
+	// 	}
+	// });
+
+	offerList.push(newOffer);
+	return updateFromDatabase();
+};
+
+const updateOffer = (updatedOffer) => {
+	// pool.query(
+	// 	"UPDATE offer SET forWhom = $2, description = $3 proposedPrice = $4 WHERE item = $1",
+	// 	[updatedOffer.name, updatedOffer.image, updatedOffer.description, newOffer.proposedPrice],
+	// 	(err) => {
+	// 		if (err) {
+	// 			console.log(err.stack);
+	// 		}
+	// 	}
+	// );
+	offerList[offerList.findIndex((item) => item.item === updatedOffer.item)] = updatedOffer;
+
+	return updateFromDatabase();
+};
+
+const deleteOffer = (offerItem) => {
+	// pool.query("DELETE FROM offer WHERE item = $1", [offerItem], (err) => {
+	// 	if (err) {
+	// 		console.log(err.stack);
+	// 	}
+	// });
+	offerList = offerList.filter((item) => item.item !== offerItem);
+
+	return updateFromDatabase();
+};
+
+const getImageList = () => {
+	return imageList;
 };
 
 const getPriceList = () => {
@@ -223,17 +264,20 @@ const updateFromDatabase = () => {
 module.exports = {
 	getColorInfo,
 	updateColorInfo,
-	getHorseList,
-	createHorse,
-	updateHorse,
-	deleteHorse,
-	getImageList,
-	getContactInfo,
 	getTextBlockList,
 	createTextBlock,
 	updateTextBlock,
 	deleteTextBlock,
+	getHorseList,
+	createHorse,
+	updateHorse,
+	deleteHorse,
 	getOfferList,
+	createOffer,
+	updateOffer,
+	deleteOffer,
+	getImageList,
+	getContactInfo,
 	getPriceList,
 	getPassword,
 };

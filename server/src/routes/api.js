@@ -137,7 +137,7 @@ router.patch("/horse", (req, res) => {
 		console.log(image);
 		if (!databaseConnector.getImageList().find((item) => item === image)) return res.status(406).json("Image does not exist");
 	}
-	console.log("XD");
+
 	if (!databaseConnector.updateHorse(updatedHorse)) res.status(500).json("Unknown error during code generation");
 	return res.sendStatus(200);
 });
@@ -148,7 +148,7 @@ router.delete("/horse", (req, res) => {
 		name = req.body.name;
 		if (name === null || name === "" || name === undefined) throw Error();
 	} catch {
-		res.status(406).json("Name not provided");
+		return res.status(406).json("Name not provided");
 	}
 
 	if (databaseConnector.getHorseList().find((item) => item.name === name) === undefined) return res.status(406).json("Horse does not exist");
@@ -157,12 +157,66 @@ router.delete("/horse", (req, res) => {
 	return res.sendStatus(200);
 });
 
-router.get("/image", (req, res) => {
-	return res.json(databaseConnector.getImageList());
-});
-
 router.get("/offer", (req, res) => {
 	return res.json(databaseConnector.getOfferList());
+});
+
+router.post("/offer", (req, res) => {
+	let newOffer = req.body;
+
+	if (
+		!Object.prototype.hasOwnProperty.call(newOffer, "item") ||
+		!Object.prototype.hasOwnProperty.call(newOffer, "forWhom") ||
+		!Object.prototype.hasOwnProperty.call(newOffer, "description") ||
+		!Object.prototype.hasOwnProperty.call(newOffer, "proposedPrice")
+	)
+		return res.status(406).json("New offer object lacks mandatory fields");
+
+	if (newOffer.item === null || newOffer.item === "" || newOffer.item === undefined) return res.status(406).json("Name not correct");
+	if (databaseConnector.getOfferList().find((item) => item.item === newOffer.item)) return res.status(406).json("Item already exists");
+
+	if (!databaseConnector.createOffer(newOffer)) res.status(500).json("Unknown error during code generation");
+	return res.sendStatus(200);
+});
+
+router.patch("/offer", (req, res) => {
+	let updatedOffer = req.body;
+
+	if (
+		!Object.prototype.hasOwnProperty.call(updatedOffer, "item") ||
+		!Object.prototype.hasOwnProperty.call(updatedOffer, "forWhom") ||
+		!Object.prototype.hasOwnProperty.call(updatedOffer, "description") ||
+		!Object.prototype.hasOwnProperty.call(updatedOffer, "proposedPrice") ||
+		!Object.prototype.hasOwnProperty.call(updatedOffer, "images")
+	)
+		return res.status(406).json("New offer object lacks mandatory fields");
+
+	for (const image of updatedOffer.images) {
+		console.log(image);
+		if (!databaseConnector.getImageList().find((item) => item === image)) return res.status(406).json("Image does not exist");
+	}
+
+	if (!databaseConnector.updateOffer(updatedOffer)) res.status(500).json("Unknown error during code generation");
+	return res.sendStatus(200);
+});
+
+router.delete("/offer", (req, res) => {
+	let item;
+	try {
+		item = req.body.item;
+		if (item === null || item === "" || item === undefined) throw Error();
+	} catch {
+		return res.status(406).json("Name not provided");
+	}
+
+	if (databaseConnector.getOfferList().find((item) => item.item === item) === undefined) return res.status(406).json("Offer does not exist");
+
+	if (!databaseConnector.deleteOffer(item)) res.status(500).json("Unknown error during code generation");
+	return res.sendStatus(200);
+});
+
+router.get("/image", (req, res) => {
+	return res.json(databaseConnector.getImageList());
 });
 
 router.get("/priceList", (req, res) => {

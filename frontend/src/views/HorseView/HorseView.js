@@ -2,31 +2,16 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import "./HorseView.css";
 import { API_URL, checkResponseOk } from "../../constants";
 import { PersonalCard } from "../../components";
-import { AuthContext } from "../../contextProviders";
+import { AuthContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
 import { Button } from "primereact/button";
-import { ImageSelectorModal, TextEditorModal } from "../../components";
 import { Toast } from "primereact/toast";
 
 const HorseView = () => {
-	const [horseList, setHorseList] = useState([]);
-	const [imageSelectorModalVisibility, setImageSelectorModalVisibility] = useState(false);
-	const [textEditorModalNameVisibility, setTextEditorModalNameVisibility] = useState(false);
-	const [textEditorModalDescriptionVisibility, setTextEditorModalDescriptionVisibility] = useState(false);
-	const [newHorse, setNewHorse] = useState({});
 	const authContext = useContext(AuthContext);
+	const { openImageSelector } = useContext(ImageSelectorContext);
+	const openTextEditor = useContext(TextEditorContext);
+	const [horseList, setHorseList] = useState([]);
 	const toast = useRef(null);
-
-	const toggleImageSelectorModal = () => {
-		setImageSelectorModalVisibility((prevState) => !prevState);
-	};
-
-	const toggleTextEditorModalName = () => {
-		setTextEditorModalNameVisibility((prevState) => !prevState);
-	};
-
-	const toggleTextEditorModalDescription = () => {
-		setTextEditorModalDescriptionVisibility((prevState) => !prevState);
-	};
 
 	useEffect(() => {
 		fetchHorseList();
@@ -47,27 +32,7 @@ const HorseView = () => {
 		toast.current.show({ severity: "error", summary: "Błąd", detail: message, life: 6000 });
 	};
 
-	const setNewHorseName = (name) => {
-		if (name === null || name === "" || name === undefined || name === "Imię") {
-			addingNewHorseError("Imię nie zostało wybrane");
-			return;
-		}
-		setNewHorse({ name: name });
-		toggleTextEditorModalDescription();
-	};
-
-	const setNewHorseDescription = (description) => {
-		if (description === null || description === "" || description === undefined) {
-			addingNewHorseError("Nie dodano opisu");
-			return;
-		}
-		setNewHorse((prevState) => {
-			return { ...prevState, description: description };
-		});
-		toggleImageSelectorModal();
-	};
-
-	const addNewHorse = (newImages) => {
+	const addNewHorse = (newHorse, newImages) => {
 		let image = newImages.length === 0 ? null : newImages[0];
 
 		if (image === null || image === "" || image === undefined) {
@@ -89,7 +54,26 @@ const HorseView = () => {
 				console.error(`Server response: ${err}`);
 				authContext.showDataUpdateError(`Błąd serwera: "${err}", zmiany nie zostały zapisane`);
 			});
-		setNewHorse({});
+	};
+
+	const setNewHorseDescription = (newHorse, description) => {
+		if (description === null || description === "" || description === undefined) {
+			addingNewHorseError("Nie dodano opisu");
+			return;
+		}
+		openImageSelector(`Wybierz profilowe konia ${newHorse.name}`, [], (images) => addNewHorse({ ...newHorse, description: description }, images), true);
+	};
+
+	const setNewHorseName = (name) => {
+		if (name === null || name === "" || name === undefined || name === "Imię") {
+			addingNewHorseError("Imię nie zostało wybrane");
+			return;
+		}
+		openTextEditor(undefined, `Opis ${name}`, "Opis", (description) => setNewHorseDescription({ name: name }, description));
+	};
+
+	const createNewHorseName = () => {
+		openTextEditor(undefined, "Imię nowego konia", "Imię", setNewHorseName);
 	};
 
 	return (
@@ -108,30 +92,8 @@ const HorseView = () => {
 			{authContext.isLogged ? (
 				<>
 					<Toast ref={toast} />
-					<TextEditorModal
-						visibilityToggle={toggleTextEditorModalName}
-						visible={textEditorModalNameVisibility}
-						subtitle={`Imię nowego konia`}
-						text='Imię'
-						saveText={setNewHorseName}
-					></TextEditorModal>
-					<TextEditorModal
-						visibilityToggle={toggleTextEditorModalDescription}
-						visible={textEditorModalDescriptionVisibility}
-						subtitle={`Opis ${newHorse.name}`}
-						text='Opis'
-						saveText={setNewHorseDescription}
-					></TextEditorModal>
-					<ImageSelectorModal
-						visibilityToggle={toggleImageSelectorModal}
-						visible={imageSelectorModalVisibility}
-						title={`Wybierz profilowe konia ${newHorse.name}`}
-						images={[]}
-						returnImageCallback={addNewHorse}
-						singleImage={true}
-					></ImageSelectorModal>
 					<div className='new-horse'>
-						<Button className='add-block-btn p-button-sm p-button-secondary' onClick={toggleTextEditorModalName} label='Dodaj nowego konia'></Button>
+						<Button className='add-horse-btn p-button-sm p-button-secondary' onClick={createNewHorseName} label='Dodaj nowego konia'></Button>
 					</div>
 				</>
 			) : (

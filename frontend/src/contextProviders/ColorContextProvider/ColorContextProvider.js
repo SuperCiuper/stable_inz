@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { API_URL } from "../constants";
+import { API_URL } from "../../constants";
 
 const defaultColors = {
 	mainRGB: "fff6de",

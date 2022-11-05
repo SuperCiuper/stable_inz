@@ -1,33 +1,19 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { AuthContext, ColorContext } from "../../contextProviders";
+import { AuthContext, ColorContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
 import "./PersonalCard.css";
 import { Button } from "primereact/button";
 import { Galleria } from "primereact/galleria";
 import { classNames } from "primereact/utils";
 import { API_URL, DUMMY_IMAGE, checkResponseOk } from "../../constants";
-import { ImageSelectorModal, TextEditorModal } from "../../components";
 import { Toast } from "primereact/toast";
 
 const PersonalCard = ({ name, images, description, index, personType, updateParentCallback = () => {} }) => {
-	const { colorContext } = useContext(ColorContext);
 	const authContext = useContext(AuthContext);
+	const { colorContext } = useContext(ColorContext);
+	const { openImageSelector } = useContext(ImageSelectorContext);
+	const openTextEditor = useContext(TextEditorContext);
 	const [isFullScreen, setFullScreen] = useState(false);
-	const [imageSelectorModalVisibility, setImageSelectorModalVisibility] = useState(false);
-	const [profileImageSelectorModalVisibility, setProfileImageSelectorModalVisibility] = useState(false);
-	const [textEditorModalVisibility, setTextEditorModalVisibility] = useState(false);
 	const toast = useRef(null);
-
-	const toggleImageSelectorModal = () => {
-		setImageSelectorModalVisibility((prevState) => !prevState);
-	};
-
-	const toggleProfileImageSelectorModalVisibility = () => {
-		setProfileImageSelectorModalVisibility((prevState) => !prevState);
-	};
-
-	const toggleTextEditorModal = () => {
-		setTextEditorModalVisibility((prevState) => !prevState);
-	};
 
 	const onFullScreenChange = () => {
 		setFullScreen((current) => !current);
@@ -125,10 +111,6 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 			});
 	};
 
-	const saveImages = (newImages = images) => {
-		handleFetch("PATCH", { name: name, description: description, images: newImages });
-	};
-
 	const saveProfileImage = (newImages = images) => {
 		if (newImages.length === 0) {
 			toast.current.show({ severity: "error", summary: "Błąd", detail: "Profilowe musi być wybrane", life: 6000 });
@@ -141,8 +123,24 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 		handleFetch("PATCH", { name: name, description: description, images: sortedNewImages });
 	};
 
-	const saveText = (newDescription = description) => {
-		handleFetch("PATCH", { name: name, description: newDescription, image: images });
+	const editProfileImage = () => {
+		openImageSelector(`Wybierz profilowe zdjęcie ${name}`, [images[0]], saveProfileImage, true);
+	};
+
+	const saveImages = (newImages = images) => {
+		handleFetch("PATCH", { name: name, description: description, images: newImages });
+	};
+
+	const editImages = () => {
+		openImageSelector(`Wybierz zdjęcia ${name}`, images, saveImages, undefined, images[0]);
+	};
+
+	const saveDescription = (newDescription = description) => {
+		handleFetch("PATCH", { name: name, description: newDescription, images: images });
+	};
+
+	const editDescription = () => {
+		openTextEditor(undefined, `Opis ${name}`, description, saveDescription);
 	};
 
 	const deletePersonalCard = () => {
@@ -151,37 +149,10 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 
 	return (
 		<div className='personal-card' style={{ borderColor: `#${colorContext.detailRGB}` }}>
-			{authContext.isLogged ? (
-				<>
-					<Toast ref={toast} />
-					<ImageSelectorModal
-						visibilityToggle={toggleImageSelectorModal}
-						visible={imageSelectorModalVisibility}
-						title={`Wybierz zdjęcia ${name}`}
-						images={images}
-						returnImageCallback={saveImages}
-						profileImage={images[0]}
-					></ImageSelectorModal>
-					<ImageSelectorModal
-						visibilityToggle={toggleProfileImageSelectorModalVisibility}
-						visible={profileImageSelectorModalVisibility}
-						title={`Wybierz profilowe zdjęcie ${name}`}
-						images={[images[0]]}
-						returnImageCallback={saveProfileImage}
-						singleImage={true}
-					></ImageSelectorModal>
-					<TextEditorModal
-						visibilityToggle={toggleTextEditorModal}
-						visible={textEditorModalVisibility}
-						subtitle={`Opis ${name}`}
-						text={description}
-						saveText={saveText}
-					></TextEditorModal>
-				</>
-			) : (
+			{authContext.isLogged ? <Toast ref={toast} /> : ""}
+			{images.length === 0 ? (
 				""
-			)}
-			{images ? (
+			) : (
 				<Galleria
 					id={`galleria-${index}`}
 					className={galleriaClassName}
@@ -192,20 +163,15 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 					showItemNavigatorsOnHover
 					showThumbnails={false} // TODO: add thumbnails in fullscreen mode
 				/>
-			) : (
-				""
 			)}
 			<h2>{name}</h2>
-			<p className='description'>{description}</p>
+			<p className='description' onClick={authContext.isLogged ? editDescription : () => {}} style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}>
+				{description}
+			</p>
 			{authContext.isLogged ? (
 				<div className='button-bar'>
-					<Button
-						className='btn p-button-sm p-button-warning'
-						onClick={toggleProfileImageSelectorModalVisibility}
-						icon='pi pi-images'
-						label='Ustaw zdjęcie profilowe'
-					></Button>
-					<Button className='btn p-button-sm p-button-warning' onClick={toggleImageSelectorModal} icon='pi pi-images' label='Ustaw zdjęcia'></Button>
+					<Button className='btn p-button-sm p-button-warning' onClick={editProfileImage} icon='pi pi-images' label='Ustaw zdjęcie profilowe'></Button>
+					<Button className='btn p-button-sm p-button-warning' onClick={editImages} icon='pi pi-images' label='Ustaw zdjęcia'></Button>
 					<Button className='btn p-button-sm p-button-danger' onClick={deletePersonalCard} icon='pi pi-trash' label='Usuń'></Button>
 				</div>
 			) : (

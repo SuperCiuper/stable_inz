@@ -9,28 +9,26 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import App from "./App";
 import { ContactView, GalleryView, HomeView, HorseView, LoginView, OfferView, PriceListView } from "./views";
-import { AuthContextProvider, ColorContextProvider } from "./contextProviders";
+import { GlobalContextProvider } from "./contextProviders";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
 		<BrowserRouter>
-			<AuthContextProvider>
-				<ColorContextProvider>
-					<Routes>
-						<Route path='/' element={<App />}>
-							<Route path='/horses' element={<HorseView />} />
-							<Route path='/offer' element={<OfferView />} />
-							<Route path='/prices' element={<PriceListView />} />
-							<Route path='/gallery' element={<GalleryView />} />
-							<Route path='/contact' element={<ContactView />} />
-							<Route path='/login' element={<LoginView />} />
-							<Route path='/*' element={<Navigate replace to='/' />} />
-							<Route index element={<HomeView />} />
-						</Route>
-					</Routes>
-				</ColorContextProvider>
-			</AuthContextProvider>
+			<GlobalContextProvider>
+				<Routes>
+					<Route path='/' element={<App />}>
+						<Route path='/horses' element={<HorseView />} />
+						<Route path='/offer' element={<OfferView />} />
+						<Route path='/prices' element={<PriceListView />} />
+						<Route path='/gallery' element={<GalleryView />} />
+						<Route path='/contact' element={<ContactView />} />
+						<Route path='/login' element={<LoginView />} />
+						<Route path='/*' element={<Navigate replace to='/' />} />
+						<Route index element={<HomeView />} />
+					</Route>
+				</Routes>
+			</GlobalContextProvider>
 		</BrowserRouter>
 	</React.StrictMode>
 );
