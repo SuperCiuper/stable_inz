@@ -1,6 +1,7 @@
 const Pool = require("pg").Pool;
 const pool = new Pool();
 
+const DEFAULT_IMAGE = "dummyImage.jpg";
 const dummyDescription =
 	"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.";
 
@@ -75,8 +76,6 @@ var priceList = [
 		price: "200 zł",
 	},
 ];
-
-const DEFAULT_IMAGE = 0;
 
 pool.query("SELECT NOW()", (err, res) => {
 	console.log(err, res);
@@ -154,52 +153,55 @@ const deleteTextBlock = (textBlockId) => {
 	return updateFromDatabase();
 };
 
-const getImageList = () => {
-	return imageList;
-};
-
 const getHorseList = () => {
 	return horseList;
 };
 
 const createHorse = (newHorse) => {
-	if (newHorse.image === null) {
-		newHorse.image = DEFAULT_IMAGE;
-	}
-	pool.query("INSERT INTO horse VALUES ($1, $2, $3)", [newHorse.name, newHorse.image, newHorse.description], (err) => {
-		if (err) {
-			console.log(err.stack);
-		}
-	});
+	if (newHorse.image === null) newHorse.image = DEFAULT_IMAGE;
 
-	updateFromDatabase();
+	// pool.query("INSERT INTO horse VALUES ($1, $2, $3)", [newHorse.name, newHorse.image, newHorse.description], (err) => {
+	// 	if (err) {
+	// 		console.log(err.stack);
+	// 	}
+	// });
+
+	newHorse = { ...newHorse, images: [newHorse.image] };
+	delete newHorse["image"];
+	horseList.push(newHorse);
+	return updateFromDatabase();
 };
 
 const updateHorse = (updatedHorse) => {
-	if (updatedHorse.image === null) {
-		updatedHorse.image = DEFAULT_IMAGE;
-	}
-	pool.query(
-		"UPDATE horse SET profile_image_id = $2, description = $3 WHERE name = $1",
-		[updatedHorse.name, updatedHorse.image, updatedHorse.description],
-		(err) => {
-			if (err) {
-				console.log(err.stack);
-			}
-		}
-	);
+	if (updatedHorse.image === null) updatedHorse.image = DEFAULT_IMAGE;
 
-	updateFromDatabase();
+	// pool.query(
+	// 	"UPDATE horse SET profile_image_id = $2, description = $3 WHERE name = $1",
+	// 	[updatedHorse.name, updatedHorse.image, updatedHorse.description],
+	// 	(err) => {
+	// 		if (err) {
+	// 			console.log(err.stack);
+	// 		}
+	// 	}
+	// );
+	horseList[horseList.findIndex((item) => item.name === updatedHorse.name)] = updatedHorse;
+
+	return updateFromDatabase();
 };
 
 const deleteHorse = (horseName) => {
-	pool.query("DELETE FROM horse WHERE id = $1", [horseName], (err) => {
-		if (err) {
-			console.log(err.stack);
-		}
-	});
+	// pool.query("DELETE FROM horse WHERE name = $1", [horseName], (err) => {
+	// 	if (err) {
+	// 		console.log(err.stack);
+	// 	}
+	// });
+	horseList = horseList.filter((item) => item.name !== horseName);
 
-	updateFromDatabase();
+	return updateFromDatabase();
+};
+
+const getImageList = () => {
+	return imageList;
 };
 
 const getOfferList = () => {

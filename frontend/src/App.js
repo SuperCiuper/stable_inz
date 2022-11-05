@@ -29,7 +29,6 @@ const App = () => {
 	const { colorContext } = useContext(ColorContext);
 	console.log(useWindowDimensions()); // TODO check if needed
 
-	console.log(colorContext);
 	return (
 		<div className='App' style={{ backgroundColor: `#${colorContext.mainRGB}` }}>
 			<Header />

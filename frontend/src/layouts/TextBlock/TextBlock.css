@@ -45,10 +45,7 @@
   width: 100%;
 }
 
-.button-bar .edit-image-btn {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+.button-bar .btn {
   width: 100%;
 }
 

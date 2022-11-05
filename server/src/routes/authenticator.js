@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
 
 router.post("/login", (req, res) => {
 	const password = req.body.password;
-	console.log(password);
+
 	try {
 		const passwordIsValid = bcrypt.compareSync(password, databaseConnector.getPassword());
 

@@ -17,15 +17,11 @@ router.get("/", function (req, res) {
 	res.render("index", { title: "Praca inżynierska - REST API" });
 });
 
-router.get("/XD", [verifyToken], function (req, res) {
-	res.render("index", { title: "Praca inżynierska - REST API" });
-});
-
 router.get("/colorInfo", (req, res) => {
 	return res.json(databaseConnector.getColorInfo());
 });
 
-router.patch("/colorInfo", [], (req, res) => {
+router.patch("/colorInfo", (req, res) => {
 	let updatedColorInfo = req.body;
 	let oldColorInfo = databaseConnector.getColorInfo();
 
@@ -76,13 +72,14 @@ router.post("/textBlock", (req, res) => {
 	return res.sendStatus(200);
 });
 
-router.patch("/textBlock/:id", (req, res) => {
+router.patch("/textBlock", (req, res) => {
 	let updatedTextBlock = req.body;
-	updatedTextBlock.id = parseInt(req.params.id);
 
-	if (databaseConnector.getTextBlockList().find((item) => item.id === updatedTextBlock.id) === undefined) return res.status(406).json("Wrong textBlock id");
 	if (!Object.prototype.hasOwnProperty.call(updatedTextBlock, "description") || !Object.prototype.hasOwnProperty.call(updatedTextBlock, "image"))
 		return res.status(406).json("Object lacks mandatory fields");
+
+	updatedTextBlock.id = parseInt(updatedTextBlock.id);
+	if (databaseConnector.getTextBlockList().find((item) => item.id === updatedTextBlock.id) === undefined) return res.status(406).json("Wrong textBlock id");
 	if (updatedTextBlock.image != null && !databaseConnector.getImageList().find((item) => item === updatedTextBlock.image))
 		return res.status(406).json("Image does not exist");
 
@@ -90,17 +87,18 @@ router.patch("/textBlock/:id", (req, res) => {
 	return res.sendStatus(200);
 });
 
-router.delete("/textBlock/:id", (req, res) => {
-	let id = parseInt(req.params.id);
+router.delete("/textBlock", (req, res) => {
+	let id;
+	try {
+		id = parseInt(req.body.id);
+	} catch {
+		res.status(406).json("Id not provided");
+	}
 
-	if (databaseConnector.getTextBlockList().find((item) => item.id === id) === undefined) return res.status(406).json("Wrong textBlock id");
+	if (databaseConnector.getTextBlockList().find((item) => item.id === id) === undefined) return res.status(406).json("TextBlock does not exist");
 
 	if (!databaseConnector.deleteTextBlock(id)) res.status(500).json("Unknown error during code generation");
 	return res.sendStatus(200);
-});
-
-router.get("/image", (req, res) => {
-	return res.json(databaseConnector.getImageList());
 });
 
 router.get("/horse", (req, res) => {
@@ -116,29 +114,51 @@ router.post("/horse", (req, res) => {
 		!Object.prototype.hasOwnProperty.call(newHorse, "image")
 	)
 		return res.status(406).json("New horse object lacks mandatory fields");
-	if (newHorse.getHorseList().find((item) => item.name === newHorse.name)) return res.status(406).json("Name taken");
-	if (newHorse.image != null && !databaseConnector.getImageList().find((item) => item === newHorse.image)) return res.status(406).json("Image does not exist");
+
+	if (newHorse.name === null || newHorse.name === "" || newHorse.name === undefined) return res.status(406).json("Name not correct");
+	if (databaseConnector.getHorseList().find((item) => item.name === newHorse.name)) return res.status(406).json("Name taken");
+	if (newHorse.image !== null && !databaseConnector.getImageList().find((item) => item === newHorse.image)) return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.createHorse(newHorse)) res.status(500).json("Unknown error during code generation");
-
 	return res.sendStatus(200);
 });
 
-router.patch("/horse/:name", (req, res) => {
+router.patch("/horse", (req, res) => {
 	let updatedHorse = req.body;
-	updatedHorse.name = req.params.name;
 
-	if (!Object.prototype.hasOwnProperty.call(updatedHorse, "description") || !Object.prototype.hasOwnProperty.call(updatedHorse, "image"))
-		return res.status(406).json("Object lacks mandatory fields");
-	if (updatedHorse.image != null && !databaseConnector.getImageList().find((item) => item === updatedHorse.image))
-		return res.status(406).json("Image does not exist");
+	if (
+		!Object.prototype.hasOwnProperty.call(updatedHorse, "name") ||
+		!Object.prototype.hasOwnProperty.call(updatedHorse, "description") ||
+		!Object.prototype.hasOwnProperty.call(updatedHorse, "images")
+	)
+		return res.status(406).json("New horse object lacks mandatory fields");
 
+	for (const image of updatedHorse.images) {
+		console.log(image);
+		if (!databaseConnector.getImageList().find((item) => item === image)) return res.status(406).json("Image does not exist");
+	}
+	console.log("XD");
 	if (!databaseConnector.updateHorse(updatedHorse)) res.status(500).json("Unknown error during code generation");
 	return res.sendStatus(200);
 });
 
-router.delete("/horse/:name", (req, res) => {
-	return res.json(databaseConnector.deleteHorse(req.params.name));
+router.delete("/horse", (req, res) => {
+	let name;
+	try {
+		name = req.body.name;
+		if (name === null || name === "" || name === undefined) throw Error();
+	} catch {
+		res.status(406).json("Name not provided");
+	}
+
+	if (databaseConnector.getHorseList().find((item) => item.name === name) === undefined) return res.status(406).json("Horse does not exist");
+
+	if (!databaseConnector.deleteHorse(name)) res.status(500).json("Unknown error during code generation");
+	return res.sendStatus(200);
+});
+
+router.get("/image", (req, res) => {
+	return res.json(databaseConnector.getImageList());
 });
 
 router.get("/offer", (req, res) => {
@@ -147,50 +167,6 @@ router.get("/offer", (req, res) => {
 
 router.get("/priceList", (req, res) => {
 	return res.json(databaseConnector.getPriceList());
-});
-
-router.post("/apiaries", (req, res) => {
-	let newApiary = req.body;
-
-	try {
-		if (newApiary.name == "") return res.status(406).json("Name not specified");
-	} catch (error) {
-		console.log(error);
-		return res.status(406).json("Name is not correct");
-	}
-
-	try {
-		let date = new Date();
-		newApiary.date = date.toLocaleDateString("pl-PL");
-
-		let number = date.toISOString().split("T")[0];
-		number = number.split("-").join("");
-
-		// sort by date then id to allow finding first free id number
-		apiaryList.sort((a, b) => {
-			return a.number.slice(0, -3) - b.number.slice(0, -3);
-		});
-
-		let val = apiaryList
-			.filter((item) => newApiary.date === item.date)
-			.reduce((previousVal, item) => {
-				return parseInt(item.number.slice(8, -3)) === previousVal ? ++previousVal : previousVal;
-			}, 1);
-
-		if (newApiary.number === "") number += String(val).padStart(5, "0");
-		else if (newApiary.number <= 0 || newApiary.number >= 100000) return res.status(406).json("Number has to be in range 1 - 99999");
-		else if (newApiary.number < val) return res.status(406).json("Number already taken, you can try to get it tommorow");
-		else number += String(newApiary.number).padStart(5, "0");
-
-		number += calculateControlSum(number);
-		newApiary.number = number;
-		apiaryList.push(newApiary);
-
-		res.sendStatus(200);
-	} catch (error) {
-		console.log(error);
-		res.status(500).json("Unknown error during code generation");
-	}
 });
 
 module.exports = router;

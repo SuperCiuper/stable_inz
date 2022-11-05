@@ -3,9 +3,17 @@ import "./ImageSelectorModal.css";
 import { Button } from "primereact/button";
 import { API_URL } from "../../constants";
 
-const ImageSelectorModal = ({ visibilityToggle, visible, title = "Title", image = null, returnImageCallback = () => {} }) => {
+const ImageSelectorModal = ({
+	visibilityToggle,
+	visible,
+	title = "Title",
+	images = [],
+	returnImageCallback = () => {},
+	singleImage = false,
+	profileImage = null,
+}) => {
 	const [imageList, setImageList] = useState([]);
-	const [selectedImage, setSelectedImage] = useState(image);
+	const [selectedImages, setSelectedImages] = useState([...images]);
 
 	useEffect(() => {
 		fetch(API_URL + "image")
@@ -16,8 +24,17 @@ const ImageSelectorModal = ({ visibilityToggle, visible, title = "Title", image 
 	}, []);
 
 	const saveChanges = () => {
-		returnImageCallback(selectedImage);
+		returnImageCallback(selectedImages);
 		visibilityToggle();
+	};
+
+	const onClickImage = (image) => {
+		setSelectedImages((prevState) => {
+			if (prevState.find((item) => item === image) === undefined) {
+				if (singleImage) return [image];
+				else return [...prevState, image];
+			} else return [...prevState.filter((item) => item !== image)];
+		});
 	};
 
 	return (
@@ -26,10 +43,13 @@ const ImageSelectorModal = ({ visibilityToggle, visible, title = "Title", image 
 				<h2 className='title'>{title}</h2>
 				<div className='image-gallery'>
 					{imageList.map((image, index) => (
-						<div className='image-container' key={index} onClick={() => setSelectedImage(image)}>
+						<div className='image-container' key={index} onClick={image === profileImage ? () => {} : () => onClickImage(image)}>
 							{/* eslint-disable-next-line */}
 							<img src={`${API_URL}image/${image}`} alt={`Image ${image} not found`}></img>
-							<div className='selected-image' style={{ visibility: selectedImage === image && visible ? "visible" : "hidden" }}>
+							<div
+								className='selected-image'
+								style={{ visibility: selectedImages.find((item) => item === image) !== undefined && visible ? "visible" : "hidden" }}
+							>
 								<i className='pi pi-star-fill' style={{ fontSize: "2rem" }} />
 							</div>
 						</div>

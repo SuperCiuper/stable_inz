@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./HomeView.css";
-import { API_URL } from "../../constants";
+import { API_URL, checkResponseOk } from "../../constants";
 import { TextBlock } from "../../layouts";
 import { AuthContext } from "../../contextProviders";
 import { Button } from "primereact/button";
@@ -8,8 +8,8 @@ import { TextEditorModal } from "../../components";
 
 const HomeView = () => {
 	const [textBlockList, setTextBlockList] = useState([]);
-	const authContext = useContext(AuthContext);
 	const [textEditorModalVisibility, setTextEditorModalVisibility] = useState(false);
+	const authContext = useContext(AuthContext);
 
 	const toggleTextEditorModal = () => {
 		setTextEditorModalVisibility((prevState) => !prevState);
@@ -21,9 +21,12 @@ const HomeView = () => {
 
 	const fetchTextBlockList = () => {
 		fetch(API_URL + "textBlock")
-			.then((response) => (response.ok ? response.json() : Promise.reject("Response not ok")))
+			.then((response) => checkResponseOk(response))
 			.then((response) => {
 				setTextBlockList(response);
+			})
+			.catch((err) => {
+				console.error(`Server response: ${err}`);
 			});
 	};
 
@@ -33,17 +36,15 @@ const HomeView = () => {
 			headers: { ...authContext.getAuthHeader(), "Content-Type": "application/json" },
 			body: JSON.stringify({ description: description, image: null }),
 		})
-			.then((response) => (response.ok ? response : Promise.reject("Response not ok")))
-			.then(
-				() => {
-					fetchTextBlockList();
-					authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
-				},
-				(err) => {
-					console.log(err);
-					authContext.showDataUpdateError("Błąd serwera, zmiany nie zostały zapisane");
-				}
-			);
+			.then((response) => checkResponseOk(response))
+			.then(() => {
+				fetchTextBlockList();
+				authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
+			})
+			.catch((err) => {
+				console.error(`Server response: ${err}`);
+				authContext.showDataUpdateError(`Błąd serwera: "${err}", zmiany nie zostały zapisane`);
+			});
 	};
 
 	return (

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { ColorContext } from "../../contextProviders";
 import "./TextBlock.css";
-import { API_URL } from "../../constants";
+import { API_URL, checkResponseOk } from "../../constants";
 import { AuthContext } from "../../contextProviders";
 import { ImageSelectorModal, TextEditorModal } from "../../components";
 import { Button } from "primereact/button";
@@ -15,81 +15,62 @@ const ImageBlock = ({ image }) => {
 	);
 };
 
-const TextBlock = ({ index, id, image, description, updateParentCallback, children }) => {
+const TextBlock = ({ index, id, image, description, updateParentCallback = () => {} }) => {
 	const { colorContext } = useContext(ColorContext);
 	const authContext = useContext(AuthContext);
-	const [textEditorModalVisibility, setTextEditorModalVisibility] = useState(false);
 	const [imageSelectorModalVisibility, setImageSelectorModalVisibility] = useState(false);
-
-	const toggleTextEditorModal = () => {
-		setTextEditorModalVisibility((prevState) => !prevState);
-	};
+	const [textEditorModalVisibility, setTextEditorModalVisibility] = useState(false);
 
 	const toggleImageSelectorModal = () => {
 		setImageSelectorModalVisibility((prevState) => !prevState);
 	};
 
-	const saveText = (newDescription = description) => {
-		fetch(API_URL + `textBlock/${id}`, {
-			method: "PATCH",
-			headers: { ...authContext.getAuthHeader(), "Content-Type": "application/json" },
-			body: JSON.stringify({ description: newDescription, image: image }),
-		})
-			.then((response) => (response.ok ? response : Promise.reject("Response not ok")))
-			.then(
-				() => {
-					updateParentCallback();
-					authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
-				},
-				(err) => {
-					console.log(err);
-					authContext.showDataUpdateError("Błąd serwera, zmiany nie zostały zapisane");
-				}
-			);
+	const toggleTextEditorModal = () => {
+		setTextEditorModalVisibility((prevState) => !prevState);
 	};
 
-	const saveImage = (newImage = image) => {
-		fetch(API_URL + `textBlock/${id}`, {
-			method: "PATCH",
+	const handleFetch = (method, body) => {
+		fetch(API_URL + "textBlock", {
+			method: method,
 			headers: { ...authContext.getAuthHeader(), "Content-Type": "application/json" },
-			body: JSON.stringify({ description: description, image: newImage }),
+			body: JSON.stringify(body),
 		})
-			.then((response) => (response.ok ? response : Promise.reject("Response not ok")))
-			.then(
-				() => {
-					updateParentCallback();
-					authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
-				},
-				(err) => {
-					console.log(err);
-					authContext.showDataUpdateError("Błąd serwera, zmiany nie zostały zapisane");
-				}
-			);
+			.then((response) => checkResponseOk(response))
+			.then(() => {
+				updateParentCallback();
+				authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
+			})
+			.catch((err) => {
+				console.error(`Server response: ${err}`);
+				authContext.showDataUpdateError(`Błąd serwera: "${err}", zmiany nie zostały zapisane`);
+			});
+	};
+
+	const saveImage = (newImages = image === null ? null : [...image]) => {
+		let newImage = newImages.length === 0 ? null : newImages[0];
+		handleFetch("PATCH", { id: id, description: description, image: newImage });
+	};
+
+	const saveText = (newDescription = description) => {
+		handleFetch("PATCH", { id: id, description: newDescription, image: image });
 	};
 
 	const deleteBlock = () => {
-		console.log("click");
-		fetch(API_URL + `textBlock/${id}`, {
-			method: "DELETE",
-			headers: { ...authContext.getAuthHeader() },
-		})
-			.then((response) => (response.ok ? response : Promise.reject("Response not ok")))
-			.then(
-				() => {
-					updateParentCallback();
-					authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
-				},
-				(err) => {
-					console.log(err);
-					authContext.showDataUpdateError("Błąd serwera, zmiany nie zostały zapisane");
-				}
-			);
+		handleFetch("DELETE", { id: id });
 	};
 
 	return (
 		<div className='text-block' style={{ borderColor: `#${colorContext.detailRGB}` }}>
 			{authContext.isLogged ? (
 				<>
+					<ImageSelectorModal
+						visibilityToggle={toggleImageSelectorModal}
+						visible={imageSelectorModalVisibility}
+						title={`Wybierz obrazek dla ${index + 1}. bloku `}
+						images={[image]}
+						returnImageCallback={saveImage}
+						singleImage={true}
+					></ImageSelectorModal>
 					<TextEditorModal
 						visibilityToggle={toggleTextEditorModal}
 						visible={textEditorModalVisibility}
@@ -97,13 +78,6 @@ const TextBlock = ({ index, id, image, description, updateParentCallback, childr
 						text={description}
 						saveText={saveText}
 					></TextEditorModal>
-					<ImageSelectorModal
-						visibilityToggle={toggleImageSelectorModal}
-						visible={imageSelectorModalVisibility}
-						title={`Wybierz obrazek dla ${index + 1}. bloku `}
-						image={image}
-						returnImageCallback={saveImage}
-					></ImageSelectorModal>
 				</>
 			) : (
 				""
@@ -120,13 +94,8 @@ const TextBlock = ({ index, id, image, description, updateParentCallback, childr
 				</p>
 				{authContext.isLogged ? (
 					<div className='button-bar'>
-						<Button
-							className='edit-image-btn p-button-sm p-button-warning'
-							onClick={toggleImageSelectorModal}
-							icon='pi pi-images'
-							label='Ustaw zdjęcie'
-						></Button>
-						<Button className='edit-image-btn p-button-sm p-button-danger' onClick={deleteBlock} icon='pi pi-trash' label='Usuń blok'></Button>
+						<Button className='btn p-button-sm p-button-warning' onClick={toggleImageSelectorModal} icon='pi pi-images' label='Ustaw zdjęcie'></Button>
+						<Button className='btn p-button-sm p-button-danger' onClick={deleteBlock} icon='pi pi-trash' label='Usuń blok'></Button>
 					</div>
 				) : (
 					""
