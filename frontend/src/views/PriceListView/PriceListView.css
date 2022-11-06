@@ -40,3 +40,20 @@
 .priceList-view table tbody tr:last-of-type td:last-of-type {
   border-bottom-right-radius: 3px;
 }
+
+.new-price {
+  width: 100%;
+  height: 100%;
+}
+
+.new-price .add-price-btn {
+	min-width: 100%;
+}
+
+.delete-tab {
+  min-width: 3rem;
+}
+
+.delete-price-btn {
+  min-width: 100%;
+}

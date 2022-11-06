@@ -4,7 +4,7 @@ import "./PersonalCard.css";
 import { Button } from "primereact/button";
 import { Galleria } from "primereact/galleria";
 import { classNames } from "primereact/utils";
-import { API_URL, DUMMY_IMAGE, checkResponseOk } from "../../constants";
+import { API_URL, DUMMY_IMAGE } from "../../constants";
 import { Toast } from "primereact/toast";
 
 const PersonalCard = ({ name, images, description, index, personType, updateParentCallback = () => {} }) => {
@@ -80,9 +80,9 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 		return <Button className='fullscreen-button' icon={fullScreenClassName} onClick={() => toggleFullScreen()} />;
 	};
 
-	const renderImage = (image) => {
+	const renderImage = (image = images[0]) => {
 		return (
-			<div className='image-block'>
+			<div className='personal-image-block'>
 				{/* eslint-disable-next-line */}
 				<img src={`${API_URL}image/${image}`} onError={(e) => (e.target.src = `${API_URL}image/${DUMMY_IMAGE}`)} alt={`Image ${image} not found`} />
 				{fullscreenButton()}
@@ -95,20 +95,7 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 	});
 
 	const handleFetch = (method, body) => {
-		fetch(API_URL + personType, {
-			method: method,
-			headers: { ...authContext.getAuthHeader(), "Content-Type": "application/json" },
-			body: JSON.stringify(body),
-		})
-			.then((response) => checkResponseOk(response))
-			.then(() => {
-				updateParentCallback();
-				authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
-			})
-			.catch((err) => {
-				console.error(`Server response: ${err}`);
-				authContext.showDataUpdateError(`Błąd serwera: "${err}", zmiany nie zostały zapisane`);
-			});
+		authContext.performDataUpdate(personType, method, body, updateParentCallback);
 	};
 
 	const saveProfileImage = (newImages = images) => {
@@ -140,7 +127,7 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 	};
 
 	const editDescription = () => {
-		openTextEditor(undefined, `Opis ${name}`, description, saveDescription);
+		openTextEditor(`Opis ${name}`, description, saveDescription);
 	};
 
 	const deletePersonalCard = () => {

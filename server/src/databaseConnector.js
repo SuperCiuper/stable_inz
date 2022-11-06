@@ -50,15 +50,15 @@ var horseList = [
 ];
 var offerList = [
 	{
-		item: "Jazda indywidualna",
+		name: "Jazda indywidualna",
 		forWhom: "Dla każdego",
 		description: "Jazdy indywidualne dopasowane do umiejętności jeźdźca",
 		proposedPrice: "70 zł/h",
 		images: ["2.webp", "1.jpg"],
 	},
 	{
-		item: "Jazda terenowa",
-		forWhom: "Dla ośób jeżdżących samodzielnie w 3 stylach",
+		name: "Jazda terenowa",
+		forWhom: "Dla osób jeżdżących samodzielnie w 3 stylach",
 		description: "Jazda terenowa w grupach od 3 do 10 osób. Czas trwania od 2 do 4 godzin.",
 		proposedPrice: "200 zł",
 		images: [],
@@ -66,15 +66,18 @@ var offerList = [
 ];
 var priceList = [
 	{
-		item: "Jazda indywidualna - godzina",
+		id: 1,
+		name: "Jazda indywidualna - godzina",
 		price: "70 zł",
 	},
 	{
-		item: "Karnet na 10 godzinnych jazd",
+		id: 2,
+		name: "Karnet na 10 godzinnych jazd",
 		price: "600 zł",
 	},
 	{
-		item: "Jazda terenowa - od 2 do 4 godzin",
+		id: 3,
+		name: "Jazda terenowa - od 2 do 4 godzin",
 		price: "200 zł",
 	},
 ];
@@ -207,21 +210,19 @@ const getOfferList = () => {
 };
 
 const createOffer = (newOffer) => {
-	if (newOffer.image === null) newOffer.image = DEFAULT_IMAGE;
-
 	// pool.query("INSERT INTO offer VALUES ($1, $2, $3, $4)", [newOffer.item, newOffer.forWhom, newOffer.description, newOffer.proposedPrice], (err) => {
 	// 	if (err) {
 	// 		console.log(err.stack);
 	// 	}
 	// });
-
+	newOffer.images = [];
 	offerList.push(newOffer);
 	return updateFromDatabase();
 };
 
 const updateOffer = (updatedOffer) => {
 	// pool.query(
-	// 	"UPDATE offer SET forWhom = $2, description = $3 proposedPrice = $4 WHERE item = $1",
+	// 	"UPDATE offer SET forWhom = $2, description = $3 proposedPrice = $4 WHERE name = $1",
 	// 	[updatedOffer.name, updatedOffer.image, updatedOffer.description, newOffer.proposedPrice],
 	// 	(err) => {
 	// 		if (err) {
@@ -229,28 +230,67 @@ const updateOffer = (updatedOffer) => {
 	// 		}
 	// 	}
 	// );
-	offerList[offerList.findIndex((item) => item.item === updatedOffer.item)] = updatedOffer;
+	offerList[offerList.findIndex((item) => item.name === updatedOffer.name)] = updatedOffer;
 
 	return updateFromDatabase();
 };
 
-const deleteOffer = (offerItem) => {
-	// pool.query("DELETE FROM offer WHERE item = $1", [offerItem], (err) => {
+const deleteOffer = (offerName) => {
+	// pool.query("DELETE FROM offer WHERE name = $1", [offerName], (err) => {
 	// 	if (err) {
 	// 		console.log(err.stack);
 	// 	}
 	// });
-	offerList = offerList.filter((item) => item.item !== offerItem);
+	offerList = offerList.filter((item) => item.name !== offerName);
+
+	return updateFromDatabase();
+};
+
+const getPriceList = () => {
+	return priceList;
+};
+
+const createPrice = (newPrice) => {
+	// pool.query("INSERT INTO price VALUES ($1, $2)", [newPrice.name, newPrice.price], (err) => {
+	// 	if (err) {
+	// 		console.log(err.stack);
+	// 	}
+	// });
+	const id = Math.max(...priceList.map((item) => item.id)) + 1;
+	priceList.push({ ...newPrice, id: id });
+
+	return updateFromDatabase();
+};
+
+const updatePrice = (updatedPrice) => {
+	// pool.query(
+	// 	"UPDATE price SET price = $2 WHERE name = $1",
+	// 	[updatedPrice.name, updatedPrice.image, updatedPrice.description, newPrice.proposedPrice],
+	// 	(err) => {
+	// 		if (err) {
+	// 			console.log(err.stack);
+	// 		}
+	// 	}
+	// );
+
+	priceList[priceList.findIndex((item) => item.id === updatedPrice.id)] = updatedPrice;
+
+	return updateFromDatabase();
+};
+
+const deletePrice = (priceId) => {
+	// pool.query("DELETE FROM price WHERE id = $1", [priceId], (err) => {
+	// 	if (err) {
+	// 		console.log(err.stack);
+	// 	}
+	// });
+	priceList = priceList.filter((item) => item.id !== priceId);
 
 	return updateFromDatabase();
 };
 
 const getImageList = () => {
 	return imageList;
-};
-
-const getPriceList = () => {
-	return priceList;
 };
 
 const getPassword = () => {
@@ -276,8 +316,11 @@ module.exports = {
 	createOffer,
 	updateOffer,
 	deleteOffer,
+	getPriceList,
+	createPrice,
+	updatePrice,
+	deletePrice,
 	getImageList,
 	getContactInfo,
-	getPriceList,
 	getPassword,
 };

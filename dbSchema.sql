@@ -41,11 +41,11 @@ CREATE TABLE main_page_text_block (
  );
 
 CREATE TABLE offer ( 
-	item             		text DEFAULT 'Item' NOT NULL,
+	name             		text DEFAULT 'Item' NOT NULL,
 	for_whom            text DEFAULT 'Everyone' NOT NULL,
 	description         text DEFAULT 'Description' NOT NULL,
 	proposed_price      text DEFAULT 'Proposed price' NOT NULL,
-	CONSTRAINT pk_offer PRIMARY KEY ( item )
+	CONSTRAINT pk_offer PRIMARY KEY ( name )
  );
 
 CREATE TABLE horse ( 
@@ -63,9 +63,10 @@ CREATE TABLE trainer (
  );
 
  CREATE TABLE price_list ( 
-	item                text DEFAULT 'Item' NOT NULL,
+ 	id                  serial NOT NULL,
+	name                text DEFAULT 'Item' NOT NULL,
 	price               text DEFAULT 'Price' NOT NULL,
-	CONSTRAINT pk_price_list PRIMARY KEY ( item )
+	CONSTRAINT pk_price_list PRIMARY KEY ( id )
  );
 
 ALTER TABLE contact_info ADD CONSTRAINT fk_contact_info_main_info FOREIGN KEY ( id ) REFERENCES main_info( id ) ON DELETE CASCADE ON UPDATE CASCADE;

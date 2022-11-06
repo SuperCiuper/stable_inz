@@ -72,7 +72,7 @@ export const ImageSelectorContextProvider = ({ children }) => {
 							</div>
 						))}
 					</div>
-					<Button className='save-text-btn p-button-sm p-button-secondary' onClick={saveChanges} icon='pi pi-check' label='Zapisz'></Button>
+					<Button className='save-text-btn p-button-sm p-button-secondary' onClick={saveChanges} label='Zapisz'></Button>
 				</div>
 			</div>
 			{children}

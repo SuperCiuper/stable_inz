@@ -36,6 +36,20 @@
   font-weight: 360;
 }
 
+.text-block .ImageBlock {
+  min-width: 50%;
+  display: flex;
+  align-items: center;
+  
+  font-size: 0.9rem;
+}
+
+.text-block .ImageBlock img {
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+}
+
 .text-block .content .button-bar {
   display: flex;
   flex-direction: row;
@@ -49,18 +63,4 @@
 
 .button-bar .btn {
   width: 100%;
-}
-
-.text-block .ImageBlock {
-  min-width: 50%;
-  display: flex;
-  align-items: center;
-  
-  font-size: 0.9rem;
-}
-
-.text-block .ImageBlock img {
-  min-width: 100%;
-  min-height: 100%;
-  object-fit: cover;
 }

@@ -4,7 +4,6 @@ import "./ColorEditor.css";
 import { ColorPicker } from "primereact/colorpicker";
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { Button } from "primereact/button";
-import { API_URL } from "../../constants";
 
 const ColorEditor = () => {
 	const { colorContext, setColorContext } = useContext(ColorContext);
@@ -12,24 +11,9 @@ const ColorEditor = () => {
 	const [editedColors, setEditedColors] = useState({ ...colorContext });
 
 	const saveEditedColors = () => {
-		console.log(editedColors);
-
-		fetch(API_URL + "colorInfo", {
-			method: "PATCH",
-			headers: { ...authContext.getAuthHeader(), "Content-Type": "application/json" },
-			body: JSON.stringify(editedColors),
-		})
-			.then((response) => (response.ok ? response : Promise.reject("Response not ok")))
-			.then(
-				() => {
-					setColorContext({ ...editedColors });
-					authContext.showDataUpdateSuccess("Kolory zostały zapisane");
-				},
-				(err) => {
-					console.log(err);
-					authContext.showDataUpdateError("Błąd serwera, zmiany nie zostały zapisane");
-				}
-			);
+		authContext.performDataUpdate("colorInfo", "PATCH", editedColors, () => {
+			setColorContext({ ...editedColors });
+		});
 	};
 
 	const confirmColorChange = (event) => {

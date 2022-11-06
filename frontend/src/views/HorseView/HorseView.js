@@ -28,7 +28,7 @@ const HorseView = () => {
 			});
 	};
 
-	const addingNewHorseError = (message) => {
+	const addNewHorseError = (message) => {
 		toast.current.show({ severity: "error", summary: "Błąd", detail: message, life: 6000 });
 	};
 
@@ -36,29 +36,16 @@ const HorseView = () => {
 		let image = newImages.length === 0 ? null : newImages[0];
 
 		if (image === null || image === "" || image === undefined) {
-			addingNewHorseError("Profilowe nie zostało wybrane");
+			addNewHorseError("Profilowe nie zostało wybrane");
 			return;
 		}
 
-		fetch(API_URL + "horse", {
-			method: "POST",
-			headers: { ...authContext.getAuthHeader(), "Content-Type": "application/json" },
-			body: JSON.stringify({ name: newHorse.name, description: newHorse.description, image: image }),
-		})
-			.then((response) => checkResponseOk(response))
-			.then(() => {
-				fetchHorseList();
-				authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
-			})
-			.catch((err) => {
-				console.error(`Server response: ${err}`);
-				authContext.showDataUpdateError(`Błąd serwera: "${err}", zmiany nie zostały zapisane`);
-			});
+		authContext.performDataUpdate("horse", "POST", { name: newHorse.name, description: newHorse.description, image: image }, fetchHorseList);
 	};
 
 	const setNewHorseDescription = (newHorse, description) => {
 		if (description === null || description === "" || description === undefined) {
-			addingNewHorseError("Nie dodano opisu");
+			addNewHorseError("Nie dodano opisu");
 			return;
 		}
 		openImageSelector(`Wybierz profilowe konia ${newHorse.name}`, [], (images) => addNewHorse({ ...newHorse, description: description }, images), true);
@@ -66,14 +53,14 @@ const HorseView = () => {
 
 	const setNewHorseName = (name) => {
 		if (name === null || name === "" || name === undefined || name === "Imię") {
-			addingNewHorseError("Imię nie zostało wybrane");
+			addNewHorseError("Imię nie zostało wybrane");
 			return;
 		}
-		openTextEditor(undefined, `Opis ${name}`, "Opis", (description) => setNewHorseDescription({ name: name }, description));
+		openTextEditor(`Opis ${name}`, "Opis", (description) => setNewHorseDescription({ name: name }, description));
 	};
 
-	const createNewHorseName = () => {
-		openTextEditor(undefined, "Imię nowego konia", "Imię", setNewHorseName);
+	const createNewHorse = () => {
+		openTextEditor("Imię nowego konia", "Imię", setNewHorseName, true);
 	};
 
 	return (
@@ -90,12 +77,10 @@ const HorseView = () => {
 				/>
 			))}
 			{authContext.isLogged ? (
-				<>
+				<div className='new-horse'>
 					<Toast ref={toast} />
-					<div className='new-horse'>
-						<Button className='add-horse-btn p-button-sm p-button-secondary' onClick={createNewHorseName} label='Dodaj nowego konia'></Button>
-					</div>
-				</>
+					<Button className='add-horse-btn p-button-sm p-button-secondary' onClick={createNewHorse} label='Dodaj nowego konia'></Button>
+				</div>
 			) : (
 				""
 			)}

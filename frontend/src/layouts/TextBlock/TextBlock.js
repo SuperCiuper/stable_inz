@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import "./TextBlock.css";
-import { API_URL, checkResponseOk } from "../../constants";
+import { API_URL } from "../../constants";
 import { AuthContext, ColorContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
 import { Button } from "primereact/button";
 
@@ -20,20 +20,7 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
 	const openTextEditor = useContext(TextEditorContext);
 
 	const handleFetch = (method, body) => {
-		fetch(API_URL + "textBlock", {
-			method: method,
-			headers: { ...authContext.getAuthHeader(), "Content-Type": "application/json" },
-			body: JSON.stringify(body),
-		})
-			.then((response) => checkResponseOk(response))
-			.then(() => {
-				updateParentCallback();
-				authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
-			})
-			.catch((err) => {
-				console.error(`Server response: ${err}`);
-				authContext.showDataUpdateError(`Błąd serwera: "${err}", zmiany nie zostały zapisane`);
-			});
+		authContext.performDataUpdate("textBlock", method, body, updateParentCallback);
 	};
 
 	const saveImage = (newImages = image === null ? null : [...image]) => {
@@ -50,7 +37,7 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
 	};
 
 	const editDescription = () => {
-		openTextEditor(undefined, `Opis bloku ${index + 1}`, description, saveDescription);
+		openTextEditor(`Opis bloku ${index + 1}`, description, saveDescription);
 	};
 
 	const deleteBlock = () => {

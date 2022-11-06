@@ -67,3 +67,28 @@
   max-width: 100%;
   object-fit: scale-down;
 }
+
+.p-accordion-content .button-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  column-gap: 2rem;
+
+  width: 100%;
+
+  margin-top: 1rem;
+}
+
+.button-bar .btn {
+  width: 100%;
+}
+
+.new-offer {
+  width: 100%;
+  height: 100%;
+}
+
+.new-offer .add-offer-btn {
+	min-width: 100%;
+}
+

@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 const SALT_ROUNDS = 16;
 var { verifyToken } = require("../middleware/authorizator");
 
-const EXPIRATION_TIME = "2h"; // 2 hours
+const EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
 
 router.get("/", (req, res) => {
 	res.render("index", { title: "Praca inżynierska - AUTH" });
@@ -19,22 +19,20 @@ router.post("/login", (req, res) => {
 		const passwordIsValid = bcrypt.compareSync(password, databaseConnector.getPassword());
 
 		if (!passwordIsValid) {
-			return res.status(401).send({
-				accessToken: null,
-				message: "Invalid Password!",
-			});
+			return res.status(401).json("Invalid Password!");
 		}
 
 		var token = jwt.sign({}, process.env.PRIVATE_KEY, {
 			expiresIn: EXPIRATION_TIME,
 		});
 
-		res.status(200).send({
+		return res.status(200).json({
 			accessToken: token,
+			expiresIn: EXPIRATION_TIME,
 		});
 	} catch (err) {
 		console.log(err);
-		res.status(500).send({ message: err.message });
+		res.status(500).json("Internal server error");
 	}
 });
 

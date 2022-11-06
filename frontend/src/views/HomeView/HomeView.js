@@ -43,7 +43,7 @@ const HomeView = () => {
 	};
 
 	const createNewBlock = () => {
-		openTextEditor(undefined, "Nowy blok", "Nowy_tekst", addNewTextBlock);
+		openTextEditor("Nowy blok", "Nowy_tekst", addNewTextBlock);
 	};
 
 	return (

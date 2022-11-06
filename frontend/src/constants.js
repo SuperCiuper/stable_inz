@@ -3,9 +3,7 @@ const GMAP_API_KEY = process.env.REACT_APP_GMAP_API_KEY || "http://localhost:300
 const DUMMY_IMAGE = "dummyImage.jpg";
 
 const checkResponseOk = async (response) => {
-	console.log(response);
 	const data = response.headers.get("content-type")?.includes("application/json") ? await response.json() : null;
-	console.log(response.headers.get("content-type"));
 
 	if (!response.ok) {
 		return Promise.reject(new Error(data || response.status));
