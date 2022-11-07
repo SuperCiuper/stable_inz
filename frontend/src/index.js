@@ -18,14 +18,15 @@ root.render(
 			<GlobalContextProvider>
 				<Routes>
 					<Route path='/' element={<App />}>
+						<Route path='/main' element={<HomeView />} />
 						<Route path='/horses' element={<HorseView />} />
 						<Route path='/offer' element={<OfferView />} />
 						<Route path='/prices' element={<PriceListView />} />
 						<Route path='/gallery' element={<GalleryView />} />
 						<Route path='/contact' element={<ContactView />} />
 						<Route path='/login' element={<LoginView />} />
-						<Route path='/*' element={<Navigate replace to='/' />} />
-						<Route index element={<HomeView />} />
+						<Route path='/*' element={<Navigate replace to='/main' />} />
+						<Route index element={<Navigate replace to='/main' />} />
 					</Route>
 				</Routes>
 			</GlobalContextProvider>

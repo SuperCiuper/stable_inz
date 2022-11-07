@@ -25,3 +25,20 @@
 .gallery-view .image-container:last-child {
   flex-grow: 10;
 }
+
+.gallery-view .button-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  column-gap: 2rem;
+
+  width: 100%;
+
+  padding: 1rem;
+
+  margin-top: auto;
+}
+
+.gallery-view .button-bar .btn {
+  width: 100%;
+}

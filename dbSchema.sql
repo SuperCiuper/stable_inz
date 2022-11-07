@@ -50,14 +50,14 @@ CREATE TABLE offer (
 
 CREATE TABLE horse ( 
 	name                text NOT NULL,
-	profile_image_name  text DEFAULT 0 NOT NULL,
+	profile_image_name  text DEFAULT 'dummyImage.jpg' NOT NULL,
 	description         text DEFAULT 'Description' NOT NULL,
 	CONSTRAINT pk_horse PRIMARY KEY ( name )
  );
 
 CREATE TABLE trainer ( 
 	name                 text NOT NULL,
-	profile_image_name   text DEFAULT 0 NOT NULL,
+	profile_image_name   text DEFAULT 'dummyImage.jpg' NOT NULL,
 	description          text DEFAULT 'Description' NOT NULL,
 	CONSTRAINT pk_trainer PRIMARY KEY ( name )
  );

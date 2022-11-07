@@ -1,11 +1,13 @@
 var express = require("express");
 var router = express.Router();
+const fileUpload = require("express-fileupload");
 var databaseConnector = require("../databaseConnector");
 var { verifyToken } = require("../middleware/authorizator");
 var authRouter = require("./authenticator");
 
 const DUMMY_IMAGE = "dummyImage.jpg";
 
+router.use(fileUpload());
 router.use("/auth", authRouter);
 
 router.post("*", [verifyToken]);
@@ -46,7 +48,7 @@ router.patch("/colorInfo", (req, res) => {
 		if (!colorHexRegex.test(value)) return res.status(406).json("Values are not color hex");
 	});
 
-	if (!databaseConnector.updateColorInfo(updatedColorInfo)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.updateColorInfo(updatedColorInfo)) res.status(500).json("Unknown internal server error");
 
 	return res.sendStatus(200);
 });
@@ -67,7 +69,7 @@ router.post("/textBlock", (req, res) => {
 	if (newTextBlock.image != null && !databaseConnector.getImageList().find((item) => item === newTextBlock.image))
 		return res.status(406).json("Image does not exist");
 
-	if (!databaseConnector.createTextBlock(newTextBlock)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.createTextBlock(newTextBlock)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -87,7 +89,7 @@ router.patch("/textBlock", (req, res) => {
 	if (updatedTextBlock.image != null && !databaseConnector.getImageList().find((item) => item === updatedTextBlock.image))
 		return res.status(406).json("Image does not exist");
 
-	if (!databaseConnector.updateTextBlock(updatedTextBlock)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.updateTextBlock(updatedTextBlock)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -101,7 +103,7 @@ router.delete("/textBlock", (req, res) => {
 
 	if (databaseConnector.getTextBlockList().find((item) => item.id === deleteId) === undefined) return res.status(406).json("TextBlock does not exist");
 
-	if (!databaseConnector.deleteTextBlock(deleteId)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.deleteTextBlock(deleteId)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -123,7 +125,7 @@ router.post("/horse", (req, res) => {
 	if (databaseConnector.getHorseList().find((item) => item.name === newHorse.name)) return res.status(406).json("Name taken");
 	if (newHorse.image !== null && !databaseConnector.getImageList().find((item) => item === newHorse.image)) return res.status(406).json("Image does not exist");
 
-	if (!databaseConnector.createHorse(newHorse)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.createHorse(newHorse)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -143,7 +145,7 @@ router.patch("/horse", (req, res) => {
 		if (!databaseConnector.getImageList().find((item) => item === image)) return res.status(406).json("One of images does not exist");
 	}
 
-	if (!databaseConnector.updateHorse(updatedHorse)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.updateHorse(updatedHorse)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -159,7 +161,7 @@ router.delete("/horse", (req, res) => {
 	if (databaseConnector.getHorseList().find((item) => item.name === deleteName) === undefined)
 		return res.status(406).json("Horse with given name does not exist");
 
-	if (!databaseConnector.deleteHorse(deleteName)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.deleteHorse(deleteName)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -181,7 +183,7 @@ router.post("/offer", (req, res) => {
 	if (newOffer.name === null || newOffer.name === "" || newOffer.name === undefined) return res.status(406).json("Name not correct");
 	if (databaseConnector.getOfferList().find((item) => item.name === newOffer.name)) return res.status(406).json("Name taken");
 
-	if (!databaseConnector.createOffer(newOffer)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.createOffer(newOffer)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -203,7 +205,7 @@ router.patch("/offer", (req, res) => {
 		if (!databaseConnector.getImageList().find((item) => item === image)) return res.status(406).json("One of images does not exist");
 	}
 
-	if (!databaseConnector.updateOffer(updatedOffer)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.updateOffer(updatedOffer)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -219,7 +221,7 @@ router.delete("/offer", (req, res) => {
 	if (databaseConnector.getOfferList().find((item) => item.name === deleteName) === undefined)
 		return res.status(406).json("Offer with given name does not exist");
 
-	if (!databaseConnector.deleteOffer(deleteName)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.deleteOffer(deleteName)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -236,7 +238,7 @@ router.post("/price", (req, res) => {
 	if (newPrice.name === null || newPrice.name === "" || newPrice.name === undefined) return res.status(406).json("Name not correct");
 	if (databaseConnector.getPriceList().find((item) => item.name === newPrice.name)) return res.status(406).json("Name taken");
 
-	if (!databaseConnector.createPrice(newPrice)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.createPrice(newPrice)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -255,7 +257,7 @@ router.patch("/price", (req, res) => {
 	if (databaseConnector.getPriceList().find((item) => item.id === updatedPrice.id) === undefined)
 		return res.status(406).json("Price with given id does not exist");
 
-	if (!databaseConnector.updatePrice(updatedPrice)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.updatePrice(updatedPrice)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -269,12 +271,35 @@ router.delete("/price", (req, res) => {
 
 	if (databaseConnector.getPriceList().find((item) => item.id === deleteId) === undefined) return res.status(406).json("Price with given id does not exist");
 
-	if (!databaseConnector.deletePrice(deleteId)) res.status(500).json("Unknown error during code generation");
+	if (!databaseConnector.deletePrice(deleteId)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
 router.get("/image", (req, res) => {
 	return res.json(databaseConnector.getImageList());
+});
+
+router.post("/image", (req, res) => {
+	var images = req.files.images;
+	if (!Array.isArray(images)) images = [images];
+
+	if (images === null || images === undefined) return res.status(406).json("No images sent");
+
+	for (const image of images) {
+		if (databaseConnector.getImageList().find((item) => item === image.name)) return res.status(406).json("One of images already exists");
+	}
+
+	if (!databaseConnector.uploadImages(images)) res.status(500).json("Unknown internal server error");
+	return res.sendStatus(200);
+});
+
+router.delete("/image", (req, res) => {
+	const images = req.body;
+
+	if (images === null || images === undefined || images.length === 0) return res.status(406).json("No images sent");
+
+	if (!databaseConnector.deleteImages(images)) res.status(500).json("Unknown internal server error");
+	return res.sendStatus(200);
 });
 
 module.exports = router;

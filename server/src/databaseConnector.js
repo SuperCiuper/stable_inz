@@ -1,6 +1,9 @@
 const Pool = require("pg").Pool;
 const pool = new Pool();
+const path = require("path");
+var fs = require("fs");
 
+const IMAGE_PATH = path.join(__dirname, "../public/api/image/");
 const DEFAULT_IMAGE = "dummyImage.jpg";
 const dummyDescription =
 	"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.";
@@ -117,7 +120,7 @@ const createTextBlock = (newTextBlock) => {
 	// if newTextBlock.image === null => inster NULL
 
 	// pool.query(
-	// 	"INSERT INTO main_page_text_block (description, image_name) VALUES $1 $2",
+	// 	"INSERT INTO main_page_text_block (description, image_name) VALUES ($1, $2)",
 	// 	[newTextBlock.description, newTextBlock.image],
 	// 	(err, res) => {
 	// 		if (err) {
@@ -178,17 +181,18 @@ const createHorse = (newHorse) => {
 };
 
 const updateHorse = (updatedHorse) => {
-	if (updatedHorse.image === null) updatedHorse.image = DEFAULT_IMAGE;
+	if (updatedHorse.images === []) updatedHorse.images[0] = DEFAULT_IMAGE;
 
 	// pool.query(
-	// 	"UPDATE horse SET profile_image_id = $2, description = $3 WHERE name = $1",
-	// 	[updatedHorse.name, updatedHorse.image, updatedHorse.description],
+	// 	"UPDATE horse SET profile_image_name = $2, description = $3 WHERE name = $1",
+	// 	[updatedHorse.name, updatedHorse.images[0], updatedHorse.description],
 	// 	(err) => {
 	// 		if (err) {
 	// 			console.log(err.stack);
 	// 		}
 	// 	}
-	// );
+	// ); // TODO add image table update
+
 	horseList[horseList.findIndex((item) => item.name === updatedHorse.name)] = updatedHorse;
 
 	return updateFromDatabase();
@@ -251,7 +255,7 @@ const getPriceList = () => {
 };
 
 const createPrice = (newPrice) => {
-	// pool.query("INSERT INTO price VALUES ($1, $2)", [newPrice.name, newPrice.price], (err) => {
+	// pool.query("INSERT INTO price (name, price) VALUES ($1, $2)", [newPrice.name, newPrice.price], (err) => {
 	// 	if (err) {
 	// 		console.log(err.stack);
 	// 	}
@@ -293,6 +297,43 @@ const getImageList = () => {
 	return imageList;
 };
 
+const uploadImages = (images) => {
+	for (const newImage of images) {
+		// pool.query("INSERT INTO image (name) VALUES ($1)", [newImage.name], (err) => {
+		// 	if (err) {
+		// 		console.log(err.stack);
+		// 	}
+		// });
+
+		// deta upload
+		newImage.mv(IMAGE_PATH + newImage.name);
+		imageList.push(newImage.name);
+	}
+
+	// deta pull;
+	return updateFromDatabase();
+};
+
+const deleteImages = (images) => {
+	for (const deleteImage of images) {
+		// pool.query("DELETE FROM image WHERE name = $1", [deleteImage], (err) => {
+		// 	if (err) {
+		// 		console.log(err.stack);
+		// 	}
+		// });
+
+		// deta delete
+		fs.unlink(IMAGE_PATH + deleteImage, (err) => {
+			if (err) throw err;
+			console.log("deleted");
+		});
+		imageList = imageList.filter((item) => item !== deleteImage);
+	}
+
+	// deta pull;
+	return updateFromDatabase();
+};
+
 const getPassword = () => {
 	return "$2b$15$7X95ZlV0ELPq.ljtRqRFFucEZAkWY0Ga8F3sYfsW3A97z2HBZ9yia"; // "password"
 };
@@ -321,6 +362,8 @@ module.exports = {
 	updatePrice,
 	deletePrice,
 	getImageList,
+	uploadImages,
+	deleteImages,
 	getContactInfo,
 	getPassword,
 };

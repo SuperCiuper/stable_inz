@@ -3,7 +3,7 @@
   align-items: center;
   flex-wrap: wrap;
   width: 100vw;
-  height: 5.75rem;
+  height: 7.75rem;
 
   border-bottom: 2px solid rgba(51, 51, 51, 0.233);
 
@@ -18,13 +18,13 @@
   justify-content: center;
 
   min-width: 100vw;
-  min-height: 3.875rem;
-  max-height: 3.875rem;
+  min-height: 5.5rem;
+  max-height: 5.5rem;
 }
 
 .Header .Logo img {
-  min-height: 3.875rem;
-  max-height: 3.875rem;
+  min-height: 5.5rem;
+  max-height: 5.5rem;
   object-fit: contain;
 }
 
@@ -33,18 +33,19 @@
   align-items: center;
   justify-content: center;
   min-width: 100vw;
-  min-height: 1.8rem;
-  max-height: 1.8rem;
+  min-height: 2.175rem;
+  max-height: 2.175rem;
 }
 
 .Header .ButtonBar .header-button{
   min-width: 2.875rem;
-  min-height: 1.8rem;
+  min-height: 2.175rem;
 
   padding-right: 1.25rem;
   padding-left: 1.25rem;
 
-  line-height: 1.8rem;
+  line-height: 2.175rem;
+  font-size: 1.45rem;
   text-align: center;
 
   border-left: 1px solid rgba(51, 51, 51, 0.233);

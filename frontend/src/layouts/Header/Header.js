@@ -24,7 +24,10 @@ const HeaderButton = ({ pathName, buttonName }) => {
 				className='header-button'
 				onMouseOver={currentPath.includes(pathName) ? undefined : highlightButton}
 				onMouseOut={currentPath.includes(pathName) ? undefined : colorButton}
-				style={{ color: `#${currentPath.includes(pathName) ? colorContext.highlightRGB : colorContext.buttonsRGB}` }}
+				style={{
+					color: `#${currentPath.includes(pathName) ? colorContext.highlightRGB : colorContext.buttonsRGB}`,
+					fontWeight: currentPath.includes(pathName) ? "450" : "inherit",
+				}}
 				onClick={buttonName === "Wyloguj" && authContext.isLogged ? () => authContext.logoutUser() : () => {}}
 			>
 				{buttonName}
@@ -49,11 +52,12 @@ const Header = () => {
 	return (
 		<div className='Header' style={{ backgroundColor: `#${colorContext.supportRGB}` }}>
 			<div className='Logo'>
-				<Link to='/'>
+				<Link to='/main'>
 					<img src='logo.png' alt='Stajnia Malta' />{" "}
 				</Link>
 			</div>
 			<div className='ButtonBar'>
+				<HeaderButton pathName={"/main"} buttonName={"Strona główna"} />
 				<HeaderButton pathName={"/horses"} buttonName={"Konie"} />
 				<HeaderButton pathName={"/offer"} buttonName={"Oferta"} />
 				<HeaderButton pathName={"/prices"} buttonName={"Cennik"} />

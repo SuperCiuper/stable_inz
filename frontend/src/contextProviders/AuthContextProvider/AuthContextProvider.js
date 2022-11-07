@@ -35,7 +35,7 @@ export const AuthContextProvider = ({ children }) => {
 			})
 			.catch((err) => {
 				console.error(`Server response: ${err}`);
-				showDataUpdateError("Próba logowania nie powiodła się");
+				toast.current.show({ severity: "error", summary: "Błąd", detail: "Próba logowania nie powiodła się", life: 10000 });
 			});
 	};
 
@@ -54,8 +54,6 @@ export const AuthContextProvider = ({ children }) => {
 		navigate("/");
 	}, [navigate]);
 
-	const showDataUpdateError = (message) => {};
-
 	const performDataUpdate = (url, method, body, callback) => {
 		const authToken = localStorage.getItem("authToken");
 		if (authToken === null || authContext === undefined) {
@@ -63,11 +61,21 @@ export const AuthContextProvider = ({ children }) => {
 			logoutUser();
 			return;
 		}
-		fetch(API_URL + url, {
-			method: method,
-			headers: { "x-access-token": JSON.parse(authToken), "Content-Type": "application/json" },
-			body: JSON.stringify(body),
-		})
+
+		fetch(
+			API_URL + url,
+			url === "image" && method === "POST"
+				? {
+						method: "POST",
+						headers: { "x-access-token": JSON.parse(authToken) },
+						body: body,
+				  }
+				: {
+						method: method,
+						headers: { "x-access-token": JSON.parse(authToken), "Content-Type": "application/json" },
+						body: JSON.stringify(body),
+				  }
+		)
 			.then((response) => checkResponseOk(response))
 			.then(() => {
 				callback();
