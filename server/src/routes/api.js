@@ -5,8 +5,6 @@ var databaseConnector = require("../databaseConnector");
 var { verifyToken } = require("../middleware/authorizator");
 var authRouter = require("./authenticator");
 
-const DUMMY_IMAGE = "dummyImage.jpg";
-
 router.use(fileUpload());
 router.use("/auth", authRouter);
 
@@ -26,6 +24,7 @@ router.patch("/colorInfo", (req, res) => {
 	let updatedColorInfo = req.body;
 	let oldColorInfo = databaseConnector.getColorInfo();
 
+	// replace with manual test
 	const areValuesMatching = (oldObject, newObject) => {
 		let oldKeys = Object.keys(oldObject);
 		let newKeys = Object.keys(newObject);
@@ -37,8 +36,6 @@ router.patch("/colorInfo", (req, res) => {
 		});
 		return true;
 	};
-
-	if (!areValuesMatching(oldColorInfo, updatedColorInfo)) return res.status(406).json("Color info object properties does not match");
 
 	if (Object.keys(oldColorInfo).length !== Object.keys(updatedColorInfo).length || !areValuesMatching(oldColorInfo, updatedColorInfo))
 		return res.status(406).json("Color info object properties does not match");
@@ -55,6 +52,34 @@ router.patch("/colorInfo", (req, res) => {
 
 router.get("/contactInfo", (req, res) => {
 	return res.json(databaseConnector.getContactInfo());
+});
+
+router.patch("/contactInfo", (req, res) => {
+	let updatedContactInfo = req.body;
+
+	if (
+		!Object.prototype.hasOwnProperty.call(updatedContactInfo, "city") ||
+		!Object.prototype.hasOwnProperty.call(updatedContactInfo, "gmapLat") ||
+		!Object.prototype.hasOwnProperty.call(updatedContactInfo, "gmapLng") ||
+		!Object.prototype.hasOwnProperty.call(updatedContactInfo, "mail") ||
+		!Object.prototype.hasOwnProperty.call(updatedContactInfo, "phoneNumber") ||
+		!Object.prototype.hasOwnProperty.call(updatedContactInfo, "street") ||
+		!Object.prototype.hasOwnProperty.call(updatedContactInfo, "zipCode")
+	)
+		return res.status(406).json("Updated offer object lacks mandatory fields");
+
+	Object.values(updatedContactInfo).forEach((value) => {
+		if (value === null || value === undefined || value === "") return res.status(406).json("At least one value is not valid");
+	});
+	const phoneNumberRegex = new RegExp("[0-9]{9}");
+	if (!phoneNumberRegex.test(updatedContactInfo.phoneNumber)) return res.status(406).json("Phone number is not valid");
+
+	updatedContactInfo.phoneNumber = parseInt(updatedContactInfo.phoneNumber);
+
+	// parse lng lat, also check if correct
+
+	if (!databaseConnector.updateContactInfo(updatedContactInfo)) res.status(500).json("Unknown internal server error");
+	return res.sendStatus(200);
 });
 
 router.get("/textBlock", (req, res) => {
@@ -271,12 +296,18 @@ router.delete("/price", (req, res) => {
 
 	if (databaseConnector.getPriceList().find((item) => item.id === deleteId) === undefined) return res.status(406).json("Price with given id does not exist");
 
-	if (!databaseConnector.deletePrice(deleteId)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
+	databaseConnector.deletePrice(deleteId).then((result) => {
+		//TODO rewrite this everywhere, move to files?
+		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");
+	});
 });
 
 router.get("/image", (req, res) => {
 	return res.json(databaseConnector.getImageList());
+});
+
+router.get("/image/:name", (req, res) => {
+	res.redirect("/api/image/dummyImage.jpg");
 });
 
 router.post("/image", (req, res) => {
@@ -289,8 +320,9 @@ router.post("/image", (req, res) => {
 		if (databaseConnector.getImageList().find((item) => item === image.name)) return res.status(406).json("One of images already exists");
 	}
 
-	if (!databaseConnector.uploadImages(images)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
+	databaseConnector.uploadImages(images).then((result) => {
+		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");
+	});
 });
 
 router.delete("/image", (req, res) => {
@@ -298,8 +330,9 @@ router.delete("/image", (req, res) => {
 
 	if (images === null || images === undefined || images.length === 0) return res.status(406).json("No images sent");
 
-	if (!databaseConnector.deleteImages(images)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
+	databaseConnector.deleteImages(images).then((result) => {
+		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");
+	});
 });
 
 module.exports = router;

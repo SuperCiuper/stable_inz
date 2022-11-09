@@ -1,10 +1,13 @@
 const Pool = require("pg").Pool;
 const pool = new Pool();
+const { Deta } = require("deta");
+const detaIntance = Deta(process.env.DETA_KEY);
+const detaImageDrive = detaIntance.Drive("images");
 const path = require("path");
 var fs = require("fs");
 
 const IMAGE_PATH = path.join(__dirname, "../public/api/image/");
-const DEFAULT_IMAGE = "dummyImage.jpg";
+const DUMMY_IMAGE = "dummyImage.jpg";
 const dummyDescription =
 	"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.";
 
@@ -30,7 +33,7 @@ var textBlockList = [
 	{ id: 2, description: `2${dummyDescription}`, image: "2.webp" },
 	{ id: 3, description: `3${dummyDescription}`, image: null },
 ];
-var imageList = ["1.jpg", "2.webp"];
+var imageList = [];
 var horseList = [
 	{
 		name: "Malta",
@@ -86,7 +89,7 @@ var priceList = [
 ];
 
 pool.query("SELECT NOW()", (err, res) => {
-	console.log(err, res);
+	//console.log(err, res);
 	pool.end();
 });
 
@@ -110,6 +113,20 @@ const updateColorInfo = (updatedColorInfo) => {
 
 const getContactInfo = () => {
 	return contactInfo;
+};
+
+const updateContactInfo = (updatedContactInfo) => {
+	// pool.query(
+	// 	"UPDATE horse SET main_theme_rgb = $1, support_theme_rgb = $2, background_rgb = $3, details_rgb = $4, highlight_rgb = $5",
+	// 	[updatedColorInfo.name, updatedColorInfo.image, updatedColorInfo.description],
+	// 	(err, res) => {
+	// 		if (err) {
+	// 			console.log(err.stack);
+	// 		}
+	// 	}
+	// );
+	contactInfo = updatedContactInfo;
+	return updateFromDatabase();
 };
 
 const getTextBlockList = () => {
@@ -166,7 +183,7 @@ const getHorseList = () => {
 };
 
 const createHorse = (newHorse) => {
-	if (newHorse.image === null) newHorse.image = DEFAULT_IMAGE;
+	if (newHorse.image === null) newHorse.image = DUMMY_IMAGE;
 
 	// pool.query("INSERT INTO horse VALUES ($1, $2, $3)", [newHorse.name, newHorse.image, newHorse.description], (err) => {
 	// 	if (err) {
@@ -181,7 +198,7 @@ const createHorse = (newHorse) => {
 };
 
 const updateHorse = (updatedHorse) => {
-	if (updatedHorse.images === []) updatedHorse.images[0] = DEFAULT_IMAGE;
+	if (updatedHorse.images === []) updatedHorse.images[0] = DUMMY_IMAGE;
 
 	// pool.query(
 	// 	"UPDATE horse SET profile_image_name = $2, description = $3 WHERE name = $1",
@@ -297,40 +314,63 @@ const getImageList = () => {
 	return imageList;
 };
 
-const uploadImages = (images) => {
-	for (const newImage of images) {
-		// pool.query("INSERT INTO image (name) VALUES ($1)", [newImage.name], (err) => {
-		// 	if (err) {
-		// 		console.log(err.stack);
-		// 	}
-		// });
+const uploadImages = async (images) => {
+	await Promise.all(
+		images.map(async (newImage) => {
+			// pool.query("INSERT INTO image (name) VALUES ($1)", [newImage.name], (err) => {
+			// 	if (err) {
+			// 		console.log(err.stack);
+			// 	}
+			// });
 
-		// deta upload
-		newImage.mv(IMAGE_PATH + newImage.name);
-		imageList.push(newImage.name);
-	}
+			await newImage.mv(IMAGE_PATH + newImage.name);
+			try {
+				await detaImageDrive.put(newImage.name, { path: IMAGE_PATH + newImage.name });
+				console.log(`Saved ${newImage.name}`);
+			} catch {
+				(err) => {
+					console.error(err);
+					return false;
+				};
+			}
+			imageList.push(newImage.name);
+		})
+	);
 
 	// deta pull;
+	console.log("done");
 	return updateFromDatabase();
 };
 
-const deleteImages = (images) => {
-	for (const deleteImage of images) {
-		// pool.query("DELETE FROM image WHERE name = $1", [deleteImage], (err) => {
-		// 	if (err) {
-		// 		console.log(err.stack);
-		// 	}
-		// });
+const deleteImages = async (images) => {
+	await Promise.all(
+		images.map(async (deleteImage) => {
+			// pool.query("DELETE FROM image WHERE name = $1", [deleteImage], (err) => {
+			// 	if (err) {
+			// 		console.log(err.stack);
+			// 	}
+			// });
 
-		// deta delete
-		fs.unlink(IMAGE_PATH + deleteImage, (err) => {
-			if (err) throw err;
-			console.log("deleted");
-		});
-		imageList = imageList.filter((item) => item !== deleteImage);
-	}
+			fs.unlink(IMAGE_PATH + deleteImage, (err) => {
+				if (err) {
+					console.error(err);
+					return false;
+				}
+				console.log(`${deleteImage} deleted`);
+			});
+			try {
+				await detaImageDrive.delete(deleteImage);
+			} catch (err) {
+				console.error(err);
+				return false;
+			}
+			imageList = imageList.filter((item) => item !== deleteImage);
+			console.log(deleteImage);
+		})
+	);
 
-	// deta pull;
+	let arr = await detaImageDrive.list();
+	console.log(arr, imageList);
 	return updateFromDatabase();
 };
 
@@ -338,13 +378,48 @@ const getPassword = () => {
 	return "$2b$15$7X95ZlV0ELPq.ljtRqRFFucEZAkWY0Ga8F3sYfsW3A97z2HBZ9yia"; // "password"
 };
 
+const pullDeta = async () => {
+	let images = await detaImageDrive.list();
+	images = images.names;
+	await Promise.all(
+		images.map(async (image) => {
+			try {
+				const blob = await detaImageDrive.get(image);
+				const buffer = Buffer.from(await blob.arrayBuffer());
+
+				if (fs.existsSync(IMAGE_PATH + image)) {
+					fs.unlink(IMAGE_PATH + image, (err) => {
+						if (err) throw err;
+					});
+				}
+
+				fs.writeFile(IMAGE_PATH + image, buffer, () => console.log(`Saved ${image}`));
+			} catch {
+				(err) => {
+					console.error(err);
+					return false;
+				};
+			}
+		})
+	);
+	imageList = images; //TODO remove
+	imageList = imageList.filter((item) => item !== DUMMY_IMAGE);
+};
+
 const updateFromDatabase = () => {
 	return true;
+};
+
+const serverStartup = () => {
+	pullDeta();
+	return updateFromDatabase();
 };
 
 module.exports = {
 	getColorInfo,
 	updateColorInfo,
+	getContactInfo,
+	updateContactInfo,
 	getTextBlockList,
 	createTextBlock,
 	updateTextBlock,
@@ -364,6 +439,7 @@ module.exports = {
 	getImageList,
 	uploadImages,
 	deleteImages,
-	getContactInfo,
 	getPassword,
+	serverStartup,
+	DUMMY_IMAGE,
 };

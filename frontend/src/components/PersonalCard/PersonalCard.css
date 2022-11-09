@@ -6,7 +6,7 @@
 
 @media screen and (max-width: 640px) {
   .personal-card {
-    width: 80%; 
+    width: 90%; 
   }
 }
 
@@ -39,7 +39,9 @@
 }
 
 .personal-card .custom-galleria {
-  height: 16rem;
+  height: 19rem;
+
+  border-bottom: 2px solid;
 }
 
 .p-galleria-content, .p-galleria-item-wrapper, .p-galleria-item-container, .p-galleria-item {

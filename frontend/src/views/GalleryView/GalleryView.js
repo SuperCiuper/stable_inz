@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext, ImageSelectorContext } from "../../contextProviders";
 import "./GalleryView.css";
-import { API_URL, DUMMY_IMAGE, checkResponseOk } from "../../constants";
+import { API_URL, checkResponseOk } from "../../constants";
 import { Image } from "primereact/image";
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
@@ -22,7 +22,6 @@ const GalleryView = () => {
 					const j = Math.floor(Math.random() * (i + 1));
 					[response[i], response[j]] = [response[j], response[i]];
 				}
-
 				setImageList(response);
 			})
 			.catch((err) => {
@@ -40,17 +39,13 @@ const GalleryView = () => {
 	};
 
 	const uploadImages = async ({ files }) => {
-		console.log(files);
-
 		const formData = new FormData();
 		for (const image of files) {
 			formData.append("images", image);
 		}
 
 		authContext.performDataUpdate("image", "POST", formData, fetchUpdatedImages);
-		console.log(fileUpload);
 		fileUpload.current.clear();
-		console.log("xd");
 	};
 
 	const saveImages = (images) => {
@@ -76,9 +71,6 @@ const GalleryView = () => {
 						auto
 						customUpload
 						uploadHandler={uploadImages}
-						onUpload={() => {
-							console.log("after");
-						}}
 					/>
 					<Button className='btn p-button-sm p-button-danger' onClick={deleteImages} icon='pi pi-trash' label='Usuń zdjęcia'></Button>
 				</div>
@@ -88,13 +80,7 @@ const GalleryView = () => {
 			{imageList.map((item, index) => (
 				<div className='image-container' key={index}>
 					{/* eslint-disable-next-line */}
-					<Image
-						className='image-item'
-						src={`${API_URL}image/${item}`}
-						onError={(e) => (e.target.src = `${API_URL}image/${DUMMY_IMAGE}`)}
-						alt={`Image ${item} not found`}
-						preview
-					/>
+					<Image className='image-item' src={`${API_URL}image/${item}`} alt={`Image ${item} not found`} preview />
 				</div>
 			))}
 			<div className='image-container'></div>

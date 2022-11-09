@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ColorContext } from "../../contextProviders";
+import { AuthContext, ColorContext, TextEditorContext } from "../../contextProviders";
 import "./ContactView.css";
-import { API_URL, GMAP_API_KEY } from "../../constants";
+import { API_URL, GMAP_API_KEY, checkResponseOk } from "../../constants";
 
 const defaultContactInfo = {
 	street: "Klepacka 21",
@@ -14,21 +14,38 @@ const defaultContactInfo = {
 };
 
 const ContactView = () => {
-	const [contactInfo, setContactInfo] = useState(defaultContactInfo);
+	const authContext = useContext(AuthContext);
 	const { colorContext } = useContext(ColorContext);
-
-	useEffect(() => {
-		fetch(API_URL + "contactInfo")
-			.then((response) => (response.ok ? response.json() : Promise.reject("Response not ok")))
-			.then((response) => {
-				setContactInfo(response);
-			});
-
-		console.log("X");
-	}, []);
+	const openTextEditor = useContext(TextEditorContext);
+	const [contactInfo, setContactInfo] = useState(defaultContactInfo);
 
 	console.log(contactInfo);
-	console.log({ lat: parseFloat(contactInfo.gmapLat), lng: parseFloat(contactInfo.gmapLng) });
+
+	const fetchContactInfo = () => {
+		fetch(API_URL + "contactInfo")
+			.then((response) => checkResponseOk(response))
+			.then((response) => {
+				setContactInfo(response);
+			})
+			.catch((err) => {
+				console.error(`Server response: ${err}`);
+			});
+	};
+
+	useEffect(() => {
+		fetchContactInfo();
+	}, []);
+
+	const handleFetch = (name, updatedValue) => {
+		let updatedContactInfo = contactInfo;
+		updatedContactInfo[name] = updatedValue;
+		authContext.performDataUpdate("contactInfo", "PATCH", updatedContactInfo, fetchContactInfo);
+	};
+
+	const editContactInfo = (name, title) => {
+		openTextEditor(title, "", (updatedValue) => handleFetch(name, updatedValue), true);
+	};
+
 	return (
 		<div className='contact-view'>
 			<img
@@ -42,19 +59,51 @@ const ContactView = () => {
 			<div className='contact-info'>
 				<p>
 					<b>ADRES</b> <br />
-					{contactInfo.street}
+					{/* eslint-disable-next-line */}
+					<a
+						onClick={authContext.isLogged ? () => editContactInfo("street", "Podaj ulicę") : () => {}}
+						style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}
+					>
+						{contactInfo.street},
+					</a>
 					<br />
-					{contactInfo.zipCode} {contactInfo.city},
+					{/* eslint-disable-next-line */}
+					<a
+						onClick={authContext.isLogged ? () => editContactInfo("zipCode", "Podaj kod pocztowy") : () => {}}
+						style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}
+					>
+						{contactInfo.zipCode}
+					</a>
+					&nbsp;
+					{/* eslint-disable-next-line */}
+					<a
+						onClick={authContext.isLogged ? () => editContactInfo("city", "Podaj miasto") : () => {}}
+						style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}
+					>
+						{contactInfo.city}
+					</a>
 				</p>
 				<p>
 					<b>NUMER TELEFONU</b>
 					<br />
-					{contactInfo.phoneNumber}
+					{/* eslint-disable-next-line */}
+					<a
+						onClick={authContext.isLogged ? () => editContactInfo("phoneNumber", "Podaj numer telefonu") : () => {}}
+						style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}
+					>
+						{contactInfo.phoneNumber}
+					</a>
 				</p>
 				<p>
 					<b>MAIL</b>
 					<br />
-					{contactInfo.mail}
+					{/* eslint-disable-next-line */}
+					<a
+						onClick={authContext.isLogged ? () => editContactInfo("mail", "Podaj adres mailowy") : () => {}}
+						style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}
+					>
+						{contactInfo.mail}
+					</a>
 				</p>
 			</div>
 		</div>

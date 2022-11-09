@@ -56,7 +56,7 @@ const Header = () => {
 					<img src='logo.png' alt='Stajnia Malta' />{" "}
 				</Link>
 			</div>
-			<div className='ButtonBar'>
+			<div className='button-bar'>
 				<HeaderButton pathName={"/main"} buttonName={"Strona główna"} />
 				<HeaderButton pathName={"/horses"} buttonName={"Konie"} />
 				<HeaderButton pathName={"/offer"} buttonName={"Oferta"} />

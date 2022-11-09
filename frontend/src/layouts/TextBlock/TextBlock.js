@@ -46,7 +46,7 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
 
 	return (
 		<div className='text-block' style={{ borderColor: `#${colorContext.detailRGB}` }}>
-			{image && index % 2 === 1 ? <ImageBlock image={image} /> : ""}
+			{(image && index % 2 === 1) || window.innerWidth <= 1200 ? <ImageBlock image={image} /> : ""}
 			<div className='content'>
 				<p className='description' onClick={authContext.isLogged ? editDescription : () => {}} style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}>
 					{description}
@@ -60,7 +60,7 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
 					""
 				)}
 			</div>
-			{image && index % 2 === 0 ? <ImageBlock image={image} /> : ""}
+			{image && index % 2 === 0 && window.innerWidth > 1200 ? <ImageBlock image={image} /> : ""}
 		</div>
 	);
 };

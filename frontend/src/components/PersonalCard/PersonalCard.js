@@ -4,7 +4,7 @@ import "./PersonalCard.css";
 import { Button } from "primereact/button";
 import { Galleria } from "primereact/galleria";
 import { classNames } from "primereact/utils";
-import { API_URL, DUMMY_IMAGE } from "../../constants";
+import { API_URL } from "../../constants";
 import { Toast } from "primereact/toast";
 
 const PersonalCard = ({ name, images, description, index, personType, updateParentCallback = () => {} }) => {
@@ -84,7 +84,7 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 		return (
 			<div className='personal-image-block'>
 				{/* eslint-disable-next-line */}
-				<img src={`${API_URL}image/${image}`} onError={(e) => (e.target.src = `${API_URL}image/${DUMMY_IMAGE}`)} alt={`Image ${image} not found`} />
+				<img src={`${API_URL}image/${image}`} alt={`Image ${image} not found`} />
 				{fullscreenButton()}
 			</div>
 		);

@@ -6,13 +6,23 @@ import { AuthContext, TextEditorContext } from "../../contextProviders";
 import { Button } from "primereact/button";
 
 const HomeView = () => {
-	const [textBlockList, setTextBlockList] = useState([]);
 	const authContext = useContext(AuthContext);
 	const openTextEditor = useContext(TextEditorContext);
+	const [textBlockList, setTextBlockList] = useState([]);
+	const [rerender, setRerender] = useState(false);
 
 	useEffect(() => {
 		fetchTextBlockList();
 	}, []);
+
+	const forceRerender = () => {
+		setRerender((prevState) => !prevState);
+	};
+
+	useEffect(() => {
+		window.addEventListener("resize", forceRerender);
+		return () => window.removeEventListener("resize", forceRerender);
+	}, [rerender]);
 
 	const fetchTextBlockList = () => {
 		fetch(API_URL + "textBlock")

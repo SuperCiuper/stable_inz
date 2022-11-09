@@ -1,9 +1,30 @@
+@media screen and (min-width: 900px) {
+  .Header {
+    height: 7.75rem;
+  }
+  .Header .button-bar {
+    flex-wrap: nowrap;
+    min-height: 2.175rem;
+    max-height: 2.175rem;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .Header {
+    height: 9.875rem;
+  }
+  .Header .button-bar {
+    flex-wrap: wrap;
+    min-height: 4.350rem;
+    max-height: 4.350rem;
+  }
+}
+
 .Header {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   width: 100vw;
-  height: 7.75rem;
 
   border-bottom: 2px solid rgba(51, 51, 51, 0.233);
 
@@ -23,23 +44,22 @@
 }
 
 .Header .Logo img {
+  max-width: 100vw;
   min-height: 5.5rem;
   max-height: 5.5rem;
   object-fit: contain;
 }
 
-.Header .ButtonBar {
+.Header .button-bar {
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 100vw;
-  min-height: 2.175rem;
-  max-height: 2.175rem;
 }
 
-.Header .ButtonBar .header-button{
+.Header .button-bar a .header-button{
   min-width: 2.875rem;
-  min-height: 2.175rem;
+  min-height: 100%;
 
   padding-right: 1.25rem;
   padding-left: 1.25rem;
@@ -49,9 +69,12 @@
   text-align: center;
 
   border-left: 1px solid rgba(51, 51, 51, 0.233);
+}
+
+.Header .button-bar a:last-child .header-button{
   border-right: 1px solid rgba(51, 51, 51, 0.233);
 }
 
-.Header .ButtonBar .header-button:hover{
+.Header .button-bar .header-button:hover{
   cursor: pointer;
 }

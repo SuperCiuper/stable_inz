@@ -1,12 +1,36 @@
+@media screen and (min-width: 900px) {
+  .gallery-view .image-container {
+    height: 28vh;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .gallery-view .image-container {
+    height: 24vh;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .gallery-view .image-container {
+    height: 20vh;
+  }
+}
+
+@media screen and (max-width: 450px ) {
+  .gallery-view .image-container {
+    height: 16vh;
+  }
+}
+
 .gallery-view {
   display: flex;
   flex-wrap: wrap;
 
-  min-width: 100%;
+  width: 100%;
 }
 
 .gallery-view .image-container {
-  height: 36vh;
+  max-width: 100%;
   flex-grow: 1;
 }
 
@@ -16,8 +40,10 @@
 }
 
 .image-container .image-item img {
+  min-height: 100%;
   max-height: 100%;
   min-width: 100%;
+  max-width: 100%;
   object-fit: cover;
   vertical-align: bottom;
 }

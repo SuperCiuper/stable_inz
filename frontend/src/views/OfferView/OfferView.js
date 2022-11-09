@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext, ColorContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
 import "./OfferView.css";
-import { API_URL, DUMMY_IMAGE, checkResponseOk } from "../../constants";
+import { API_URL, checkResponseOk } from "../../constants";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Galleria } from "primereact/galleria";
 import { Button } from "primereact/button";
@@ -35,7 +35,7 @@ const OfferView = () => {
 		return (
 			<div className='image-block'>
 				{/* eslint-disable-next-line */}
-				<img src={`${API_URL}image/${image}`} onError={(e) => (e.target.src = `${API_URL}image/${DUMMY_IMAGE}`)} alt={`Image ${image} not found`} />
+				<img src={`${API_URL}image/${image}`} alt={`Image ${image} not found`} />
 			</div>
 		);
 	};
