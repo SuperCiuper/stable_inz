@@ -53,8 +53,8 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
 				</p>
 				{authContext.isLogged ? (
 					<div className='button-bar'>
-						<Button className='btn p-button-sm p-button-warning' onClick={editImage} icon='pi pi-images' label='Ustaw zdjęcie'></Button>
-						<Button className='btn p-button-sm p-button-danger' onClick={deleteBlock} icon='pi pi-trash' label='Usuń blok'></Button>
+						<Button className='btn p-button-sm p-button-warning' onClick={editImage} icon='pi pi-images' label='Ustaw zdjęcie' />
+						<Button className='btn p-button-sm p-button-danger' onClick={deleteBlock} icon='pi pi-trash' label='Usuń blok' />
 					</div>
 				) : (
 					""

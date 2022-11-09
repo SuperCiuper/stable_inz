@@ -2,15 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext, ColorContext, TextEditorContext } from "../../contextProviders";
 import "./ContactView.css";
 import { API_URL, GMAP_API_KEY, checkResponseOk } from "../../constants";
+import { Button } from "primereact/button";
 
 const defaultContactInfo = {
-	street: "Klepacka 21",
-	zipCode: "15-698",
-	city: "Biedastok",
-	phoneNumber: 123456789,
-	mail: "stajnia.malta@gmail.com",
-	gmapLat: "53.053995",
-	gmapLng: "23.095907",
+	street: "",
+	zipCode: "",
+	city: "",
+	phoneNumber: "",
+	mail: "",
+	gmapLat: "0",
+	gmapLng: "0",
 };
 
 const ContactView = () => {
@@ -105,6 +106,22 @@ const ContactView = () => {
 						{contactInfo.mail}
 					</a>
 				</p>
+				{authContext.isLogged ? (
+					<div className='button-bar'>
+						<Button
+							className='btn p-button-sm p-button-secondary'
+							onClick={() => editContactInfo("gmapLat", "Podaj szerokość geograficzną")}
+							label='Ustaw szerokość geograficzną'
+						/>
+						<Button
+							className='btn p-button-sm p-button-secondary'
+							onClick={() => editContactInfo("gmapLng", "Podaj długość geograficzną")}
+							label='Ustaw długość geograficzną'
+						/>
+					</div>
+				) : (
+					""
+				)}
 			</div>
 		</div>
 	);

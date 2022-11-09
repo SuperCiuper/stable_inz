@@ -12,7 +12,7 @@ router.post("*", [verifyToken]);
 router.patch("*", [verifyToken]);
 router.delete("*", [verifyToken]);
 
-router.get("/", function (req, res) {
+router.get("/", (req, res) => {
 	res.render("index", { title: "Praca inżynierska - REST API" });
 });
 
@@ -305,9 +305,13 @@ router.delete("/price", (req, res) => {
 router.get("/image", (req, res) => {
 	return res.json(databaseConnector.getImageList());
 });
+var fs = require("fs");
+const path = require("path");
 
 router.get("/image/:name", (req, res) => {
-	res.redirect("/api/image/dummyImage.jpg");
+	var files = fs.readdirSync(path.join(__dirname, "../../public/api/image/"));
+	console.log(files);
+	res.redirect(databaseConnector.DUMMY_IMAGE_PATH);
 });
 
 router.post("/image", (req, res) => {

@@ -113,7 +113,7 @@ const PriceListView = () => {
 						<tr>
 							<td className='new-price' colSpan='3'>
 								<Toast ref={toast} />
-								<Button className='add-price-btn p-button-sm p-button-secondary' onClick={createNewPrice} label='Dodaj nowy przedmiot'></Button>
+								<Button className='add-price-btn p-button-sm p-button-secondary' onClick={createNewPrice} label='Dodaj nowy przedmiot' />
 							</td>
 						</tr>
 					) : (

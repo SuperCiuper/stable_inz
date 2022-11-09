@@ -61,7 +61,6 @@ export const AuthContextProvider = ({ children }) => {
 			logoutUser();
 			return;
 		}
-
 		fetch(
 			API_URL + url,
 			url === "image" && method === "POST"

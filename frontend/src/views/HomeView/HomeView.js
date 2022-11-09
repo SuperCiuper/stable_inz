@@ -63,7 +63,7 @@ const HomeView = () => {
 			))}
 			{authContext.isLogged ? (
 				<div className='new-block'>
-					<Button className='add-block-btn p-button-sm p-button-secondary' onClick={createNewBlock} label='Dodaj nowy blok'></Button>
+					<Button className='add-block-btn p-button-sm p-button-secondary' onClick={createNewBlock} label='Dodaj nowy blok' />
 				</div>
 			) : (
 				""

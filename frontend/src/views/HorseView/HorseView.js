@@ -79,7 +79,7 @@ const HorseView = () => {
 			{authContext.isLogged ? (
 				<div className='new-horse'>
 					<Toast ref={toast} />
-					<Button className='add-horse-btn p-button-sm p-button-secondary' onClick={createNewHorse} label='Dodaj nowego konia'></Button>
+					<Button className='add-horse-btn p-button-sm p-button-secondary' onClick={createNewHorse} label='Dodaj nowego konia' />
 				</div>
 			) : (
 				""

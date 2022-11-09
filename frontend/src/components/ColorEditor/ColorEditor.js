@@ -45,7 +45,7 @@ const ColorEditor = () => {
 				</div>
 			))}
 			<ConfirmPopup />
-			<Button onClick={confirmColorChange} icon='pi pi-check' label='Zapisz' className='p-button-sm p-button-secondary'></Button>
+			<Button onClick={confirmColorChange} icon='pi pi-check' label='Zapisz' className='p-button-sm p-button-secondary' />
 		</div>
 	);
 };

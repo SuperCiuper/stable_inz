@@ -157,9 +157,9 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 			</p>
 			{authContext.isLogged ? (
 				<div className='button-bar'>
-					<Button className='btn p-button-sm p-button-warning' onClick={editProfileImage} icon='pi pi-images' label='Ustaw zdjęcie profilowe'></Button>
-					<Button className='btn p-button-sm p-button-warning' onClick={editImages} icon='pi pi-images' label='Ustaw zdjęcia'></Button>
-					<Button className='btn p-button-sm p-button-danger' onClick={deletePersonalCard} icon='pi pi-trash' label='Usuń'></Button>
+					<Button className='btn p-button-sm p-button-warning' onClick={editProfileImage} icon='pi pi-images' label='Ustaw zdjęcie profilowe' />
+					<Button className='btn p-button-sm p-button-warning' onClick={editImages} icon='pi pi-images' label='Ustaw zdjęcia' />
+					<Button className='btn p-button-sm p-button-danger' onClick={deletePersonalCard} icon='pi pi-trash' label='Usuń' />
 				</div>
 			) : (
 				""

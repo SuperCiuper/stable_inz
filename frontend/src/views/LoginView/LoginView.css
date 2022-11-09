@@ -9,9 +9,18 @@
 .login-view p {
   min-width: 100%;
   text-align: center;
+  font-size: 1.6rem;
+
+  margin: 0.5rem;
 }
 
 .login-view input {
   max-width: 12rem;
   text-align: center;
+}
+
+.login-view .btn {
+  min-width: 12rem;
+  
+  margin-top: 1rem;
 }

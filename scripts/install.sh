@@ -1,5 +1,3 @@
-pwd
-
 cd frontend
 npm install
 

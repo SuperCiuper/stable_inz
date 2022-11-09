@@ -48,3 +48,19 @@
   font-size: 1.2rem;
   line-height: 1.5rem;
 }
+
+.contact-info .button-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  column-gap: 2rem;
+
+  width: 100%;
+
+  margin-top: 1rem;
+}
+
+.contact-info .button-bar .btn {
+  margin-bottom: 1rem;
+  width: 100%;
+}

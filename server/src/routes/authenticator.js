@@ -32,14 +32,18 @@ router.post("/login", (req, res) => {
 		});
 	} catch (err) {
 		console.log(err);
-		res.status(500).json("Internal server error");
+		return res.status(500).json("Internal server error");
 	}
 });
 
 router.patch("/update", [verifyToken], (req, res) => {
-	res.render("index", { title: "update" });
+	password = req.body.password;
+	if (password === null || password === undefined || password === "") return res.status(406).json("Password is empty");
+	newPasswordHash = bcrypt.hashSync(password, SALT_ROUNDS);
 
-	//return res.json(databaseConnector.getMainInfo());
+	databaseConnector.updatePassword(newPasswordHash).then((result) => {
+		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");
+	});
 });
 
 module.exports = router;

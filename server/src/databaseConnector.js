@@ -8,6 +8,7 @@ var fs = require("fs");
 
 const IMAGE_PATH = path.join(__dirname, "../public/api/image/");
 const DUMMY_IMAGE = "dummyImage.jpg";
+const DUMMY_IMAGE_PATH = "/api/image/" + DUMMY_IMAGE;
 const dummyDescription =
 	"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.";
 
@@ -87,6 +88,7 @@ var priceList = [
 		price: "200 zł",
 	},
 ];
+var passwordHash = "$2b$15$7X95ZlV0ELPq.ljtRqRFFucEZAkWY0Ga8F3sYfsW3A97z2HBZ9yia";
 
 pool.query("SELECT NOW()", (err, res) => {
 	//console.log(err, res);
@@ -336,9 +338,6 @@ const uploadImages = async (images) => {
 			imageList.push(newImage.name);
 		})
 	);
-
-	// deta pull;
-	console.log("done");
 	return updateFromDatabase();
 };
 
@@ -351,7 +350,7 @@ const deleteImages = async (images) => {
 			// 	}
 			// });
 
-			fs.unlink(IMAGE_PATH + deleteImage, (err) => {
+			fs.unlinkSync(IMAGE_PATH + deleteImage, (err) => {
 				if (err) {
 					console.error(err);
 					return false;
@@ -365,17 +364,21 @@ const deleteImages = async (images) => {
 				return false;
 			}
 			imageList = imageList.filter((item) => item !== deleteImage);
-			console.log(deleteImage);
 		})
 	);
-
-	let arr = await detaImageDrive.list();
-	console.log(arr, imageList);
 	return updateFromDatabase();
 };
 
 const getPassword = () => {
-	return "$2b$15$7X95ZlV0ELPq.ljtRqRFFucEZAkWY0Ga8F3sYfsW3A97z2HBZ9yia"; // "password"
+	//pull password from database
+	return passwordHash;
+};
+
+const updatePassword = async (newPasswordHash) => {
+	console.log(newPasswordHash);
+	passwordHash = newPasswordHash;
+
+	return true;
 };
 
 const pullDeta = async () => {
@@ -388,12 +391,12 @@ const pullDeta = async () => {
 				const buffer = Buffer.from(await blob.arrayBuffer());
 
 				if (fs.existsSync(IMAGE_PATH + image)) {
-					fs.unlink(IMAGE_PATH + image, (err) => {
+					fs.unlinkSync(IMAGE_PATH + image, (err) => {
 						if (err) throw err;
 					});
 				}
 
-				fs.writeFile(IMAGE_PATH + image, buffer, () => console.log(`Saved ${image}`));
+				fs.writeFileSync(IMAGE_PATH + image, buffer, () => console.log(`Saved ${image}`));
 			} catch {
 				(err) => {
 					console.error(err);
@@ -440,6 +443,7 @@ module.exports = {
 	uploadImages,
 	deleteImages,
 	getPassword,
+	updatePassword,
 	serverStartup,
-	DUMMY_IMAGE,
+	DUMMY_IMAGE_PATH,
 };

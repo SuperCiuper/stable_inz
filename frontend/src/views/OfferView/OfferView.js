@@ -172,8 +172,8 @@ const OfferView = () => {
 						)}
 						{authContext.isLogged ? (
 							<div className='button-bar'>
-								<Button className='btn p-button-sm p-button-warning' onClick={() => editImages(item)} icon='pi pi-images' label='Ustaw zdjęcia'></Button>
-								<Button className='btn p-button-sm p-button-danger' onClick={() => deleteOffer(item)} icon='pi pi-trash' label='Usuń'></Button>
+								<Button className='btn p-button-sm p-button-warning' onClick={() => editImages(item)} icon='pi pi-images' label='Ustaw zdjęcia' />
+								<Button className='btn p-button-sm p-button-danger' onClick={() => deleteOffer(item)} icon='pi pi-trash' label='Usuń' />
 							</div>
 						) : (
 							""
@@ -184,7 +184,7 @@ const OfferView = () => {
 			{authContext.isLogged ? (
 				<div className='new-offer'>
 					<Toast ref={toast} />
-					<Button className='add-offer-btn p-button-sm p-button-secondary' onClick={createNewOffer} label='Dodaj nową ofertę'></Button>
+					<Button className='add-offer-btn p-button-sm p-button-secondary' onClick={createNewOffer} label='Dodaj nową ofertę' />
 				</div>
 			) : (
 				""

@@ -72,7 +72,7 @@ const GalleryView = () => {
 						customUpload
 						uploadHandler={uploadImages}
 					/>
-					<Button className='btn p-button-sm p-button-danger' onClick={deleteImages} icon='pi pi-trash' label='Usuń zdjęcia'></Button>
+					<Button className='btn p-button-sm p-button-danger' onClick={deleteImages} icon='pi pi-trash' label='Usuń zdjęcia' />
 				</div>
 			) : (
 				""
