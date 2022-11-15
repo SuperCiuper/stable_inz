@@ -37,7 +37,11 @@ const LoginView = () => {
 				strongLabel='Silne'
 				toggleMask
 			/>
-			{authContext.isLogged ? <Button className='btn p-button-sm p-button-secondary' onClick={saveNewPassword} label='Zmień hasło' /> : ""}
+			{authContext.isLogged ? (
+				<Button className='btn p-button-sm p-button-secondary' onClick={saveNewPassword} label='Zmień hasło' />
+			) : (
+				<Button className='btn p-button-sm p-button-success' onClick={() => authContext.loginUser(password)} label='Zaloguj' />
+			)}
 		</div>
 	);
 };

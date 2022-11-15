@@ -24,7 +24,7 @@ var contactInfo = {
 	street: "Klepacka 21",
 	zipCode: "15-698",
 	city: "Biedastok",
-	phoneNumber: 123456789,
+	phoneNumber: "123456789",
 	mail: "stajnia.malta@gmail.com",
 	gmapLat: "53.053995",
 	gmapLng: "23.095907",
@@ -53,6 +53,14 @@ var horseList = [
 		description:
 			"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
 		images: ["2.webp", "1.jpg"],
+	},
+];
+var trainerList = [
+	{
+		name: "Adnama",
+		description:
+			"Super jeździca. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+		images: ["1.jpg", "2.webp"],
 	},
 ];
 var offerList = [
@@ -228,6 +236,54 @@ const deleteHorse = (horseName) => {
 	return updateFromDatabase();
 };
 
+const getTrainerList = () => {
+	return trainerList;
+};
+
+const createTrainer = (newTrainer) => {
+	if (newTrainer.image === null) newTrainer.image = DUMMY_IMAGE;
+
+	// pool.query("INSERT INTO trainer VALUES ($1, $2, $3)", [newTrainer.name, newTrainer.image, newTrainer.description], (err) => {
+	// 	if (err) {
+	// 		console.log(err.stack);
+	// 	}
+	// });
+
+	newTrainer = { ...newTrainer, images: [newTrainer.image] };
+	delete newTrainer["image"];
+	trainerList.push(newTrainer);
+	return updateFromDatabase();
+};
+
+const updateTrainer = (updatedTrainer) => {
+	if (updatedTrainer.images === []) updatedTrainer.images[0] = DUMMY_IMAGE;
+
+	// pool.query(
+	// 	"UPDATE trainer SET profile_image_name = $2, description = $3 WHERE name = $1",
+	// 	[updatedTrainer.name, updatedTrainer.images[0], updatedTrainer.description],
+	// 	(err) => {
+	// 		if (err) {
+	// 			console.log(err.stack);
+	// 		}
+	// 	}
+	// ); // TODO add image table update
+
+	trainerList[trainerList.findIndex((item) => item.name === updatedTrainer.name)] = updatedTrainer;
+
+	return updateFromDatabase();
+};
+
+const deleteTrainer = (trainerName) => {
+	// pool.query("DELETE FROM trainer WHERE name = $1", [trainerName], (err) => {
+	// 	if (err) {
+	// 		console.log(err.stack);
+	// 	}
+	// });
+	trainerList = trainerList.filter((item) => item.name !== trainerName);
+
+	return updateFromDatabase();
+};
+
 const getOfferList = () => {
 	return offerList;
 };
@@ -316,10 +372,26 @@ const getImageList = () => {
 	return imageList;
 };
 
+const updateImages = async (images) => {
+	imageList = [];
+	console.log(images);
+	images.forEach(async (updatedImage) => {
+		// pool.query("IUPDATE image SET visible=$2 WHERE name=$1", [updatedImage.image, updatedImage.visible], (err) => {
+		// 	if (err) {
+		// 		console.log(err.stack);
+		// 	}
+		// });
+		imageList.push({ image: updatedImage.image, visible: updatedImage.visible });
+	});
+	console.log(imageList);
+
+	return updateFromDatabase();
+};
+
 const uploadImages = async (images) => {
 	await Promise.all(
 		images.map(async (newImage) => {
-			// pool.query("INSERT INTO image (name) VALUES ($1)", [newImage.name], (err) => {
+			// pool.query("INSERT INTO image (name, visible) VALUES ($1, true)", [newImage.name], (err) => {
 			// 	if (err) {
 			// 		console.log(err.stack);
 			// 	}
@@ -335,7 +407,7 @@ const uploadImages = async (images) => {
 					return false;
 				};
 			}
-			imageList.push(newImage.name);
+			imageList.push({ image: newImage.name, visible: true });
 		})
 	);
 	return updateFromDatabase();
@@ -363,7 +435,7 @@ const deleteImages = async (images) => {
 				console.error(err);
 				return false;
 			}
-			imageList = imageList.filter((item) => item !== deleteImage);
+			imageList = imageList.filter((item) => item.image !== deleteImage);
 		})
 	);
 	return updateFromDatabase();
@@ -407,6 +479,12 @@ const pullDeta = async () => {
 	);
 	imageList = images; //TODO remove
 	imageList = imageList.filter((item) => item !== DUMMY_IMAGE);
+
+	// TODO check with map
+	imageList.forEach((image, index) => {
+		imageList[index] = { image: image, visible: true };
+	});
+	console.log(imageList);
 };
 
 const updateFromDatabase = () => {
@@ -431,6 +509,10 @@ module.exports = {
 	createHorse,
 	updateHorse,
 	deleteHorse,
+	getTrainerList,
+	createTrainer,
+	updateTrainer,
+	deleteTrainer,
 	getOfferList,
 	createOffer,
 	updateOffer,
@@ -440,6 +522,7 @@ module.exports = {
 	updatePrice,
 	deletePrice,
 	getImageList,
+	updateImages,
 	uploadImages,
 	deleteImages,
 	getPassword,

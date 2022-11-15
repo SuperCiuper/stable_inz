@@ -4,6 +4,8 @@ const fileUpload = require("express-fileupload");
 var databaseConnector = require("../databaseConnector");
 var { verifyToken } = require("../middleware/authorizator");
 var authRouter = require("./authenticator");
+var fs = require("fs");
+const path = require("path");
 
 router.use(fileUpload());
 router.use("/auth", authRouter);
@@ -74,8 +76,6 @@ router.patch("/contactInfo", (req, res) => {
 	const phoneNumberRegex = new RegExp("[0-9]{9}");
 	if (!phoneNumberRegex.test(updatedContactInfo.phoneNumber)) return res.status(406).json("Phone number is not valid");
 
-	updatedContactInfo.phoneNumber = parseInt(updatedContactInfo.phoneNumber);
-
 	// parse lng lat, also check if correct
 
 	if (!databaseConnector.updateContactInfo(updatedContactInfo)) res.status(500).json("Unknown internal server error");
@@ -91,7 +91,7 @@ router.post("/textBlock", (req, res) => {
 
 	if (!Object.prototype.hasOwnProperty.call(newTextBlock, "description") || !Object.prototype.hasOwnProperty.call(newTextBlock, "image"))
 		return res.status(406).json("Object lacks mandatory fields");
-	if (newTextBlock.image != null && !databaseConnector.getImageList().find((item) => item === newTextBlock.image))
+	if (newTextBlock.image != null && !databaseConnector.getImageList().find((item) => item.image === newTextBlock.image))
 		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.createTextBlock(newTextBlock)) res.status(500).json("Unknown internal server error");
@@ -111,7 +111,7 @@ router.patch("/textBlock", (req, res) => {
 	updatedTextBlock.id = parseInt(updatedTextBlock.id);
 	if (databaseConnector.getTextBlockList().find((item) => item.id === updatedTextBlock.id) === undefined)
 		return res.status(406).json("Textblock with given id does not exist");
-	if (updatedTextBlock.image != null && !databaseConnector.getImageList().find((item) => item === updatedTextBlock.image))
+	if (updatedTextBlock.image != null && !databaseConnector.getImageList().find((item) => item.image === updatedTextBlock.image))
 		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.updateTextBlock(updatedTextBlock)) res.status(500).json("Unknown internal server error");
@@ -148,7 +148,8 @@ router.post("/horse", (req, res) => {
 
 	if (newHorse.name === null || newHorse.name === "" || newHorse.name === undefined) return res.status(406).json("Name not correct");
 	if (databaseConnector.getHorseList().find((item) => item.name === newHorse.name)) return res.status(406).json("Name taken");
-	if (newHorse.image !== null && !databaseConnector.getImageList().find((item) => item === newHorse.image)) return res.status(406).json("Image does not exist");
+	if (newHorse.image !== null && !databaseConnector.getImageList().find((item) => item.image === newHorse.image))
+		return res.status(406).json("Image does not exist");
 
 	if (!databaseConnector.createHorse(newHorse)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
@@ -167,7 +168,7 @@ router.patch("/horse", (req, res) => {
 	if (databaseConnector.getHorseList().find((item) => item.name === updatedHorse.name) === undefined)
 		return res.status(406).json("Horse with given name does not exist");
 	for (const image of updatedHorse.images) {
-		if (!databaseConnector.getImageList().find((item) => item === image)) return res.status(406).json("One of images does not exist");
+		if (!databaseConnector.getImageList().find((item) => item.image === image)) return res.status(406).json("One of images does not exist");
 	}
 
 	if (!databaseConnector.updateHorse(updatedHorse)) res.status(500).json("Unknown internal server error");
@@ -187,6 +188,61 @@ router.delete("/horse", (req, res) => {
 		return res.status(406).json("Horse with given name does not exist");
 
 	if (!databaseConnector.deleteHorse(deleteName)) res.status(500).json("Unknown internal server error");
+	return res.sendStatus(200);
+});
+
+router.get("/trainer", (req, res) => {
+	return res.json(databaseConnector.getTrainerList());
+});
+
+router.post("/trainer", (req, res) => {
+	let newTrainer = req.body;
+
+	if (!Object.prototype.hasOwnProperty.call(newTrainer, "name") || !Object.prototype.hasOwnProperty.call(newTrainer, "description"))
+		return res.status(406).json("New trainer object lacks mandatory fields");
+
+	if (newTrainer.name === null || newTrainer.name === "" || newTrainer.name === undefined) return res.status(406).json("Name not correct");
+	if (databaseConnector.getTrainerList().find((item) => item.name === newTrainer.name)) return res.status(406).json("Name taken");
+	if (newTrainer.image !== null && !databaseConnector.getImageList().find((item) => item.image === newTrainer.image))
+		return res.status(406).json("Image does not exist");
+
+	if (!databaseConnector.createTrainer(newTrainer)) res.status(500).json("Unknown internal server error");
+	return res.sendStatus(200);
+});
+
+router.patch("/trainer", (req, res) => {
+	let updatedTrainer = req.body;
+
+	if (
+		!Object.prototype.hasOwnProperty.call(updatedTrainer, "name") ||
+		!Object.prototype.hasOwnProperty.call(updatedTrainer, "description") ||
+		!Object.prototype.hasOwnProperty.call(updatedTrainer, "images")
+	)
+		return res.status(406).json("Updated trainer object lacks mandatory fields");
+
+	if (databaseConnector.getTrainerList().find((item) => item.name === updatedTrainer.name) === undefined)
+		return res.status(406).json("Trainer with given name does not exist");
+	for (const image of updatedTrainer.images) {
+		if (!databaseConnector.getImageList().find((item) => item.image === image)) return res.status(406).json("One of images does not exist");
+	}
+
+	if (!databaseConnector.updateTrainer(updatedTrainer)) res.status(500).json("Unknown internal server error");
+	return res.sendStatus(200);
+});
+
+router.delete("/trainer", (req, res) => {
+	let deleteName;
+	try {
+		deleteName = req.body.name;
+		if (deleteName === null || deleteName === "" || deleteName === undefined) throw Error();
+	} catch {
+		return res.status(406).json("Name not provided");
+	}
+
+	if (databaseConnector.getTrainerList().find((item) => item.name === deleteName) === undefined)
+		return res.status(406).json("Trainer with given name does not exist");
+
+	if (!databaseConnector.deleteTrainer(deleteName)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
 });
 
@@ -227,7 +283,7 @@ router.patch("/offer", (req, res) => {
 	if (databaseConnector.getOfferList().find((item) => item.name === updatedOffer.name) === undefined)
 		return res.status(406).json("Offer with given name does not exist");
 	for (const image of updatedOffer.images) {
-		if (!databaseConnector.getImageList().find((item) => item === image)) return res.status(406).json("One of images does not exist");
+		if (!databaseConnector.getImageList().find((item) => item.image === image)) return res.status(406).json("One of images does not exist");
 	}
 
 	if (!databaseConnector.updateOffer(updatedOffer)) res.status(500).json("Unknown internal server error");
@@ -305,8 +361,6 @@ router.delete("/price", (req, res) => {
 router.get("/image", (req, res) => {
 	return res.json(databaseConnector.getImageList());
 });
-var fs = require("fs");
-const path = require("path");
 
 router.get("/image/:name", (req, res) => {
 	var files = fs.readdirSync(path.join(__dirname, "../../public/api/image/"));
@@ -315,16 +369,32 @@ router.get("/image/:name", (req, res) => {
 });
 
 router.post("/image", (req, res) => {
-	var images = req.files.images;
+	let images = req.files.images;
 	if (!Array.isArray(images)) images = [images];
 
 	if (images === null || images === undefined) return res.status(406).json("No images sent");
 
 	for (const image of images) {
-		if (databaseConnector.getImageList().find((item) => item === image.name)) return res.status(406).json("One of images already exists");
+		if (databaseConnector.getImageList().find((item) => item.image === image.name)) return res.status(406).json("One of images already exists");
 	}
 
 	databaseConnector.uploadImages(images).then((result) => {
+		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");
+	});
+});
+
+router.patch("/image", (req, res) => {
+	let imageList = req.body;
+	console.log(imageList);
+	if (imageList === null || imageList === undefined) return res.status(406).json("Image list not sent");
+
+	for (const image of imageList) {
+		if (!Object.prototype.hasOwnProperty.call(image, "image") || !Object.prototype.hasOwnProperty.call(image, "visible"))
+			return res.status(406).json("One of updated images lacks mandatory fields");
+		if (!databaseConnector.getImageList().find((item) => item.image === image.image)) return res.status(406).json("One of images does not exist");
+	}
+
+	databaseConnector.updateImages(imageList).then((result) => {
 		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");
 	});
 });

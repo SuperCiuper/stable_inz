@@ -28,7 +28,7 @@ const HeaderButton = ({ pathName, buttonName }) => {
 					color: `#${currentPath.includes(pathName) ? colorContext.highlightRGB : colorContext.buttonsRGB}`,
 					fontWeight: currentPath.includes(pathName) ? "450" : "inherit",
 				}}
-				onClick={buttonName === "Wyloguj" && authContext.isLogged ? () => authContext.logoutUser() : () => {}}
+				onClick={buttonName === "Wyloguj" ? () => authContext.logoutUser() : () => {}}
 			>
 				{buttonName}
 			</div>
@@ -59,6 +59,7 @@ const Header = () => {
 			<div className='button-bar'>
 				<HeaderButton pathName={"/main"} buttonName={"Strona główna"} />
 				<HeaderButton pathName={"/horses"} buttonName={"Konie"} />
+				<HeaderButton pathName={"/trainers"} buttonName={"Trenerzy"} />
 				<HeaderButton pathName={"/offer"} buttonName={"Oferta"} />
 				<HeaderButton pathName={"/prices"} buttonName={"Cennik"} />
 				<HeaderButton pathName={"/gallery"} buttonName={"Galeria"} />

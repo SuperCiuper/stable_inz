@@ -7,7 +7,6 @@ import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
 
 const GalleryView = () => {
-	// TODO check what happens with more photos
 	const authContext = useContext(AuthContext);
 	const { openImageSelector, fetchImages } = useContext(ImageSelectorContext);
 	const [imageList, setImageList] = useState([]);
@@ -48,8 +47,30 @@ const GalleryView = () => {
 		fileUpload.current.clear();
 	};
 
+	const updateImages = async (hiddenImages) => {
+		console.log(hiddenImages);
+		let updatedImages = await Promise.all(
+			imageList.map(async (item) => {
+				if (await hiddenImages.find((image) => image === item.image)) {
+					return { ...item, visible: false };
+				}
+				return { ...item, visible: true };
+			})
+		);
+
+		authContext.performDataUpdate("image", "PATCH", updatedImages, fetchUpdatedImages);
+	};
+
 	const saveImages = (images) => {
 		authContext.performDataUpdate("image", "DELETE", images, fetchUpdatedImages);
+	};
+
+	const changeVisibility = () => {
+		let hiddenImages = imageList.reduce((result, item) => {
+			if (!item.visible) result.push(item.image);
+			return result;
+		}, []);
+		openImageSelector(`Ukryj zdjęcia w galerii`, hiddenImages, updateImages);
 	};
 
 	const deleteImages = () => {
@@ -72,17 +93,22 @@ const GalleryView = () => {
 						customUpload
 						uploadHandler={uploadImages}
 					/>
+					<Button className='btn p-button-sm p-button-secondary' onClick={changeVisibility} icon='pi pi-trash' label='Ukryj zdjęcia' />
 					<Button className='btn p-button-sm p-button-danger' onClick={deleteImages} icon='pi pi-trash' label='Usuń zdjęcia' />
 				</div>
 			) : (
 				""
 			)}
-			{imageList.map((item, index) => (
-				<div className='image-container' key={index}>
-					{/* eslint-disable-next-line */}
-					<Image className='image-item' src={`${API_URL}image/${item}`} alt={`Image ${item} not found`} preview />
-				</div>
-			))}
+			{imageList.map((item, index) =>
+				item.visible ? (
+					<div className='image-container' key={index}>
+						{/* eslint-disable-next-line */}
+						<Image className='image-item' src={`${API_URL}image/${item.image}`} alt={item.image} preview />
+					</div>
+				) : (
+					""
+				)
+			)}
 			<div className='image-container'></div>
 		</div>
 	);

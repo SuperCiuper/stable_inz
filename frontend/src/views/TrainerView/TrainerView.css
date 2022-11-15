@@ -1,0 +1,29 @@
+@media screen and (min-width: 640px) {
+  .trainer-view .new-trainer {
+    width: 45%; 
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .trainer-view .new-trainer {
+    width: 90%; 
+  }
+}
+
+.trainer-view {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+
+  row-gap: 4rem;
+
+  height: 100%;
+
+  padding: 2rem;
+}
+
+.trainer-view .new-trainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

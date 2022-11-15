@@ -8,7 +8,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import App from "./App";
-import { ContactView, GalleryView, HomeView, HorseView, LoginView, OfferView, PriceListView } from "./views";
+import { ContactView, GalleryView, HomeView, HorseView, LoginView, OfferView, PriceListView, TrainerView } from "./views";
 import { GlobalContextProvider } from "./contextProviders";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -20,6 +20,7 @@ root.render(
 					<Route path='/' element={<App />}>
 						<Route path='/main' element={<HomeView />} />
 						<Route path='/horses' element={<HorseView />} />
+						<Route path='/trainers' element={<TrainerView />} />
 						<Route path='/offer' element={<OfferView />} />
 						<Route path='/prices' element={<PriceListView />} />
 						<Route path='/gallery' element={<GalleryView />} />
