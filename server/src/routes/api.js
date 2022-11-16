@@ -24,32 +24,28 @@ router.get("/colorInfo", (req, res) => {
 
 router.patch("/colorInfo", (req, res) => {
 	let updatedColorInfo = req.body;
-	let oldColorInfo = databaseConnector.getColorInfo();
-
-	// replace with manual test
-	const areValuesMatching = (oldObject, newObject) => {
-		let oldKeys = Object.keys(oldObject);
-		let newKeys = Object.keys(newObject);
-
-		if (oldKeys.length !== newKeys.length) return false;
-
-		oldKeys.forEach((key) => {
-			if (!Object.prototype.hasOwnProperty.call(newObject, key)) return false;
-		});
-		return true;
-	};
-
-	if (Object.keys(oldColorInfo).length !== Object.keys(updatedColorInfo).length || !areValuesMatching(oldColorInfo, updatedColorInfo))
+	if (
+		!Object.prototype.hasOwnProperty.call(updatedColorInfo, "backgroundMain") ||
+		!Object.prototype.hasOwnProperty.call(updatedColorInfo, "backgroundContent") ||
+		!Object.prototype.hasOwnProperty.call(updatedColorInfo, "panel") ||
+		!Object.prototype.hasOwnProperty.call(updatedColorInfo, "header") ||
+		!Object.prototype.hasOwnProperty.call(updatedColorInfo, "detail") ||
+		!Object.prototype.hasOwnProperty.call(updatedColorInfo, "button") ||
+		!Object.prototype.hasOwnProperty.call(updatedColorInfo, "highlight")
+	)
 		return res.status(406).json("Color info object properties does not match");
 
-	const colorHexRegex = new RegExp("[0-9A-Fa-f]{6}");
-	Object.values(updatedColorInfo).forEach((value) => {
-		if (!colorHexRegex.test(value)) return res.status(406).json("Values are not color hex");
+	const colorHexRegex = new RegExp("#[0-9a-f]{6}");
+	for (const value of Object.values(updatedColorInfo)) {
+		if (!colorHexRegex.test(value)) {
+			return res.status(406).json("Values are not color hex");
+		}
+	}
+
+	databaseConnector.updateColorInfo(updatedColorInfo).then((result) => {
+		console.log(result);
+		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");
 	});
-
-	if (!databaseConnector.updateColorInfo(updatedColorInfo)) res.status(500).json("Unknown internal server error");
-
-	return res.sendStatus(200);
 });
 
 router.get("/contactInfo", (req, res) => {
@@ -347,7 +343,7 @@ router.delete("/price", (req, res) => {
 	try {
 		deleteId = parseInt(req.body.id);
 	} catch {
-		return res.status(406).json("Name not provided");
+		return res.status(406).json("Id not provided");
 	}
 
 	if (databaseConnector.getPriceList().find((item) => item.id === deleteId) === undefined) return res.status(406).json("Price with given id does not exist");

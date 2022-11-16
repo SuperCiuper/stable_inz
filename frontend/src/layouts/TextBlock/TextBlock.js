@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 
 const ImageBlock = ({ image }) => {
 	return (
-		<div className='ImageBlock'>
+		<div className='image-block'>
 			{/* eslint-disable-next-line */}
 			<img src={`${API_URL}image/${image}`} alt={`Image ${image} not found`}></img>
 		</div>
@@ -45,8 +45,8 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
 	};
 
 	return (
-		<div className='text-block' style={{ borderColor: `#${colorContext.detailRGB}` }}>
-			{(image && index % 2 === 1) || window.innerWidth <= 1200 ? <ImageBlock image={image} /> : ""}
+		<div className='text-block' style={{ borderColor: colorContext.detail }}>
+			{image && (index % 2 === 1 || window.innerWidth) <= 1200 ? <ImageBlock image={image} /> : ""}
 			<div className='content'>
 				<p className='description' onClick={authContext.isLogged ? editDescription : () => {}} style={{ cursor: authContext.isLogged ? "pointer" : "inherit" }}>
 					{description}

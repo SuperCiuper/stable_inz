@@ -11,11 +11,11 @@ const HeaderButton = ({ pathName, buttonName }) => {
 	const currentPath = useLocation().pathname;
 
 	const highlightButton = (e) => {
-		e.target.style.color = `#${colorContext.highlightRGB}`;
+		e.target.style.color = colorContext.highlight;
 	};
 
 	const colorButton = (e) => {
-		e.target.style.color = `#${colorContext.buttonsRGB}`;
+		e.target.style.color = colorContext.button;
 	};
 
 	return (
@@ -25,8 +25,8 @@ const HeaderButton = ({ pathName, buttonName }) => {
 				onMouseOver={currentPath.includes(pathName) ? undefined : highlightButton}
 				onMouseOut={currentPath.includes(pathName) ? undefined : colorButton}
 				style={{
-					color: `#${currentPath.includes(pathName) ? colorContext.highlightRGB : colorContext.buttonsRGB}`,
-					fontWeight: currentPath.includes(pathName) ? "450" : "inherit",
+					color: currentPath.includes(pathName) ? colorContext.highlight : colorContext.button,
+					fontWeight: currentPath.includes(pathName) ? "600" : "inherit",
 				}}
 				onClick={buttonName === "Wyloguj" ? () => authContext.logoutUser() : () => {}}
 			>
@@ -42,15 +42,15 @@ const Header = () => {
 	const colorButtonRef = useRef(null);
 
 	const highlightButton = (e) => {
-		e.target.style.color = `#${colorContext.highlightRGB}`;
+		e.target.style.color = colorContext.highlight;
 	};
 
 	const colorButton = (e) => {
-		e.target.style.color = `#${colorContext.buttonsRGB}`;
+		e.target.style.color = colorContext.button;
 	};
 
 	return (
-		<div className='Header' style={{ backgroundColor: `#${colorContext.supportRGB}` }}>
+		<div className='Header' style={{ backgroundColor: colorContext.header }}>
 			<div className='Logo'>
 				<Link to='/main'>
 					<img src='logo.png' alt='Stajnia Malta' />{" "}
@@ -73,11 +73,11 @@ const Header = () => {
 							onClick={(e) => colorButtonRef.current.toggle(e)}
 							aria-haspopup
 							aria-controls='overlay_panel'
-							style={{ color: `#${colorContext.buttonsRGB}` }}
+							style={{ color: colorContext.button }}
 						>
 							Kolory
 						</div>{" "}
-						<OverlayPanel ref={colorButtonRef} id='overlay_panel' style={{ width: "240px" }} className='overlaypanel-demo'>
+						<OverlayPanel ref={colorButtonRef} id='overlay_panel' style={{ width: "17rem" }} className='overlaypanel-demo'>
 							<ColorEditor />
 						</OverlayPanel>
 					</>

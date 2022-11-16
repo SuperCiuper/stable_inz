@@ -68,13 +68,13 @@
   height: 2rem;
 }
 
-.image-block {
+.p-galleria-item .image-block {
   height: 100%;
   display: flex;
   align-items: center;
 }
 
-.image-block img {
+.p-galleria-item .image-block img {
   min-height: 100%;
   max-height: 100%;
   max-width: 100%;

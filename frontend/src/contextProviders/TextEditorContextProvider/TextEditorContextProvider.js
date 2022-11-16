@@ -23,9 +23,6 @@ export const TextEditorContextProvider = ({ children }) => {
 	const saveChanges = () => {
 		setVisibility(false);
 		saveTextCallback(text);
-		// setTitle("Edytor tekstu");
-		// setText("Nowy tekst");
-		// setSaveTextCallback(() => () => {});
 	};
 
 	return (

@@ -1,12 +1,13 @@
 CREATE TABLE main_info ( 
-	id                 boolean DEFAULT true NOT NULL,
-	password_hash				text NOT NULL,
-	main_theme_rgb      text NOT NULL,
-	support_theme_rgb   text NOT NULL,
-	background_rgb      text NOT NULL,
-	details_rgb         text NOT NULL,
-	buttons_rgb         text NOT NULL,
-	highlight_rgb       text NOT NULL,
+	id                  boolean DEFAULT true NOT NULL,
+	password_hash_rgb				text NOT NULL,
+	background_main_rgb     text NOT NULL,
+	background_content_rgb  text NOT NULL,
+	panel_rgb							  text NOT NULL,
+	header_rgb				      text NOT NULL,
+	details_rgb			        text NOT NULL,
+	button_rgb		          text NOT NULL,
+	highlight_rgb           text NOT NULL,
 	CONSTRAINT pk_main_info PRIMARY KEY ( id )
 );
 
@@ -15,6 +16,7 @@ ALTER TABLE main_info ADD CONSTRAINT cns_main_info CHECK ( id );
 CREATE TABLE contact_info ( 
 	id                  boolean DEFAULT true NOT NULL,
 	street              text NOT NULL,
+	zip_code						text NOT NULL,
 	city                text NOT NULL,
 	phone_number        text NOT NULL,
 	mail                text NOT NULL,
@@ -78,23 +80,58 @@ ALTER TABLE image ADD CONSTRAINT fk_image_horse FOREIGN KEY ( horse_name ) REFER
 ALTER TABLE image ADD CONSTRAINT fk_image_trainer FOREIGN KEY ( trainer_name ) REFERENCES trainer( name ) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE image ADD CONSTRAINT fk_image_offer FOREIGN KEY ( offer_name ) REFERENCES offer( name ) ON DELETE SET NULL ON UPDATE CASCADE;
 
+CREATE VIEW color_info_view AS
+SELECT background_main_rgb 		as "backgroundMain",
+			 background_content_rgb as "backgroundContent",
+			 panel_rgb 							as panel,
+			 header_rgb 						as header,
+			 details_rgb 						as detail,
+			 button_rgb 						as button,
+			 highlight_rgb 					as highlight
+FROM main_info
+WHERE id = true;
+
+CREATE VIEW contact_info_view AS
+SELECT street,
+			 zip_code			as "zipCode",
+			 city,
+			 phone_number as "phoneNumber",
+			 mail, 
+			 gmap_lat			as "gmapLat",
+			 gmap_lng			as "gmapLng"
+FROM contact_info
+WHERE id = true;
+
+CREATE VIEW image_list_view AS
+SELECT name as image,
+			 visible
+FROM image;
+
+CREATE VIEW text_block_list_view AS
+SELECT id,
+			 description,
+			 image_name as image
+FROM main_page_text_block;
+
 INSERT INTO main_info VALUES(
 	true,
 	'$2b$15$7X95ZlV0ELPq.ljtRqRFFucEZAkWY0Ga8F3sYfsW3A97z2HBZ9yia',
-	'fff6de',
-	'd19b5e',
-	'fdffe8',
-	'111111',
-	'FFFFFF',
-	'FFFF82'
+	'#fff6de',
+	'#fdffe8',
+	'#ffffff',
+	'#d19b5e',
+	'#111111',
+	'#000000',
+	'#ffff82'
 );
   
 INSERT INTO contact_info VALUES( 
 	true,
 	'Podaj nazwę ulicy',
+	'Podaj kod pocztowy',
 	'Podaj miasto',
 	'Ustan numer telefonu',
 	'Ustaw adres email',
-	0,
-	0
+	0.01,
+	0.01
 );

@@ -12,11 +12,9 @@ export const ImageSelectorContextProvider = ({ children }) => {
 		fetch(API_URL + "image")
 			.then((response) => checkResponseOk(response))
 			.then(async (response) => {
-				console.log(response);
 				await response.forEach((item, index) => {
 					response[index] = item.image;
 				});
-				console.log(response);
 				setImageList(response);
 			})
 			.catch((err) => {

@@ -135,7 +135,7 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
 	};
 
 	return (
-		<div className='personal-card' style={{ borderColor: `#${colorContext.detailRGB}` }}>
+		<div className='personal-card' style={{ backgroundColor: colorContext.panel, borderColor: colorContext.detail }}>
 			{authContext.isLogged ? <Toast ref={toast} /> : ""}
 			{images.length === 0 ? (
 				""

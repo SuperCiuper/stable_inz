@@ -51,7 +51,7 @@ const ContactView = () => {
 		<div className='contact-view'>
 			<img
 				className='google-map'
-				style={{ borderColor: `#${colorContext.detailRGB}` }}
+				style={{ borderColor: colorContext.detailRGB }}
 				src={`https://maps.googleapis.com/maps/api/staticmap?center=${parseFloat(contactInfo.gmapLat)},${parseFloat(
 					contactInfo.gmapLng
 				)}&zoom=12&size=640x640&markers=${parseFloat(contactInfo.gmapLat)},${parseFloat(contactInfo.gmapLng)}&key=${GMAP_API_KEY}`}

@@ -1,10 +1,12 @@
 const Pool = require("pg").Pool;
-const pool = new Pool();
 const { Deta } = require("deta");
-const detaIntance = Deta(process.env.DETA_KEY);
-const detaImageDrive = detaIntance.Drive("images");
 const path = require("path");
 var fs = require("fs");
+const { error } = require("console");
+
+const pool = new Pool();
+const detaIntance = Deta(process.env.DETA_KEY);
+const detaImageDrive = detaIntance.Drive("images");
 
 const IMAGE_PATH = path.join(__dirname, "../public/api/image/");
 const DUMMY_IMAGE = "dummyImage.jpg";
@@ -12,27 +14,12 @@ const DUMMY_IMAGE_PATH = "/api/image/" + DUMMY_IMAGE;
 const dummyDescription =
 	"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.";
 
-var colorInfo = {
-	mainRGB: "fff6de",
-	supportRGB: "d19b5e",
-	backgroundRGB: "fdffe8",
-	detailRGB: "111111",
-	buttonsRGB: "FFFFFF",
-	highlightRGB: "FFFF82",
-};
-var contactInfo = {
-	street: "Klepacka 21",
-	zipCode: "15-698",
-	city: "Biedastok",
-	phoneNumber: "123456789",
-	mail: "stajnia.malta@gmail.com",
-	gmapLat: "53.053995",
-	gmapLng: "23.095907",
-};
+var colorInfo = {};
+var contactInfo = {};
 var textBlockList = [
-	{ id: 1, description: `1${dummyDescription}`, image: "1.jpg" },
-	{ id: 2, description: `2${dummyDescription}`, image: "2.webp" },
-	{ id: 3, description: `3${dummyDescription}`, image: null },
+	// { id: 1, description: `1${dummyDescription}`, image: "1.jpg" },
+	// { id: 2, description: `2${dummyDescription}`, image: "2.webp" },
+	// { id: 3, description: `3${dummyDescription}`, image: null },
 ];
 var imageList = [];
 var horseList = [
@@ -98,45 +85,56 @@ var priceList = [
 ];
 var passwordHash = "$2b$15$7X95ZlV0ELPq.ljtRqRFFucEZAkWY0Ga8F3sYfsW3A97z2HBZ9yia";
 
-pool.query("SELECT NOW()", (err, res) => {
-	//console.log(err, res);
-	pool.end();
-});
-
 const getColorInfo = () => {
 	return colorInfo;
 };
 
-const updateColorInfo = (updatedColorInfo) => {
-	// pool.query(
-	// 	"UPDATE horse SET main_theme_rgb = $1, support_theme_rgb = $2, background_rgb = $3, details_rgb = $4, highlight_rgb = $5",
-	// 	[updatedColorInfo.name, updatedColorInfo.image, updatedColorInfo.description],
-	// 	(err, res) => {
-	// 		if (err) {
-	// 			console.log(err.stack);
-	// 		}
-	// 	}
-	// );
-	colorInfo = updatedColorInfo;
-	return updateFromDatabase();
+const updateColorInfo = async (updatedColorInfo) => {
+	try {
+		await pool.query(
+			"UPDATE main_info SET background_main_rgb = $1, background_content_rgb = $2, panel_rgb = $3, header_rgb = $4, details_rgb = $5, button_rgb = $6, highlight_rgb = $7 WHERE id = true",
+			[
+				updatedColorInfo.backgroundMain,
+				updatedColorInfo.backgroundContent,
+				updatedColorInfo.panel,
+				updatedColorInfo.header,
+				updatedColorInfo.detail,
+				updatedColorInfo.button,
+				updatedColorInfo.highlight,
+			]
+		);
+		return await updateFromDatabase();
+	} catch (err) {
+		console.error(err);
+		return false;
+	}
+	// colorInfo = updatedColorInfo;
 };
 
 const getContactInfo = () => {
 	return contactInfo;
 };
 
-const updateContactInfo = (updatedContactInfo) => {
-	// pool.query(
-	// 	"UPDATE horse SET main_theme_rgb = $1, support_theme_rgb = $2, background_rgb = $3, details_rgb = $4, highlight_rgb = $5",
-	// 	[updatedColorInfo.name, updatedColorInfo.image, updatedColorInfo.description],
-	// 	(err, res) => {
-	// 		if (err) {
-	// 			console.log(err.stack);
-	// 		}
-	// 	}
-	// );
-	contactInfo = updatedContactInfo;
-	return updateFromDatabase();
+const updateContactInfo = async (updatedContactInfo) => {
+	try {
+		await pool.query(
+			"UPDATE contact_info SET street = $1, zip_code = $2, city = $3, phone_number = $4, mail = $5, gmap_lat = $6, gmap_lng = $7 WHERE id = true",
+			[
+				updatedContactInfo.street,
+				updatedContactInfo.zipCode,
+				updatedContactInfo.city,
+				updatedContactInfo.phoneNumber,
+				updatedContactInfo.mail,
+				updatedContactInfo.gmapLat,
+				updatedContactInfo.gmapLng,
+			]
+		);
+		return await updateFromDatabase();
+	} catch (err) {
+		console.error(err);
+		return false;
+	}
+	//contactInfo = updatedContactInfo;
 };
 
 const getTextBlockList = () => {
@@ -388,17 +386,13 @@ const updateImages = async (images) => {
 	return updateFromDatabase();
 };
 
+// INSERT INTO image (name, visible) VALUES ('horses.jpg', true);
 const uploadImages = async (images) => {
 	await Promise.all(
 		images.map(async (newImage) => {
-			// pool.query("INSERT INTO image (name, visible) VALUES ($1, true)", [newImage.name], (err) => {
-			// 	if (err) {
-			// 		console.log(err.stack);
-			// 	}
-			// });
-
-			await newImage.mv(IMAGE_PATH + newImage.name);
 			try {
+				await pool.query("INSERT INTO image (name, visible) VALUES ($1, true)", [newImage.name]);
+				await newImage.mv(IMAGE_PATH + newImage.name);
 				await detaImageDrive.put(newImage.name, { path: IMAGE_PATH + newImage.name });
 				console.log(`Saved ${newImage.name}`);
 			} catch {
@@ -414,6 +408,18 @@ const uploadImages = async (images) => {
 };
 
 const deleteImages = async (images) => {
+	// TODO check what is returned in promise
+	// let result = await Promise.all(
+	// 	Object.values(updatedColorInfo).map(async (value) => {
+	// 		if (!colorHexRegex.test(value)) {
+	// 			res.status(406).json("Values are not color hex");
+	// 			return false;
+	// 		}
+	// 		return true;
+	// 	})
+	// );
+	// if (result.find((item) => time === false)) return;
+
 	await Promise.all(
 		images.map(async (deleteImage) => {
 			// pool.query("DELETE FROM image WHERE name = $1", [deleteImage], (err) => {
@@ -454,11 +460,11 @@ const updatePassword = async (newPasswordHash) => {
 };
 
 const pullDeta = async () => {
-	let images = await detaImageDrive.list();
-	images = images.names;
-	await Promise.all(
-		images.map(async (image) => {
-			try {
+	try {
+		let images = await detaImageDrive.list();
+		images = images.names;
+		await Promise.all(
+			images.map(async (image) => {
 				const blob = await detaImageDrive.get(image);
 				const buffer = Buffer.from(await blob.arrayBuffer());
 
@@ -467,33 +473,37 @@ const pullDeta = async () => {
 						if (err) throw err;
 					});
 				}
-
 				fs.writeFileSync(IMAGE_PATH + image, buffer, () => console.log(`Saved ${image}`));
-			} catch {
-				(err) => {
-					console.error(err);
-					return false;
-				};
-			}
-		})
-	);
-	imageList = images; //TODO remove
-	imageList = imageList.filter((item) => item !== DUMMY_IMAGE);
-
-	// TODO check with map
-	imageList.forEach((image, index) => {
-		imageList[index] = { image: image, visible: true };
-	});
-	console.log(imageList);
+			})
+		);
+		return true;
+	} catch (err) {
+		console.error(err);
+		return false;
+	}
 };
 
-const updateFromDatabase = () => {
-	return true;
+const updateFromDatabase = async () => {
+	try {
+		colorInfo = await pool.query("SELECT * FROM color_info_view").then((res) => res.rows[0]);
+		contactInfo = await pool.query("SELECT * FROM contact_info_view").then((res) => res.rows[0]);
+		imageList = await pool.query("SELECT * FROM image_list_view").then((res) => res.rows);
+		textBlockList = await pool.query("SELECT * FROM text_block_list_view").then((res) => res.rows);
+
+		console.log(colorInfo);
+		console.log(contactInfo);
+		console.log(imageList);
+		console.log(textBlockList);
+		return true;
+	} catch (err) {
+		console.error(err);
+		return false;
+	}
 };
 
-const serverStartup = () => {
-	pullDeta();
-	return updateFromDatabase();
+const serverStartup = async () => {
+	if (!(await updateFromDatabase())) return false;
+	return await pullDeta();
 };
 
 module.exports = {

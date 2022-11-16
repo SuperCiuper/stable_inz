@@ -1,13 +1,14 @@
 import React, { createContext, useEffect, useState } from "react";
-import { API_URL } from "../../constants";
+import { API_URL, checkResponseOk } from "../../constants";
 
-const defaultColors = {
-	mainRGB: "fff6de",
-	supportRGB: "d19b5e",
-	backgroundRGB: "fdffe8",
-	detailRGB: "111111",
-	buttonsRGB: "000000",
-	highlightRGB: "FFFF82",
+var defaultColors = {
+	backgroundMain: "#fff6de",
+	backgroundContent: "#d19b5e",
+	panel: "#ffffff",
+	header: "#d19b5e",
+	detail: "#111111",
+	button: "#000000",
+	highlight: "#ffff82",
 };
 
 export const ColorContext = createContext({ colorContext: { ...defaultColors } });
@@ -17,9 +18,12 @@ export const ColorContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		fetch(API_URL + "colorInfo")
-			.then((response) => (response.ok ? response.json() : Promise.reject("Response not ok")))
+			.then((response) => checkResponseOk(response))
 			.then((response) => {
 				setColorContext(response);
+			})
+			.catch((err) => {
+				console.error(`Server response: ${err}`);
 			});
 	}, []);
 

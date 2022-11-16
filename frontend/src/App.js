@@ -8,9 +8,9 @@ const App = () => {
 	const { colorContext } = useContext(ColorContext);
 
 	return (
-		<div className='App' style={{ backgroundColor: `#${colorContext.mainRGB}` }}>
+		<div className='App' style={{ backgroundColor: colorContext.backgroundMain }}>
 			<Header />
-			<div className='Content' style={{ backgroundColor: `#${colorContext.backgroundRGB}` }}>
+			<div className='Content' style={{ backgroundColor: colorContext.backgroundContent }}>
 				<Outlet />
 			</div>
 			<Footer />

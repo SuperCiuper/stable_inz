@@ -77,31 +77,31 @@ const PriceListView = () => {
 
 	return (
 		<div className='priceList-view'>
-			<table style={{ borderColor: `#${colorContext.detailRGB}` }}>
-				<thead style={{ backgroundColor: `#${colorContext.mainRGB}` }}>
+			<table style={{ borderColor: colorContext.detail }}>
+				<thead style={{ backgroundColor: colorContext.backgroundMain }}>
 					<tr>
-						<th style={{ borderColor: `#${colorContext.detailRGB}` }}>Usługa</th>
-						<th style={{ borderColor: `#${colorContext.detailRGB}` }}>Cena</th>
-						{authContext.isLogged ? <th style={{ borderColor: `#${colorContext.detailRGB}` }}>Usuń</th> : ""}
+						<th style={{ borderColor: colorContext.detail }}>Usługa</th>
+						<th style={{ borderColor: colorContext.detail }}>Cena</th>
+						{authContext.isLogged ? <th style={{ borderColor: colorContext.detail }}>Usuń</th> : ""}
 					</tr>
 				</thead>
-				<tbody style={{ backgroundColor: `#${colorContext.backgroundRGB}` }}>
+				<tbody style={{ backgroundColor: colorContext.panel }}>
 					{priceList.map((item, index) => (
 						<tr key={index}>
 							<td
 								onClick={authContext.isLogged ? () => editName(item) : () => {}}
-								style={{ borderColor: `#${colorContext.detailRGB}`, cursor: authContext.isLogged ? "pointer" : "inherit" }}
+								style={{ borderColor: colorContext.detail, cursor: authContext.isLogged ? "pointer" : "inherit" }}
 							>
 								{item.name}
 							</td>
 							<td
 								onClick={authContext.isLogged ? () => editPrice(item) : () => {}}
-								style={{ borderColor: `#${colorContext.detailRGB}`, cursor: authContext.isLogged ? "pointer" : "inherit" }}
+								style={{ borderColor: colorContext.detail, cursor: authContext.isLogged ? "pointer" : "inherit" }}
 							>
 								{item.price}
 							</td>
 							{authContext.isLogged ? (
-								<td className='delete-tab' style={{ borderColor: `#${colorContext.detailRGB}` }}>
+								<td className='delete-tab' style={{ borderColor: colorContext.detail }}>
 									<Button className='delete-price-btn p-button-sm p-button-danger' icon='pi pi-trash' onClick={() => deletePrice(item)} />
 								</td>
 							) : (

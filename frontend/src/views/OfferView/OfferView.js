@@ -137,8 +137,8 @@ const OfferView = () => {
 					<AccordionTab
 						key={index}
 						header={item.name}
-						headerStyle={{ borderColor: `#${colorContext.detailRGB}`, background: `#${colorContext.mainRGB}` }}
-						contentStyle={{ borderColor: `#${colorContext.detailRGB}`, background: `#${colorContext.backgroundRGB}` }}
+						headerStyle={{ borderColor: colorContext.detail, background: colorContext.backgroundMain }}
+						contentStyle={{ borderColor: colorContext.detail, background: colorContext.panel }}
 					>
 						<p
 							className='description'

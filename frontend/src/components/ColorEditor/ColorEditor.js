@@ -1,16 +1,32 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { AuthContext, ColorContext } from "../../contextProviders";
 import "./ColorEditor.css";
 import { ColorPicker } from "primereact/colorpicker";
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 
 const ColorEditor = () => {
-	const { colorContext, setColorContext } = useContext(ColorContext);
 	const authContext = useContext(AuthContext);
+	const { colorContext, setColorContext } = useContext(ColorContext);
 	const [editedColors, setEditedColors] = useState({ ...colorContext });
+	const toast = useRef(null);
 
 	const saveEditedColors = () => {
+		const colorHexRegex = new RegExp("#[0-9a-f]{6}");
+		for (const [color, value] of Object.entries(editedColors)) {
+			if (!colorHexRegex.test(value)) {
+				console.error();
+				toast.current.show({
+					severity: "error",
+					summary: "Błąd",
+					detail: `Wartość ${color}: ${value} jest nieprawidłowa (0-f, 6 znaków)`,
+					life: 10000,
+				}); // Wartość backgroundMain,#fdd1: undefined jest nieprawidłowa (0-f, 6 znaków)
+
+				return;
+			}
+		}
 		authContext.performDataUpdate("colorInfo", "PATCH", editedColors, () => {
 			setColorContext({ ...editedColors });
 		});
@@ -27,17 +43,30 @@ const ColorEditor = () => {
 		});
 	};
 
+	const changeColorInput = (newColor, color) => {
+		newColor = newColor.toLowerCase();
+		newColor = newColor.slice(0, 8);
+
+		setEditedColors((prevState) => {
+			prevState[color] = `#${newColor}`;
+			return { ...prevState };
+		});
+	};
+
 	return (
-		<div className='color-editor' style={{ borderColor: `#${colorContext.detailRGB}` }}>
+		<div className='color-editor' style={{ borderColor: colorContext.detail }}>
+			<Toast ref={toast} />
+
 			{Object.keys(editedColors).map((color, index) => (
 				<div className='color-item' key={index}>
+					<input className='hex-input' type='text' value={editedColors[color].slice(1, 7)} onChange={(event) => changeColorInput(event.target.value, color)} />
 					<ColorPicker
 						id={color}
 						value={editedColors[color]}
 						onChange={(event) =>
 							setEditedColors((prevState) => {
-								prevState[color] = event.value;
-								return prevState;
+								prevState[color] = `#${event.value}`;
+								return { ...prevState };
 							})
 						}
 					></ColorPicker>

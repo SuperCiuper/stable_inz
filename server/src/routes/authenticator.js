@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var databaseConnector = require("../databaseConnector");
+var databaseConnector = require("../databaseConnector").default;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const SALT_ROUNDS = 16;
@@ -37,9 +37,9 @@ router.post("/login", (req, res) => {
 });
 
 router.patch("/update", [verifyToken], (req, res) => {
-	password = req.body.password;
+	const password = req.body.password;
 	if (password === null || password === undefined || password === "") return res.status(406).json("Password is empty");
-	newPasswordHash = bcrypt.hashSync(password, SALT_ROUNDS);
+	const newPasswordHash = bcrypt.hashSync(password, SALT_ROUNDS);
 
 	databaseConnector.updatePassword(newPasswordHash).then((result) => {
 		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");

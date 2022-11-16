@@ -10,6 +10,17 @@
   min-width: 100%;
 }
 
+.color-editor .color-item .hex-input {
+  border: none;
+  width: 3rem;
+
+  text-align: right;
+}
+
+.color-editor .color-item .hex-input:hover {
+  cursor: pointer;
+}
+
 .color-editor .color-item .color-name {
   display: flex;
 
