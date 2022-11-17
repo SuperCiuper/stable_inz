@@ -25,9 +25,7 @@ const ContactView = () => {
 	const fetchContactInfo = () => {
 		fetch(API_URL + "contactInfo")
 			.then((response) => checkResponseOk(response))
-			.then((response) => {
-				setContactInfo(response);
-			})
+			.then((response) => setContactInfo(response))
 			.catch((err) => {
 				console.error(`Server response: ${err}`);
 			});
@@ -38,7 +36,7 @@ const ContactView = () => {
 	}, []);
 
 	const handleFetch = (name, updatedValue) => {
-		let updatedContactInfo = contactInfo;
+		let updatedContactInfo = { ...contactInfo };
 		updatedContactInfo[name] = updatedValue;
 		authContext.performDataUpdate("contactInfo", "PATCH", updatedContactInfo, fetchContactInfo);
 	};

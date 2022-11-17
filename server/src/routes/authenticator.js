@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var databaseConnector = require("../databaseConnector").default;
+var databaseConnector = require("../databaseConnector");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const SALT_ROUNDS = 16;
@@ -13,9 +13,8 @@ router.get("/", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-	const password = req.body.password;
-
 	try {
+		const password = req.body.password;
 		const passwordIsValid = bcrypt.compareSync(password, databaseConnector.getPassword());
 
 		if (!passwordIsValid) {

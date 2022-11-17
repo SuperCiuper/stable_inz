@@ -18,9 +18,7 @@ const OfferView = () => {
 	const fetchOfferList = () => {
 		fetch(API_URL + "offer")
 			.then((response) => checkResponseOk(response))
-			.then((response) => {
-				setOfferList(response);
-			})
+			.then((response) => setOfferList(response))
 			.catch((err) => {
 				console.error(`Server response: ${err}`);
 			});
@@ -42,6 +40,14 @@ const OfferView = () => {
 
 	const handleFetch = (method, body) => {
 		authContext.performDataUpdate("offer", method, body, fetchOfferList);
+	};
+
+	const saveName = (item, newName = "Nazwa") => {
+		handleFetch("PATCH", { ...item, name: newName });
+	};
+
+	const editName = (item) => {
+		openTextEditor(`Stara nazwa ${item.name}`, "", (name) => saveName(item, name));
 	};
 
 	const saveImages = (item, newImages = []) => {
@@ -172,6 +178,7 @@ const OfferView = () => {
 						)}
 						{authContext.isLogged ? (
 							<div className='button-bar'>
+								<Button className='btn p-button-sm p-button-secondary' onClick={() => editName(item)} icon='pi pi-images' label='Zmień nazwę' />
 								<Button className='btn p-button-sm p-button-warning' onClick={() => editImages(item)} icon='pi pi-images' label='Ustaw zdjęcia' />
 								<Button className='btn p-button-sm p-button-danger' onClick={() => deleteOffer(item)} icon='pi pi-trash' label='Usuń' />
 							</div>

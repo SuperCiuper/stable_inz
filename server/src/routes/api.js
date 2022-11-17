@@ -14,6 +14,53 @@ router.post("*", [verifyToken]);
 router.patch("*", [verifyToken]);
 router.delete("*", [verifyToken]);
 
+const valuesPrecheck = (body) => {
+	if (Object.values(body).some((item) => !item)) {
+		console.log("At least one property not set", body);
+		return "At least one property not set";
+	}
+	return "";
+};
+
+const checkNameFree = (name, array) => {
+	if (array.some((item) => item.name === name)) {
+		return "Name taken";
+	}
+	return "";
+};
+
+const checkName = (name, array, itemName) => {
+	if (array.every((item) => item.name !== name)) {
+		return `${itemName} with given name does not exist`;
+	}
+	return "";
+};
+
+const checkId = (id, array, itemName) => {
+	if (array.every((item) => item.id !== id)) {
+		return `${itemName} with given id does not exist`;
+	}
+	return "";
+};
+
+const checkImage = (image) => {
+	console.log(image);
+	console.log(databaseConnector.getImageList());
+	if (databaseConnector.getImageList().every((item) => item.image !== image)) {
+		console.log(image);
+		return "Image does not exist";
+	}
+	return "";
+};
+
+const checkImages = (images) => {
+	let imageList = databaseConnector.getImageList();
+	if (images.some((image) => imageList.every((item) => item.image !== image))) {
+		return "One of images does not exist";
+	}
+	return "";
+};
+
 router.get("/", (req, res) => {
 	res.render("index", { title: "Praca inżynierska - REST API" });
 });
@@ -22,6 +69,7 @@ router.get("/colorInfo", (req, res) => {
 	return res.json(databaseConnector.getColorInfo());
 });
 
+// DONE
 router.patch("/colorInfo", (req, res) => {
 	let updatedColorInfo = req.body;
 	if (
@@ -35,16 +83,15 @@ router.patch("/colorInfo", (req, res) => {
 	)
 		return res.status(406).json("Color info object properties does not match");
 
-	const colorHexRegex = new RegExp("#[0-9a-f]{6}");
-	for (const value of Object.values(updatedColorInfo)) {
-		if (!colorHexRegex.test(value)) {
-			return res.status(406).json("Values are not color hex");
-		}
-	}
+	let precheckResult = valuesPrecheck(updatedColorInfo); // TODO check if needed
+	if (precheckResult !== "") return res.status(406).json(precheckResult);
 
+	const colorHexRegex = new RegExp("#[0-9a-f]{6}");
+	if (!Object.values(updatedColorInfo).every((value) => colorHexRegex.test(value))) {
+		return res.status(406).json("At least one value is not color hex");
+	}
 	databaseConnector.updateColorInfo(updatedColorInfo).then((result) => {
-		console.log(result);
-		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");
+		return result.success ? res.sendStatus(200) : res.status(500).json(result.message);
 	});
 });
 
@@ -52,9 +99,9 @@ router.get("/contactInfo", (req, res) => {
 	return res.json(databaseConnector.getContactInfo());
 });
 
+// DONE
 router.patch("/contactInfo", (req, res) => {
 	let updatedContactInfo = req.body;
-
 	if (
 		!Object.prototype.hasOwnProperty.call(updatedContactInfo, "city") ||
 		!Object.prototype.hasOwnProperty.call(updatedContactInfo, "gmapLat") ||
@@ -66,37 +113,39 @@ router.patch("/contactInfo", (req, res) => {
 	)
 		return res.status(406).json("Updated offer object lacks mandatory fields");
 
-	Object.values(updatedContactInfo).forEach((value) => {
-		if (value === null || value === undefined || value === "") return res.status(406).json("At least one value is not valid");
+	let precheckResult = valuesPrecheck(updatedContactInfo);
+	if (precheckResult !== "") return res.status(406).json(precheckResult);
+
+	databaseConnector.updateContactInfo(updatedContactInfo).then((result) => {
+		return result.success ? res.sendStatus(200) : res.status(500).json(result.message);
 	});
-	const phoneNumberRegex = new RegExp("[0-9]{9}");
-	if (!phoneNumberRegex.test(updatedContactInfo.phoneNumber)) return res.status(406).json("Phone number is not valid");
-
-	// parse lng lat, also check if correct
-
-	if (!databaseConnector.updateContactInfo(updatedContactInfo)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
 });
 
 router.get("/textBlock", (req, res) => {
 	return res.json(databaseConnector.getTextBlockList());
 });
 
+// DONE
 router.post("/textBlock", (req, res) => {
 	let newTextBlock = req.body;
 
 	if (!Object.prototype.hasOwnProperty.call(newTextBlock, "description") || !Object.prototype.hasOwnProperty.call(newTextBlock, "image"))
 		return res.status(406).json("Object lacks mandatory fields");
-	if (newTextBlock.image != null && !databaseConnector.getImageList().find((item) => item.image === newTextBlock.image))
-		return res.status(406).json("Image does not exist");
 
-	if (!databaseConnector.createTextBlock(newTextBlock)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
+	let precheckResult = valuesPrecheck({ description: newTextBlock.description });
+	if (precheckResult !== "") return res.status(406).json(precheckResult);
+
+	let resultImage = checkImage(newTextBlock.image);
+	if (resultImage !== "") return res.status(406).json(resultImage);
+
+	databaseConnector.createTextBlock(newTextBlock).then((result) => {
+		return result.success ? res.sendStatus(200) : res.status(500).json(result.message);
+	});
 });
 
+// DONE
 router.patch("/textBlock", (req, res) => {
 	let updatedTextBlock = req.body;
-
 	if (
 		!Object.prototype.hasOwnProperty.call(updatedTextBlock, "id") ||
 		!Object.prototype.hasOwnProperty.call(updatedTextBlock, "description") ||
@@ -104,28 +153,33 @@ router.patch("/textBlock", (req, res) => {
 	)
 		return res.status(406).json("Object lacks mandatory fields");
 
-	updatedTextBlock.id = parseInt(updatedTextBlock.id);
-	if (databaseConnector.getTextBlockList().find((item) => item.id === updatedTextBlock.id) === undefined)
-		return res.status(406).json("Textblock with given id does not exist");
-	if (updatedTextBlock.image != null && !databaseConnector.getImageList().find((item) => item.image === updatedTextBlock.image))
-		return res.status(406).json("Image does not exist");
+	let precheckResult = valuesPrecheck({ id: updatedTextBlock.id, description: updatedTextBlock.description });
+	if (precheckResult !== "") return res.status(406).json(precheckResult);
 
-	if (!databaseConnector.updateTextBlock(updatedTextBlock)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
+	updatedTextBlock.id = parseInt(updatedTextBlock.id);
+	let resultId = checkId(updatedTextBlock.id, databaseConnector.getTextBlockList());
+	if (resultId !== "") return res.status(406).json(resultId);
+
+	let resultImage = checkImage(updatedTextBlock.image, true);
+	if (resultImage !== "") return res.status(406).json(resultImage);
+
+	databaseConnector.updateTextBlock(updatedTextBlock).then((result) => {
+		return result.success ? res.sendStatus(200) : res.status(500).json(result.message);
+	});
 });
 
+// DONE
 router.delete("/textBlock", (req, res) => {
-	let deleteId;
-	try {
-		deleteId = parseInt(req.body.id);
-	} catch {
-		res.status(406).json("Id not provided");
-	}
+	let precheckResult = valuesPrecheck(req.body);
+	if (precheckResult !== "") return res.status(406).json("Id not provided");
 
-	if (databaseConnector.getTextBlockList().find((item) => item.id === deleteId) === undefined) return res.status(406).json("TextBlock does not exist");
+	deleteId = parseInt(req.body.id);
+	let resultId = checkId(updatedTextBlock.id, databaseConnector.getTextBlockList());
+	if (resultId !== "") return res.status(406).json(resultId);
 
-	if (!databaseConnector.deleteTextBlock(deleteId)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
+	databaseConnector.deleteTextBlock(deleteId).then((result) => {
+		return result.success ? res.sendStatus(200) : res.status(500).json(result.message);
+	});
 });
 
 router.get("/horse", (req, res) => {
@@ -134,7 +188,6 @@ router.get("/horse", (req, res) => {
 
 router.post("/horse", (req, res) => {
 	let newHorse = req.body;
-
 	if (
 		!Object.prototype.hasOwnProperty.call(newHorse, "name") ||
 		!Object.prototype.hasOwnProperty.call(newHorse, "description") ||
@@ -142,18 +195,23 @@ router.post("/horse", (req, res) => {
 	)
 		return res.status(406).json("New horse object lacks mandatory fields");
 
-	if (newHorse.name === null || newHorse.name === "" || newHorse.name === undefined) return res.status(406).json("Name not correct");
-	if (databaseConnector.getHorseList().find((item) => item.name === newHorse.name)) return res.status(406).json("Name taken");
-	if (newHorse.image !== null && !databaseConnector.getImageList().find((item) => item.image === newHorse.image))
-		return res.status(406).json("Image does not exist");
+	let precheckResult = valuesPrecheck(newHorse);
+	if (precheckResult !== "") return res.status(406).json(precheckResult);
 
-	if (!databaseConnector.createHorse(newHorse)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
+	let resultNameFree = checkNameFree(newHorse.name, databaseConnector.getHorseList());
+	if (resultNameFree !== "") return res.status(406).json(resultNameFree);
+
+	let resultImage = checkImage(newHorse.image);
+	if (resultImage !== "") return res.status(406).json(resultImage);
+
+	databaseConnector.createHorse(newHorse).then((result) => {
+		return result.success ? res.sendStatus(200) : res.status(500).json(result.message);
+	});
 });
 
+// DONE
 router.patch("/horse", (req, res) => {
 	let updatedHorse = req.body;
-
 	if (
 		!Object.prototype.hasOwnProperty.call(updatedHorse, "name") ||
 		!Object.prototype.hasOwnProperty.call(updatedHorse, "description") ||
@@ -161,30 +219,32 @@ router.patch("/horse", (req, res) => {
 	)
 		return res.status(406).json("Updated horse object lacks mandatory fields");
 
-	if (databaseConnector.getHorseList().find((item) => item.name === updatedHorse.name) === undefined)
-		return res.status(406).json("Horse with given name does not exist");
-	for (const image of updatedHorse.images) {
-		if (!databaseConnector.getImageList().find((item) => item.image === image)) return res.status(406).json("One of images does not exist");
-	}
+	let precheckResult = valuesPrecheck(updatedHorse);
+	if (precheckResult !== "") return res.status(406).json(precheckResult);
 
-	if (!databaseConnector.updateHorse(updatedHorse)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
+	let resultName = checkName(updatedHorse.name, databaseConnector.getHorseList());
+	if (resultName !== "") return res.status(406).json(resultName);
+
+	let resultImages = checkImages(updatedHorse.images);
+	if (resultImages !== "") return res.status(406).json(resultImages);
+
+	databaseConnector.updateHorse(updatedHorse).then((result) => {
+		return result.success ? res.sendStatus(200) : res.status(500).json(result.message);
+	});
 });
 
+// DONE
 router.delete("/horse", (req, res) => {
-	let deleteName;
-	try {
-		deleteName = req.body.name;
-		if (deleteName === null || deleteName === "" || deleteName === undefined) throw Error();
-	} catch {
-		return res.status(406).json("Name not provided");
-	}
+	let precheckResult = valuesPrecheck(req.body);
+	if (precheckResult !== "") return res.status(406).json("Name not provided");
 
-	if (databaseConnector.getHorseList().find((item) => item.name === deleteName) === undefined)
-		return res.status(406).json("Horse with given name does not exist");
+	let deleteName = req.body;
+	let resultName = checkName(deleteName, databaseConnector.getHorseList());
+	if (resultName !== "") return res.status(406).json(resultName);
 
-	if (!databaseConnector.deleteHorse(deleteName)) res.status(500).json("Unknown internal server error");
-	return res.sendStatus(200);
+	databaseConnector.deleteHorse(deleteName).then((result) => {
+		return result.success ? res.sendStatus(200) : res.status(500).json(result.message);
+	});
 });
 
 router.get("/trainer", (req, res) => {
@@ -218,9 +278,10 @@ router.patch("/trainer", (req, res) => {
 
 	if (databaseConnector.getTrainerList().find((item) => item.name === updatedTrainer.name) === undefined)
 		return res.status(406).json("Trainer with given name does not exist");
-	for (const image of updatedTrainer.images) {
-		if (!databaseConnector.getImageList().find((item) => item.image === image)) return res.status(406).json("One of images does not exist");
-	}
+
+	if (updatedHorse.images.length !== 0) return res.status(406).json("No images sent");
+	let imageList = databaseConnector.getImageList();
+	if (!updatedTrainer.images.every((image) => imageList.some((item) => item.image === image))) return res.status(406).json("One of images does not exist");
 
 	if (!databaseConnector.updateTrainer(updatedTrainer)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
@@ -268,6 +329,7 @@ router.patch("/offer", (req, res) => {
 	let updatedOffer = req.body;
 
 	if (
+		!Object.prototype.hasOwnProperty.call(updatedOffer, "id") ||
 		!Object.prototype.hasOwnProperty.call(updatedOffer, "name") ||
 		!Object.prototype.hasOwnProperty.call(updatedOffer, "forWhom") ||
 		!Object.prototype.hasOwnProperty.call(updatedOffer, "description") ||
@@ -276,11 +338,18 @@ router.patch("/offer", (req, res) => {
 	)
 		return res.status(406).json("Updated offer object lacks mandatory fields");
 
-	if (databaseConnector.getOfferList().find((item) => item.name === updatedOffer.name) === undefined)
-		return res.status(406).json("Offer with given name does not exist");
-	for (const image of updatedOffer.images) {
-		if (!databaseConnector.getImageList().find((item) => item.image === image)) return res.status(406).json("One of images does not exist");
-	}
+	updatedPrice.id = parseInt(updatedPrice.id);
+
+	if (databaseConnector.getOfferList().find((item) => item.id === updatedOffer.id) === undefined)
+		return res.status(406).json("Offer with given id does not exist");
+
+	let imageList = databaseConnector.getImageList();
+	if (updatedHorse.images.length !== 0 && !updatedOffer.images.every((image) => imageList.find((item) => item.image === image)))
+		return res.status(406).json("One of images does not exist");
+
+	// for (const image of updatedOffer.images) {
+	// 	if (!databaseConnector.getImageList().find((item) => item.image === image)) return res.status(406).json("One of images does not exist");
+	// }
 
 	if (!databaseConnector.updateOffer(updatedOffer)) res.status(500).json("Unknown internal server error");
 	return res.sendStatus(200);
@@ -368,11 +437,9 @@ router.post("/image", (req, res) => {
 	let images = req.files.images;
 	if (!Array.isArray(images)) images = [images];
 
-	if (images === null || images === undefined) return res.status(406).json("No images sent");
-
-	for (const image of images) {
-		if (databaseConnector.getImageList().find((item) => item.image === image.name)) return res.status(406).json("One of images already exists");
-	}
+	if (images === null || images === undefined || images.length === 0) return res.status(406).json("No images sent");
+	let imageList = databaseConnector.getImageList();
+	if (images.every((image) => imageList.some((item) => item.image !== image.name))) return res.status(406).json("One of images already exists");
 
 	databaseConnector.uploadImages(images).then((result) => {
 		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");

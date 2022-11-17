@@ -19,9 +19,7 @@ export const ColorContextProvider = ({ children }) => {
 	useEffect(() => {
 		fetch(API_URL + "colorInfo")
 			.then((response) => checkResponseOk(response))
-			.then((response) => {
-				setColorContext(response);
-			})
+			.then((response) => setColorContext(response))
 			.catch((err) => {
 				console.error(`Server response: ${err}`);
 			});

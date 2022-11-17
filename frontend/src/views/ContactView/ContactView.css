@@ -2,8 +2,8 @@
   .contact-view {
     display: flex;
     flex-direction: row;
-    min-height: calc(100vh - 2.688rem - 7.75rem);
-    max-height: calc(100vh - 2.688rem - 7.75rem);
+    min-height: calc(100vh - 2rem - 7.75rem);
+    max-height: calc(100vh - 2rem - 7.75rem);
     max-width: 100%;
   }
   

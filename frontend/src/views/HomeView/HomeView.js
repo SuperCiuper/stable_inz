@@ -11,6 +11,15 @@ const HomeView = () => {
 	const [textBlockList, setTextBlockList] = useState([]);
 	const [rerender, setRerender] = useState(false);
 
+	const fetchTextBlockList = () => {
+		fetch(API_URL + "textBlock")
+			.then((response) => checkResponseOk(response))
+			.then((response) => setTextBlockList(response))
+			.catch((err) => {
+				console.error(`Server response: ${err}`);
+			});
+	};
+
 	useEffect(() => {
 		fetchTextBlockList();
 	}, []);
@@ -24,32 +33,8 @@ const HomeView = () => {
 		return () => window.removeEventListener("resize", forceRerender);
 	}, [rerender]);
 
-	const fetchTextBlockList = () => {
-		fetch(API_URL + "textBlock")
-			.then((response) => checkResponseOk(response))
-			.then((response) => {
-				setTextBlockList(response);
-			})
-			.catch((err) => {
-				console.error(`Server response: ${err}`);
-			});
-	};
-
 	const addNewTextBlock = (description) => {
-		fetch(API_URL + `textBlock`, {
-			method: "POST",
-			headers: { ...authContext.getAuthHeader(), "Content-Type": "application/json" },
-			body: JSON.stringify({ description: description, image: null }),
-		})
-			.then((response) => checkResponseOk(response))
-			.then(() => {
-				fetchTextBlockList();
-				authContext.showDataUpdateSuccess("Zmiany zostałe zapisane");
-			})
-			.catch((err) => {
-				console.error(`Server response: ${err}`);
-				authContext.showDataUpdateError(`Błąd serwera: "${err}", zmiany nie zostały zapisane`);
-			});
+		authContext.performDataUpdate("textBlock", "POST", { description: description, image: null }, fetchTextBlockList);
 	};
 
 	const createNewBlock = () => {

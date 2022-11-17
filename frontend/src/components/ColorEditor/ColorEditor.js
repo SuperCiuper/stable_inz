@@ -22,8 +22,7 @@ const ColorEditor = () => {
 					summary: "Błąd",
 					detail: `Wartość ${color}: ${value} jest nieprawidłowa (0-f, 6 znaków)`,
 					life: 10000,
-				}); // Wartość backgroundMain,#fdd1: undefined jest nieprawidłowa (0-f, 6 znaków)
-
+				});
 				return;
 			}
 		}

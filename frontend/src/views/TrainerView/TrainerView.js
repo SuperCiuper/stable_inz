@@ -20,9 +20,7 @@ const TrainerView = () => {
 	const fetchTrainerList = () => {
 		fetch(API_URL + "trainer")
 			.then((response) => checkResponseOk(response))
-			.then((response) => {
-				setTrainerList(response);
-			})
+			.then((response) => setTrainerList(response))
 			.catch((err) => {
 				console.error(`Server response: ${err}`);
 			});

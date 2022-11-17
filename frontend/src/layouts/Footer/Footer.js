@@ -8,7 +8,7 @@ const Footer = () => {
 	return (
 		<footer className='footer' style={{ backgroundColor: colorContext.header }}>
 			<div className='item' style={{ color: colorContext.button }}>
-				&copy; All rights reserved
+				&copy; 2022 Stajnia Malta. All rights reserved
 			</div>
 		</footer>
 	);

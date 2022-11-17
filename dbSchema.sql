@@ -1,5 +1,5 @@
 CREATE TABLE main_info ( 
-	id                  boolean DEFAULT true NOT NULL,
+	id                      boolean DEFAULT true NOT NULL,
 	password_hash_rgb				text NOT NULL,
 	background_main_rgb     text NOT NULL,
 	background_content_rgb  text NOT NULL,
@@ -25,12 +25,9 @@ CREATE TABLE contact_info (
 	CONSTRAINT pk_contact_info PRIMARY KEY ( id )
 );
 
-CREATE TABLE image ( 
-	name                text  NOT NULL,
+CREATE TABLE image (
+	name                text NOT NULL,
 	visible							boolean NOT NULL,
-	horse_name          text,
-	trainer_name        text,
-	offer_name          text,
 	CONSTRAINT pk_image PRIMARY KEY ( name )
 );
 
@@ -42,11 +39,12 @@ CREATE TABLE main_page_text_block (
 );
 
 CREATE TABLE offer ( 
+	id									serial NOT NULL,
 	name             		text NOT NULL,
 	for_whom            text NOT NULL,
 	description         text NOT NULL,
 	proposed_price      text NOT NULL,
-	CONSTRAINT pk_offer PRIMARY KEY ( name )
+	CONSTRAINT pk_offer PRIMARY KEY ( id )
 );
 
 CREATE TABLE horse ( 
@@ -70,15 +68,38 @@ CREATE TABLE price_list (
 	CONSTRAINT pk_price_list PRIMARY KEY ( id )
 );
 
+CREATE TABLE image_horse_junction (
+	image_name          text NOT NULL,
+	horse_name          text,
+	CONSTRAINT pk_image_horse_junction PRIMARY KEY ( image_name, horse_name )
+);
+
+CREATE TABLE image_trainer_junction (
+	image_name          text NOT NULL,
+	trainer_name        text,
+	CONSTRAINT pk_image_trainer_junction PRIMARY KEY ( image_name, trainer_name )
+);
+
+CREATE TABLE image_offer_junction (
+	image_name          text  NOT NULL,
+	offer_id          	int NOT NULL,
+	CONSTRAINT pk_image_offer_junction PRIMARY KEY ( image_name, offer_id )
+);
+
 ALTER TABLE contact_info ADD CONSTRAINT fk_contact_info_main_info FOREIGN KEY ( id ) REFERENCES main_info( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE horse ADD CONSTRAINT fk_horse_image FOREIGN KEY ( profile_image_name ) REFERENCES image( name ) ON DELETE SET DEFAULT ON UPDATE SET DEFAULT;
 ALTER TABLE trainer ADD CONSTRAINT fk_trainer_image FOREIGN KEY ( profile_image_name ) REFERENCES image( name ) ON DELETE SET DEFAULT ON UPDATE SET DEFAULT;
 ALTER TABLE main_page_text_block ADD CONSTRAINT fk_main_page_text_block_image FOREIGN KEY ( image_name ) REFERENCES image( name ) ON DELETE SET NULL ON UPDATE SET NULL;;
 
-ALTER TABLE image ADD CONSTRAINT fk_image_horse FOREIGN KEY ( horse_name ) REFERENCES horse( name ) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE image ADD CONSTRAINT fk_image_trainer FOREIGN KEY ( trainer_name ) REFERENCES trainer( name ) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE image ADD CONSTRAINT fk_image_offer FOREIGN KEY ( offer_name ) REFERENCES offer( name ) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE image_horse_junction ADD CONSTRAINT fk_image_horse_junction_1 FOREIGN KEY ( image_name ) REFERENCES image( name ) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE image_horse_junction ADD CONSTRAINT fk_image_horse_junction_2 FOREIGN KEY ( horse_name ) REFERENCES horse( name ) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE image_trainer_junction ADD CONSTRAINT fk_image_trainer_junction_1 FOREIGN KEY ( image_name ) REFERENCES image( name ) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE image_trainer_junction ADD CONSTRAINT fk_image_trainer_junction_2 FOREIGN KEY ( trainer_name ) REFERENCES trainer( name ) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE image_offer_junction ADD CONSTRAINT fk_image_offer_junction_1 FOREIGN KEY ( image_name ) REFERENCES image( name ) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE image_offer_junction ADD CONSTRAINT fk_image_offer_junction_2 FOREIGN KEY ( offer_id ) REFERENCES offer( id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE VIEW color_info_view AS
 SELECT background_main_rgb 		as "backgroundMain",
@@ -112,6 +133,23 @@ SELECT id,
 			 description,
 			 image_name as image
 FROM main_page_text_block;
+
+CREATE VIEW horse_list_view AS
+SELECT horse.name,
+			 horse.description,
+			 array_remove(array_prepend(horse.profile_image_name, array_agg(image_horse_junction.image_name)), NULL) as images
+FROM horse
+LEFT JOIN image_horse_junction ON horse.name = image_horse_junction.horse_name
+GROUP BY name;
+
+CREATE VIEW trainer_list_view AS
+SELECT trainer.name,
+			 trainer.description,
+			 array_remove(array_prepend(trainer.profile_image_name, array_agg(image_trainer_junction.image_name)), NULL) as images
+FROM trainer
+LEFT JOIN image_trainer_junction ON trainer.name = image_trainer_junction.trainer_name
+GROUP BY name;
+
 
 INSERT INTO main_info VALUES(
 	true,

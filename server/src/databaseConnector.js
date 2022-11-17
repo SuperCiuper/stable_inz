@@ -8,6 +8,7 @@ const pool = new Pool();
 const detaIntance = Deta(process.env.DETA_KEY);
 const detaImageDrive = detaIntance.Drive("images");
 
+const INTERNAL_SERVER_ERROR_OBJ = { success: false, message: "Internal server error, contact maintainer" };
 const IMAGE_PATH = path.join(__dirname, "../public/api/image/");
 const DUMMY_IMAGE = "dummyImage.jpg";
 const DUMMY_IMAGE_PATH = "/api/image/" + DUMMY_IMAGE;
@@ -16,31 +17,27 @@ const dummyDescription =
 
 var colorInfo = {};
 var contactInfo = {};
-var textBlockList = [
-	// { id: 1, description: `1${dummyDescription}`, image: "1.jpg" },
-	// { id: 2, description: `2${dummyDescription}`, image: "2.webp" },
-	// { id: 3, description: `3${dummyDescription}`, image: null },
-];
+var textBlockList = [];
 var imageList = [];
 var horseList = [
-	{
-		name: "Malta",
-		description:
-			"Super konica. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-		images: ["1.jpg", "2.webp"],
-	},
-	{
-		name: "Super koń",
-		description:
-			"Super koń. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-		images: ["2.webp", "1.jpg"],
-	},
-	{
-		name: "Super koń v2",
-		description:
-			"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
-		images: ["2.webp", "1.jpg"],
-	},
+	// {
+	// 	name: "Malta",
+	// 	description:
+	// 		"Super konica. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+	// 	images: ["1.jpg", "2.webp"],
+	// },
+	// {
+	// 	name: "Super koń",
+	// 	description:
+	// 		"Super koń. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+	// 	images: ["2.webp", "1.jpg"],
+	// },
+	// {
+	// 	name: "Super koń v2",
+	// 	description:
+	// 		"Super koń v2. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,",
+	// 	images: ["2.webp", "1.jpg"],
+	// },
 ];
 var trainerList = [
 	{
@@ -52,6 +49,7 @@ var trainerList = [
 ];
 var offerList = [
 	{
+		id: 1,
 		name: "Jazda indywidualna",
 		forWhom: "Dla każdego",
 		description: "Jazdy indywidualne dopasowane do umiejętności jeźdźca",
@@ -59,6 +57,7 @@ var offerList = [
 		images: ["2.webp", "1.jpg"],
 	},
 	{
+		id: 2,
 		name: "Jazda terenowa",
 		forWhom: "Dla osób jeżdżących samodzielnie w 3 stylach",
 		description: "Jazda terenowa w grupach od 3 do 10 osób. Czas trwania od 2 do 4 godzin.",
@@ -103,12 +102,11 @@ const updateColorInfo = async (updatedColorInfo) => {
 				updatedColorInfo.highlight,
 			]
 		);
-		return await updateFromDatabase();
+		return updateFromDatabase();
 	} catch (err) {
 		console.error(err);
-		return false;
+		return INTERNAL_SERVER_ERROR_OBJ;
 	}
-	// colorInfo = updatedColorInfo;
 };
 
 const getContactInfo = () => {
@@ -132,106 +130,97 @@ const updateContactInfo = async (updatedContactInfo) => {
 		return await updateFromDatabase();
 	} catch (err) {
 		console.error(err);
-		return false;
+		return INTERNAL_SERVER_ERROR_OBJ;
 	}
-	//contactInfo = updatedContactInfo;
 };
 
 const getTextBlockList = () => {
 	return textBlockList;
 };
 
-const createTextBlock = (newTextBlock) => {
-	// if newTextBlock.image === null => inster NULL
-
-	// pool.query(
-	// 	"INSERT INTO main_page_text_block (description, image_name) VALUES ($1, $2)",
-	// 	[newTextBlock.description, newTextBlock.image],
-	// 	(err, res) => {
-	// 		if (err) {
-	// 			console.log(err.stack);
-	// 		}
-	// 	}
-	// );
-	const id = Math.max(...textBlockList.map((item) => item.id)) + 1;
-	textBlockList.push({ ...newTextBlock, id: id });
-
-	return updateFromDatabase();
+const createTextBlock = async (newTextBlock) => {
+	try {
+		await pool.query("INSERT INTO main_page_text_block (description, image_name) VALUES ($1, $2)", [newTextBlock.description, newTextBlock.image]);
+		return updateFromDatabase();
+	} catch (err) {
+		console.error(err);
+		return INTERNAL_SERVER_ERROR_OBJ;
+	}
 };
 
-const updateTextBlock = (updatedTextBlock) => {
-	// pool.query(
-	// 	"UPDATE main_page_text_block SET image_name = $2, description = $3 WHERE name = $1",
-	// 	[updatedTextBlock.id, updatedTextBlock.image, updatedTextBlock.description],
-	// 	(err, res) => {
-	// 		if (err) {
-	// 			console.log(err.stack);
-	// 		}
-	// 	}
-	// );
-	textBlockList[textBlockList.findIndex((item) => item.id === updatedTextBlock.id)] = updatedTextBlock;
-
-	return updateFromDatabase();
+const updateTextBlock = async (updatedTextBlock) => {
+	try {
+		await pool.query("UPDATE main_page_text_block SET image_name = $2, description = $3 WHERE id = $1", [
+			updatedTextBlock.id,
+			updatedTextBlock.image,
+			updatedTextBlock.description,
+		]);
+		return updateFromDatabase();
+	} catch (err) {
+		console.error(err);
+		return INTERNAL_SERVER_ERROR_OBJ;
+	}
 };
 
-const deleteTextBlock = (textBlockId) => {
-	// pool.query("DELETE FROM main_page_text_block WHERE id = $1", [textBlockId], (err) => {
-	// 	if (err) {
-	// 		console.log(err.stack);
-	// 	}
-	// });
-
-	textBlockList = textBlockList.filter((item) => item.id !== textBlockId);
-
-	return updateFromDatabase();
+const deleteTextBlock = async (textBlockId) => {
+	try {
+		await pool.query("DELETE FROM main_page_text_block WHERE id = $1", [textBlockId]);
+		return updateFromDatabase();
+	} catch (err) {
+		console.error(err);
+		return INTERNAL_SERVER_ERROR_OBJ;
+	}
 };
 
 const getHorseList = () => {
 	return horseList;
 };
 
-const createHorse = (newHorse) => {
-	if (newHorse.image === null) newHorse.image = DUMMY_IMAGE;
-
-	// pool.query("INSERT INTO horse VALUES ($1, $2, $3)", [newHorse.name, newHorse.image, newHorse.description], (err) => {
-	// 	if (err) {
-	// 		console.log(err.stack);
-	// 	}
-	// });
-
-	newHorse = { ...newHorse, images: [newHorse.image] };
-	delete newHorse["image"];
-	horseList.push(newHorse);
-	return updateFromDatabase();
+const createHorse = async (newHorse) => {
+	try {
+		await pool.query("INSERT INTO horse VALUES ($1, $2, $3)", [newHorse.name, newHorse.image, newHorse.description]);
+		return updateFromDatabase();
+	} catch (err) {
+		console.error(err);
+		return INTERNAL_SERVER_ERROR_OBJ;
+	}
 };
 
-const updateHorse = (updatedHorse) => {
-	if (updatedHorse.images === []) updatedHorse.images[0] = DUMMY_IMAGE;
+const updateHorse = async (updatedHorse) => {
+	try {
+		await pool.query("UPDATE horse SET profile_image_name = $2, description = $3 WHERE name = $1", [
+			updatedHorse.name,
+			updatedHorse.images[0],
+			updatedHorse.description,
+		]);
+		await pool.query("DELETE FROM image_horse_junction WHERE horse_name = $1", [updatedHorse.name]);
 
-	// pool.query(
-	// 	"UPDATE horse SET profile_image_name = $2, description = $3 WHERE name = $1",
-	// 	[updatedHorse.name, updatedHorse.images[0], updatedHorse.description],
-	// 	(err) => {
-	// 		if (err) {
-	// 			console.log(err.stack);
-	// 		}
-	// 	}
-	// ); // TODO add image table update
+		updatedHorse.images.shift();
+		if (updatedHorse.images !== 0) {
+			let insertImagesQuery = "INSERT INTO image_horse_junction VALUES";
+			updatedHorse.images.map((image, index) => {
+				insertImagesQuery += index === 0 ? ` ($${index + 2}, $1)` : `, ($${index + 2}, $1)`;
+			});
 
-	horseList[horseList.findIndex((item) => item.name === updatedHorse.name)] = updatedHorse;
-
-	return updateFromDatabase();
+			await pool.query(insertImagesQuery, [updatedHorse.name, ...updatedHorse.images]);
+		}
+		return updateFromDatabase();
+	} catch (err) {
+		console.error(err);
+		return INTERNAL_SERVER_ERROR_OBJ;
+	}
 };
 
-const deleteHorse = (horseName) => {
-	// pool.query("DELETE FROM horse WHERE name = $1", [horseName], (err) => {
-	// 	if (err) {
-	// 		console.log(err.stack);
-	// 	}
-	// });
-	horseList = horseList.filter((item) => item.name !== horseName);
+const deleteHorse = async (horseName) => {
+	try {
+		await pool.query("DELETE FROM horse WHERE name = $1", [horseName]);
+		await pool.query("DELETE FROM image_horse_junction WHERE horse_name = $1", [horseName]);
 
-	return updateFromDatabase();
+		return updateFromDatabase();
+	} catch (err) {
+		console.error(err);
+		return INTERNAL_SERVER_ERROR_OBJ;
+	}
 };
 
 const getTrainerList = () => {
@@ -299,8 +288,8 @@ const createOffer = (newOffer) => {
 
 const updateOffer = (updatedOffer) => {
 	// pool.query(
-	// 	"UPDATE offer SET forWhom = $2, description = $3 proposedPrice = $4 WHERE name = $1",
-	// 	[updatedOffer.name, updatedOffer.image, updatedOffer.description, newOffer.proposedPrice],
+	// 	"UPDATE offer SET name = $2, forWhom = $3, description = $4, proposedPrice = $5 WHERE id = $1",
+	// 	[updatedOffer.id, updatedOffer.name, updatedOffer.image, updatedOffer.description, newOffer.proposedPrice],
 	// 	(err) => {
 	// 		if (err) {
 	// 			console.log(err.stack);
@@ -489,19 +478,132 @@ const updateFromDatabase = async () => {
 		contactInfo = await pool.query("SELECT * FROM contact_info_view").then((res) => res.rows[0]);
 		imageList = await pool.query("SELECT * FROM image_list_view").then((res) => res.rows);
 		textBlockList = await pool.query("SELECT * FROM text_block_list_view").then((res) => res.rows);
+		horseList = await pool.query("SELECT * FROM horse_list_view").then((res) => res.rows);
+		//trainerList = await pool.query("SELECT * FROM trainer_list_view").then((res) => res.rows);
 
-		console.log(colorInfo);
-		console.log(contactInfo);
 		console.log(imageList);
 		console.log(textBlockList);
-		return true;
+		console.log(horseList);
+		console.log(trainerList);
+
+		return { success: true };
 	} catch (err) {
 		console.error(err);
-		return false;
+		return { success: false, message: "Update from database error, try again then contact maintainer" };
 	}
 };
 
+const DATA_SIZE = 1000;
+const performanceAssign = () => {
+	let arr;
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("for");
+	console.time();
+	for (let q = 0; q < arr.length; ++q) arr[q] = arr[q] + 1;
+
+	console.timeEnd();
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("for_of entries");
+	console.time();
+	for (let [q, v] of arr.entries()) arr[q] = v + 1;
+
+	console.timeEnd();
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("for_in");
+	console.time();
+	for (let q in arr) arr[q] = arr[q] + 1;
+
+	console.timeEnd();
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("foreach");
+	console.time();
+	arr.forEach((v, i) => (arr[i] = v + 1));
+
+	console.timeEnd();
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("map");
+	console.time();
+	arr.map((v) => v + 1);
+
+	console.timeEnd();
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("map with index");
+	console.time();
+	arr.map((v, q) => v + q);
+
+	console.timeEnd();
+};
+
+const performanceCompute = () => {
+	console.log();
+	let arr;
+	let computed;
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("for");
+	console.time();
+	for (let q = 0; q < arr.length; ++q) computed = arr[q] + 1;
+
+	console.timeEnd();
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("for_of");
+	console.time();
+	for (let v of arr) computed = v + 1;
+
+	console.timeEnd();
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("foreach");
+	console.time();
+	arr.forEach((v) => (computed = v + 1));
+
+	console.timeEnd();
+
+	arr = [];
+	for (let q = 0; q < DATA_SIZE; ++q) arr[q] = q;
+
+	console.log("map");
+	console.time();
+	arr.map((v) => (computed = v + 1));
+
+	console.timeEnd();
+};
+
 const serverStartup = async () => {
+	/* IN GENERAL 
+	for > foreach > map > for_of > for_of entries
+	use / modify - foreach
+	use / modify, return new arr - map
+	await / work with object - for_of or Object(obj).values()
+	modify arr by index - for_of entries
+	*/
+	//performanceAssign();
+	//performanceCompute();
 	if (!(await updateFromDatabase())) return false;
 	return await pullDeta();
 };

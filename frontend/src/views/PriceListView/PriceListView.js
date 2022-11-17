@@ -15,9 +15,7 @@ const PriceListView = () => {
 	const fetchPriceList = () => {
 		fetch(API_URL + "priceList")
 			.then((response) => checkResponseOk(response))
-			.then((response) => {
-				setPriceList(response);
-			})
+			.then((response) => setPriceList(response))
 			.catch((err) => {
 				console.error(`Server response: ${err}`);
 			});

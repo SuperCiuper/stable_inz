@@ -1,4 +1,4 @@
-# Stable web application
+# Stable web application - Stajnia Malta
 
 Projekt realizowany w ramach pracy inżynierskiej
 

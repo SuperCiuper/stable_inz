@@ -20,9 +20,7 @@ const HorseView = () => {
 	const fetchHorseList = () => {
 		fetch(API_URL + "horse")
 			.then((response) => checkResponseOk(response))
-			.then((response) => {
-				setHorseList(response);
-			})
+			.then((response) => setHorseList(response))
 			.catch((err) => {
 				console.error(`Server response: ${err}`);
 			});

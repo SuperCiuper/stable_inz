@@ -39,9 +39,7 @@ const GalleryView = () => {
 
 	const uploadImages = async ({ files }) => {
 		const formData = new FormData();
-		for (const image of files) {
-			formData.append("images", image);
-		}
+		files.foreach((image) => formData.append("images", image));
 
 		authContext.performDataUpdate("image", "POST", formData, fetchUpdatedImages);
 		fileUpload.current.clear();
