@@ -9,40 +9,39 @@ var { verifyToken } = require("../middleware/authorizator");
 const EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
 
 router.get("/", (req, res) => {
-	res.render("index", { title: "Praca inżynierska - AUTH" });
+  res.render("index", { title: "Praca inżynierska - AUTH" });
 });
 
-router.post("/login", (req, res) => {
-	try {
-		const password = req.body.password;
-		const passwordIsValid = bcrypt.compareSync(password, databaseConnector.getPassword());
+router.post("/login", async (req, res) => {
+  try {
+    if (!req.body || !req.body.password) return res.status(406).json("Password not sent");
+    const password = req.body.password;
 
-		if (!passwordIsValid) {
-			return res.status(401).json("Invalid Password!");
-		}
+    const passwordIsValid = bcrypt.compareSync(password, await databaseConnector.getPassword());
+    if (!passwordIsValid) return res.status(401).json("Invalid Password!");
 
-		var token = jwt.sign({}, process.env.PRIVATE_KEY, {
-			expiresIn: EXPIRATION_TIME,
-		});
+    const token = jwt.sign({}, process.env.PRIVATE_KEY, {
+      expiresIn: EXPIRATION_TIME,
+    });
 
-		return res.status(200).json({
-			accessToken: token,
-			expiresIn: EXPIRATION_TIME,
-		});
-	} catch (err) {
-		console.log(err);
-		return res.status(500).json("Internal server error");
-	}
+    return res.status(200).json({
+      accessToken: token,
+      expiresIn: EXPIRATION_TIME,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json("Internal server error, contact maintainer");
+  }
 });
 
 router.patch("/update", [verifyToken], (req, res) => {
-	const password = req.body.password;
-	if (password === null || password === undefined || password === "") return res.status(406).json("Password is empty");
-	const newPasswordHash = bcrypt.hashSync(password, SALT_ROUNDS);
+  if (!req.body || !req.body.password) return res.status(406).json("Password not sent");
+  const password = req.body.password;
+  const newPasswordHash = bcrypt.hashSync(password, SALT_ROUNDS);
 
-	databaseConnector.updatePassword(newPasswordHash).then((result) => {
-		return result ? res.sendStatus(200) : res.status(500).json("Unknown internal server error");
-	});
+  databaseConnector.updatePassword(newPasswordHash).then((err) => {
+    return err ? res.status(500).json(err) : res.sendStatus(200);
+  });
 });
 
 module.exports = router;

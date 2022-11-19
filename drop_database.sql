@@ -1,4 +1,10 @@
-DROP VIEW color_info_view, contact_info_view, image_list_view, text_block_list_view;
+DROP VIEW color_info_view, 
+          contact_info_view, 
+          image_list_view, 
+          text_block_list_view,
+          horse_list_view,
+          trainer_list_view,
+          offer_list_view;
 
 DROP TABLE contact_info,
            main_info,

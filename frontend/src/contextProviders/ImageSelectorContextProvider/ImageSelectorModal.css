@@ -1,69 +1,69 @@
 .image-selector-modal {
-	position: fixed;
-	z-index: 1;
+  position: fixed;
+  z-index: 1;
 
-	left: 0;
-	top: 0;
+  left: 0;
+  top: 0;
 
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .image-selector-modal .modal-window {
-	margin: 15% auto;
-	margin-top: 16vh;
-	margin-bottom: 16vh;
-	padding: 1.5rem;
+  margin: 15% auto;
+  margin-top: 16vh;
+  margin-bottom: 16vh;
+  padding: 1.5rem;
 
-	width: 48rem;
+  width: 48rem;
 
-	background-color: #fefefe;
-	border: 2px solid #888;
-	border-radius: 6px;
+  background-color: #fefefe;
+  border: 2px solid #888;
+  border-radius: 6px;
 }
 
 .image-selector-modal .modal-window .title {
-	padding: 0;
-	margin: 0;
-	margin-bottom: 1.6rem;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1.6rem;
 
-	text-align: center;
+  text-align: center;
 }
 
 .image-selector-modal .modal-window .image-gallery {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-	gap: 10px;
-	min-width: 100%;
-	max-height: 64vh;
+  gap: 10px;
+  min-width: 100%;
+  max-height: 64vh;
 
-	overflow-y: scroll;
-	-ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
 }
 
-.image-selector-modal .modal-window .image-gallery::-webkit-scrollbar { 
-	display: none;  /* Safari and Chrome */
+.image-selector-modal .modal-window .image-gallery::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 .image-selector-modal .modal-window .image-gallery .image-container {
-	min-width: 10.719rem;
+  min-width: 10.719rem;
   max-width: 10.719rem;
   min-height: 9rem;
   max-height: 9rem;
 }
 
 .image-selector-modal .modal-window .image-gallery .image-container:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 
-.image-selector-modal .modal-window .image-gallery .image-container .selected-image{
+.image-selector-modal .modal-window .image-gallery .image-container .selected-image {
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   min-width: 100%;
   max-width: 100%;
   min-height: 100%;
@@ -75,16 +75,16 @@
 }
 
 .image-selector-modal .modal-window .image-gallery .image-container img {
-	min-width: 100%;
+  min-width: 100%;
   max-width: 100%;
   min-height: 100%;
   max-height: 100%;
 
-	object-fit: scale-down;
+  object-fit: scale-down;
 }
 
 .image-selector-modal .modal-window .save-text-btn {
-	min-width: 100%;
+  min-width: 100%;
 
-	margin-top: 0.5rem;
+  margin-top: 0.5rem;
 }

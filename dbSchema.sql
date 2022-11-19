@@ -1,6 +1,6 @@
 CREATE TABLE main_info ( 
 	id                      boolean DEFAULT true NOT NULL,
-	password_hash_rgb				text NOT NULL,
+	password_hash						text NOT NULL,
 	background_main_rgb     text NOT NULL,
 	background_content_rgb  text NOT NULL,
 	panel_rgb							  text NOT NULL,
@@ -32,14 +32,14 @@ CREATE TABLE image (
 );
 
 CREATE TABLE main_page_text_block (
-	id 									smallserial NOT NULL,
+	id 									smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	description 				text NOT NULL,
 	image_name   				text,
 	CONSTRAINT pk_text PRIMARY KEY ( id )
 );
 
 CREATE TABLE offer ( 
-	id									serial NOT NULL,
+	id									smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	name             		text NOT NULL,
 	for_whom            text NOT NULL,
 	description         text NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE trainer (
 );
 
 CREATE TABLE price_list ( 
- 	id                  serial NOT NULL,
+ 	id                  smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	name                text NOT NULL,
 	price               text NOT NULL,
 	CONSTRAINT pk_price_list PRIMARY KEY ( id )
@@ -82,7 +82,7 @@ CREATE TABLE image_trainer_junction (
 
 CREATE TABLE image_offer_junction (
 	image_name          text  NOT NULL,
-	offer_id          	int NOT NULL,
+	offer_id          	smallint NOT NULL,
 	CONSTRAINT pk_image_offer_junction PRIMARY KEY ( image_name, offer_id )
 );
 
@@ -126,7 +126,8 @@ WHERE id = true;
 CREATE VIEW image_list_view AS
 SELECT name as image,
 			 visible
-FROM image;
+FROM image
+WHERE name != 'dummyImage.jpg';
 
 CREATE VIEW text_block_list_view AS
 SELECT id,
@@ -149,6 +150,17 @@ SELECT trainer.name,
 FROM trainer
 LEFT JOIN image_trainer_junction ON trainer.name = image_trainer_junction.trainer_name
 GROUP BY name;
+
+CREATE VIEW offer_list_view AS
+SELECT offer.id,
+			 offer.name,
+			 offer.for_whom as "forWhom",
+			 offer.description,
+			 offer.proposed_price as "proposedPrice",
+			 array_remove(array_agg(image_offer_junction.image_name), NULL) as images
+FROM offer
+LEFT JOIN image_offer_junction ON offer.id = image_offer_junction.offer_id
+GROUP BY id;
 
 
 INSERT INTO main_info VALUES(
@@ -173,3 +185,5 @@ INSERT INTO contact_info VALUES(
 	0.01,
 	0.01
 );
+
+INSERT INTO image (name, visible) VALUES ('dummyImage.jpg', true);
