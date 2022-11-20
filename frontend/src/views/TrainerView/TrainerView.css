@@ -1,12 +1,12 @@
 @media screen and (min-width: 640px) {
   .trainer-view .new-trainer {
-    width: 40%; 
+    width: 40%;
   }
 }
 
 @media screen and (max-width: 640px) {
   .trainer-view .new-trainer {
-    width: 90%; 
+    width: 90%;
   }
 }
 

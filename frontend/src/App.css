@@ -1,10 +1,21 @@
+@media screen and (min-width: 900px) {
+  .Content {
+    min-height: calc(100vh - 2rem - 9.75rem);
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .Content {
+    min-height: calc(100vh - 2rem - 11.875rem);
+  }
+}
+
 .App {
   overflow-x: hidden;
   overflow-y: hidden;
 }
 
 .Content {
-  min-height: calc(100vh - 2rem - 7.75rem);
   margin-left: 10%;
   margin-right: 10%;
 }

@@ -1,12 +1,13 @@
-// disables incorrect eslint error on err
-/*global err:writeable*/
+/* disables incorrect eslint error on err */
+/* global err:writeable */
 
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 const fileUpload = require("express-fileupload");
-var databaseConnector = require("../databaseConnector");
-var { verifyToken } = require("../middleware/authorizator");
-var authRouter = require("./authenticator");
+
+const authRouter = require("./authenticator");
+const databaseConnector = require("../databaseConnector");
+const { verifyToken } = require("../middleware/authorizator");
 
 router.use(fileUpload());
 router.use("/auth", authRouter);
@@ -113,10 +114,8 @@ router.get("/textBlock", (req, res) => {
 
 router.post("/textBlock", (req, res) => {
   const newTextBlock = req.body;
-  if (!newTextBlock || !newTextBlock.description || !newTextBlock.image)
+  if (!newTextBlock || !newTextBlock.description || !Object.prototype.hasOwnProperty.call(newTextBlock, "image"))
     return res.status(406).json("Mandatory fields not set");
-
-  if ((err = checkImage(newTextBlock.image))) return res.status(406).json(err);
 
   databaseConnector.createTextBlock(newTextBlock).then((err) => {
     return err ? res.status(500).json(err) : res.sendStatus(200);
@@ -125,7 +124,12 @@ router.post("/textBlock", (req, res) => {
 
 router.patch("/textBlock", (req, res) => {
   let updatedTextBlock = req.body;
-  if (!updatedTextBlock || !updatedTextBlock.id || !updatedTextBlock.description || !updatedTextBlock.image)
+  if (
+    !updatedTextBlock ||
+    !updatedTextBlock.id ||
+    !updatedTextBlock.description ||
+    !Object.prototype.hasOwnProperty.call(updatedTextBlock, "image")
+  )
     return res.status(406).json("Mandatory fields not set");
   updatedTextBlock.id = parseInt(updatedTextBlock.id);
 
@@ -257,7 +261,6 @@ router.post("/offer", (req, res) => {
 
   if ((err = checkNameFree(newOffer.name, databaseConnector.getOfferList()))) return res.status(406).json(err);
 
-  console.log(newOffer);
   databaseConnector.createOffer(newOffer).then((err) => {
     return err ? res.status(500).json(err) : res.sendStatus(200);
   });
@@ -361,7 +364,6 @@ router.post("/image", (req, res) => {
 
 router.patch("/image", (req, res) => {
   let images = req.body;
-  console.log(images);
   if (!images || images.length === 0) return res.status(406).json("Image list not sent");
 
   const imageList = databaseConnector.getImageList();
@@ -382,7 +384,6 @@ router.patch("/image", (req, res) => {
 
 router.delete("/image", (req, res) => {
   const deleteImageNames = req.body;
-  console.log(deleteImageNames);
   if (!deleteImageNames || deleteImageNames.length === 0) return res.status(406).json("No images sent");
 
   if ((err = checkImages(deleteImageNames))) return res.status(406).json(err);

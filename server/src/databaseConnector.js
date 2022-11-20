@@ -1,7 +1,8 @@
-const Pool = require("pg").Pool;
 const { Deta } = require("deta");
+const Pool = require("pg").Pool;
+
 const path = require("path");
-var fs = require("fs");
+const fs = require("fs");
 
 const pool = new Pool();
 const detaIntance = Deta(process.env.DETA_KEY);
@@ -319,18 +320,16 @@ const uploadImages = async (images) => {
   const err = await Promise.all(
     images.map(async (newImage) => {
       try {
+        await newImage.mv(IMAGE_PATH + newImage.name);
+
         await pool.query("INSERT INTO image (name, visible) VALUES ($1, true)", [newImage.name]);
         await detaImageDrive.put(newImage.name, { path: IMAGE_PATH + newImage.name });
 
-        await newImage.mv(IMAGE_PATH + newImage.name);
         console.log(`Saved ${newImage.name}`);
-
         return false;
-      } catch {
-        (err) => {
-          console.error(err);
-          return true;
-        };
+      } catch (err) {
+        console.error(err);
+        return true;
       }
     })
   );
@@ -420,7 +419,8 @@ const pullDeta = async () => {
       }
     })
   );
-  if (err.some((item) => item)) "Images not pulled from DETA, contact maintainer";
+  if (err.some((item) => item)) return "Images not pulled from DETA, contact maintainer";
+  return false;
 };
 
 const updateFromDatabase = async () => {

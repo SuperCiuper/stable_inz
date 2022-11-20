@@ -16,7 +16,7 @@
   }
 }
 
-@media screen and (max-width: 450px ) {
+@media screen and (max-width: 450px) {
   .gallery-view .image-container {
     height: 16vh;
   }

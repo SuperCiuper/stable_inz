@@ -1,6 +1,6 @@
 @media screen and (min-width: 640px) {
   .p-accordion-content .p-galleria {
-    height: 32rem; 
+    height: 32rem;
   }
 }
 
@@ -28,7 +28,9 @@
   text-align: justify;
 }
 
-.p-accordion .p-accordion-header .p-accordion-header-link, .p-accordion .p-accordion-header:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link, .p-accordion .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+.p-accordion .p-accordion-header .p-accordion-header-link,
+.p-accordion .p-accordion-header:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link,
+.p-accordion .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
   background-color: inherit;
   border-color: inherit;
 }
@@ -37,7 +39,7 @@
   background-color: rgba(0, 0, 0, 0.1);
   border-color: inherit;
 
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 }
 
 .p-accordion .p-accordion-content {
@@ -51,7 +53,10 @@
   border: 0.2rem solid black;
 }
 
-.p-galleria-content, .p-galleria-item-wrapper, .p-galleria-item-container, .p-galleria-item {
+.p-galleria-content,
+.p-galleria-item-wrapper,
+.p-galleria-item-container,
+.p-galleria-item {
   min-height: 100%;
   max-height: 100%;
   min-width: 100%;
@@ -102,6 +107,5 @@
 }
 
 .new-offer .add-offer-btn {
-	min-width: 100%;
+  min-width: 100%;
 }
-

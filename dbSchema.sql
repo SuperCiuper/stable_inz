@@ -70,13 +70,13 @@ CREATE TABLE price_list (
 
 CREATE TABLE image_horse_junction (
 	image_name          text NOT NULL,
-	horse_name          text,
+	horse_name          text NOT NULL,
 	CONSTRAINT pk_image_horse_junction PRIMARY KEY ( image_name, horse_name )
 );
 
 CREATE TABLE image_trainer_junction (
 	image_name          text NOT NULL,
-	trainer_name        text,
+	trainer_name        text NOT NULL,
 	CONSTRAINT pk_image_trainer_junction PRIMARY KEY ( image_name, trainer_name )
 );
 
@@ -133,7 +133,8 @@ CREATE VIEW text_block_list_view AS
 SELECT id,
 			 description,
 			 image_name as image
-FROM main_page_text_block;
+FROM main_page_text_block
+ORDER BY id;
 
 CREATE VIEW horse_list_view AS
 SELECT horse.name,
@@ -166,13 +167,13 @@ GROUP BY id;
 INSERT INTO main_info VALUES(
 	true,
 	'$2b$15$7X95ZlV0ELPq.ljtRqRFFucEZAkWY0Ga8F3sYfsW3A97z2HBZ9yia',
-	'#fff6de',
-	'#fdffe8',
 	'#ffffff',
-	'#d19b5e',
-	'#111111',
+	'#f0f0f0',
+	'#e0e0e0',
+	'#ffffff',
 	'#000000',
-	'#ffff82'
+	'#000000',
+	'#000000'
 );
   
 INSERT INTO contact_info VALUES( 

@@ -1,8 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
 import "./HorseView.css";
-import { API_URL, checkResponseOk } from "../../constants";
+
+import { useContext, useEffect, useRef, useState } from "react";
+
 import { PersonalCard } from "../../components";
+import { API_URL, checkResponseOk } from "../../constants";
 import { AuthContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
+
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 
@@ -79,7 +82,7 @@ const HorseView = () => {
           name={item.name}
           images={item.images}
           description={item.description}
-          index={index} //TODO: check if key can be used
+          index={index}
           personType="horse"
           updateParentCallback={fetchHorseList}
         />

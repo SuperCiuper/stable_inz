@@ -1,11 +1,13 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { AuthContext, ColorContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
 import "./PersonalCard.css";
+
+import { useContext, useEffect, useRef, useState } from "react";
+import { API_URL } from "../../constants";
+import { AuthContext, ColorContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
+
 import { Button } from "primereact/button";
 import { Galleria } from "primereact/galleria";
-import { classNames } from "primereact/utils";
-import { API_URL } from "../../constants";
 import { Toast } from "primereact/toast";
+import { classNames } from "primereact/utils";
 
 const PersonalCard = ({ name, images, description, index, personType, updateParentCallback = () => {} }) => {
   const authContext = useContext(AuthContext);
@@ -83,8 +85,7 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
   const renderImage = (image = images[0]) => {
     return (
       <div className="personal-image-block">
-        {/* eslint-disable-next-line */}
-        <img src={`${API_URL}image/${image}`} alt={`Image ${image} not found`} />
+        <img src={`${API_URL}image/${image}`} alt={image} />
         {fullscreenButton()}
       </div>
     );
@@ -103,10 +104,10 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
       toast.current.show({ severity: "error", summary: "Błąd", detail: "Profilowe musi być wybrane", life: 6000 });
       return;
     }
-    let newProfileImage = newImages[0];
+    const newProfileImage = newImages[0];
     let sortedNewImages = images.filter((item) => item !== newProfileImage);
     sortedNewImages.unshift(newProfileImage);
-    console.log(sortedNewImages);
+
     handleFetch("PATCH", { name: name, description: description, images: sortedNewImages });
   };
 

@@ -5,13 +5,13 @@ import { TextEditorContext, TextEditorContextProvider } from "./TextEditorContex
 import GlobalContextProvider from "./GlobalContextProvider";
 
 export {
-	AuthContext,
-	AuthContextProvider,
-	ColorContext,
-	ColorContextProvider,
-	ImageSelectorContext,
-	ImageSelectorContextProvider,
-	TextEditorContext,
-	TextEditorContextProvider,
-	GlobalContextProvider,
+  AuthContext,
+  AuthContextProvider,
+  ColorContext,
+  ColorContextProvider,
+  ImageSelectorContext,
+  ImageSelectorContextProvider,
+  TextEditorContext,
+  TextEditorContextProvider,
+  GlobalContextProvider,
 };

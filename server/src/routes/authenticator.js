@@ -1,12 +1,14 @@
-var express = require("express");
-var router = express.Router();
-var databaseConnector = require("../databaseConnector");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const SALT_ROUNDS = 16;
-var { verifyToken } = require("../middleware/authorizator");
+const express = require("express");
+const router = express.Router();
 
-const EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const databaseConnector = require("../databaseConnector");
+const { verifyToken } = require("../middleware/authorizator");
+
+const SALT_ROUNDS = 16;
+const EXPIRATION_TIME = 60 * 60 * 1000; /* 1 hour */
 
 router.get("/", (req, res) => {
   res.render("index", { title: "Praca inżynierska - AUTH" });

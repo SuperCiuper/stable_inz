@@ -1,7 +1,9 @@
-import React, { createContext, useEffect, useState } from "react";
 import "./ImageSelectorModal.css";
-import { Button } from "primereact/button";
+
+import { createContext, useEffect, useState } from "react";
 import { API_URL, checkResponseOk } from "../../constants";
+
+import { Button } from "primereact/button";
 
 export const ImageSelectorContext = createContext({});
 
@@ -55,7 +57,7 @@ export const ImageSelectorContextProvider = ({ children }) => {
 
   const onClickImage = (image) => {
     setSelectedImages((prevState) => {
-      if (prevState.find((item) => item === image) === undefined) {
+      if (prevState.every((item) => item !== image)) {
         if (singleImage) return [image];
         else return [...prevState, image];
       } else return [...prevState.filter((item) => item !== image)];

@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { AuthContext, ColorContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
 import "./OfferView.css";
+
+import { useContext, useEffect, useRef, useState } from "react";
 import { API_URL, checkResponseOk } from "../../constants";
+import { AuthContext, ColorContext, ImageSelectorContext, TextEditorContext } from "../../contextProviders";
+
 import { Accordion, AccordionTab } from "primereact/accordion";
-import { Galleria } from "primereact/galleria";
 import { Button } from "primereact/button";
+import { Galleria } from "primereact/galleria";
 import { Toast } from "primereact/toast";
 
 const OfferView = () => {
@@ -29,11 +31,10 @@ const OfferView = () => {
   }, []);
 
   const renderImage = (image, images) => {
-    if (image === undefined) image = images[0];
+    if (!image) image = images[0];
     return (
       <div className="image-block">
-        {/* eslint-disable-next-line */}
-        <img src={`${API_URL}image/${image}`} alt={`Image ${image} not found`} />
+        <img src={`${API_URL}image/${image}`} alt={image} />
       </div>
     );
   };
@@ -187,7 +188,7 @@ const OfferView = () => {
                 circular
                 autoPlay
                 transitionInterval={4500}
-                showItemNavigators // TODO https://stackoverflow.com/questions/42036865/react-how-to-navigate-through-list-by-arrow-keys
+                showItemNavigators
                 showItemNavigatorsOnHover
                 showThumbnails={false}
               />

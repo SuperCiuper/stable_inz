@@ -1,21 +1,23 @@
-import React, { useContext } from "react";
-import { Outlet } from "react-router-dom";
 import "./App.css";
-import { Footer, Header } from "./layouts";
+
+import { useContext } from "react";
+import { Outlet } from "react-router-dom";
+
 import { ColorContext } from "./contextProviders";
+import { Footer, Header } from "./layouts";
 
 const App = () => {
-	const { colorContext } = useContext(ColorContext);
+  const { colorContext } = useContext(ColorContext);
 
-	return (
-		<div className='App' style={{ backgroundColor: colorContext.backgroundMain }}>
-			<Header />
-			<div className='Content' style={{ backgroundColor: colorContext.backgroundContent }}>
-				<Outlet />
-			</div>
-			<Footer />
-		</div>
-	);
+  return (
+    <div className="App" style={{ backgroundColor: colorContext.backgroundMain }}>
+      <Header />
+      <div className="Content" style={{ backgroundColor: colorContext.backgroundContent }}>
+        <Outlet />
+      </div>
+      <Footer />
+    </div>
+  );
 };
 
 export default App;

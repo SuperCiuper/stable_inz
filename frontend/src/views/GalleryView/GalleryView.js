@@ -1,10 +1,12 @@
+import "./GalleryView.css";
+
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext, ImageSelectorContext } from "../../contextProviders";
-import "./GalleryView.css";
 import { API_URL, checkResponseOk } from "../../constants";
-import { Image } from "primereact/image";
+
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
+import { Image } from "primereact/image";
 
 const GalleryView = () => {
   const authContext = useContext(AuthContext);
@@ -46,7 +48,6 @@ const GalleryView = () => {
   };
 
   const updateImages = async (hiddenImages) => {
-    console.log(hiddenImages);
     let updatedImages = await Promise.all(
       imageList.map(async (item) => {
         if (await hiddenImages.find((image) => image === item.image)) {
@@ -114,7 +115,6 @@ const GalleryView = () => {
       {imageList.map((item, index) =>
         item.visible ? (
           <div className="image-container" key={index}>
-            {/* eslint-disable-next-line */}
             <Image className="image-item" src={`${API_URL}image/${item.image}`} alt={item.image} preview />
           </div>
         ) : (

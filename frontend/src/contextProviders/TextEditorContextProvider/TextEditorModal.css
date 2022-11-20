@@ -1,41 +1,41 @@
 .text-editor-modal {
-	position: fixed;
-	z-index: 1;
+  position: fixed;
+  z-index: 1;
 
-	left: 0;
-	top: 0;
+  left: 0;
+  top: 0;
 
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .text-editor-modal .modal-window {
-	margin: 15% auto;
-	margin-top: 16rem;
-	padding: 1.5rem;
+  margin: 15% auto;
+  margin-top: 16rem;
+  padding: 1.5rem;
 
-	width: 36rem;
+  width: 36rem;
 
-	background-color: #fefefe;
-	border: 2px solid #888;
-	border-radius: 6px;
+  background-color: #fefefe;
+  border: 2px solid #888;
+  border-radius: 6px;
 }
 
 .text-editor-modal .modal-window .title {
-	padding: 0;
-	margin: 0;
-	margin-bottom: 1.2rem;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1.2rem;
 
-	text-align: center;
+  text-align: center;
 }
 
 .text-editor-modal .modal-window .textarea {
-	min-width: 100%;
+  min-width: 100%;
 }
 
 .text-editor-modal .modal-window .save-text-btn {
-	min-width: 100%;
+  min-width: 100%;
 
-	margin-top: 0.5rem;
+  margin-top: 0.5rem;
 }
