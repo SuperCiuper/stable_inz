@@ -32,7 +32,7 @@ const PriceListView = () => {
   };
 
   const saveName = (item, newName = "") => {
-    handleFetch("PATCH", { ...item, name: newName });
+    handleFetch("PUT", { ...item, name: newName });
   };
 
   const editName = (item) => {
@@ -40,7 +40,7 @@ const PriceListView = () => {
   };
 
   const savePrice = (item, newPrice = "") => {
-    handleFetch("PATCH", { ...item, price: newPrice });
+    handleFetch("PUT", { ...item, price: newPrice });
   };
 
   const editPrice = (item) => {
@@ -56,7 +56,7 @@ const PriceListView = () => {
   };
 
   const setNewPricePrice = (newPrice, price) => {
-    if (price === null || price === "" || price === undefined) {
+    if (!price) {
       addNewPriceError("Nie dodano opisu");
       return;
     }
@@ -64,7 +64,7 @@ const PriceListView = () => {
   };
 
   const setNewPriceName = (name) => {
-    if (name === null || name === "" || name === undefined) {
+    if (!name) {
       addNewPriceError("Nowy przedmiot nie został dodany");
       return;
     }
@@ -115,7 +115,7 @@ const PriceListView = () => {
           ))}
           {authContext.isLogged ? (
             <tr>
-              <td className="new-price" colSpan="3">
+              <td className="new-price" colSpan="3" style={{ borderColor: colorContext.detail }}>
                 <Toast ref={toast} />
                 <Button
                   className="add-price-btn p-button-sm p-button-secondary"

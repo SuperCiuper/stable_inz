@@ -108,7 +108,7 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
     let sortedNewImages = images.filter((item) => item !== newProfileImage);
     sortedNewImages.unshift(newProfileImage);
 
-    handleFetch("PATCH", { name: name, description: description, images: sortedNewImages });
+    handleFetch("PUT", { name: name, description: description, images: sortedNewImages });
   };
 
   const editProfileImage = () => {
@@ -116,15 +116,15 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
   };
 
   const saveImages = (newImages = images) => {
-    handleFetch("PATCH", { name: name, description: description, images: newImages });
+    handleFetch("PUT", { name: name, description: description, images: newImages });
   };
 
   const editImages = () => {
-    openImageSelector(`Wybierz zdjęcia ${name}`, images, saveImages, undefined, images[0]);
+    openImageSelector(`Wybierz zdjęcia ${name}`, images, saveImages, false, images[0]);
   };
 
   const saveDescription = (newDescription = description) => {
-    handleFetch("PATCH", { name: name, description: newDescription, images: images });
+    handleFetch("PUT", { name: name, description: newDescription, images: images });
   };
 
   const editDescription = () => {

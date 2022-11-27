@@ -123,7 +123,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     if (authContext.isLogged) {
       const expirationTime = localStorage.getItem("expirationTime");
-      if (expirationTime === null || expirationTime === undefined || Date.now() >= expirationTime) {
+      if (!expirationTime || Date.now() >= expirationTime) {
         toast.current.show({
           severity: "warn",
           summary: "Wylogowano",

@@ -11,7 +11,7 @@ const SALT_ROUNDS = 16;
 const EXPIRATION_TIME = 60 * 60 * 1000; /* 1 hour */
 
 router.get("/", (req, res) => {
-  res.render("index", { title: "Praca inżynierska - AUTH" });
+  res.render("index", { title: "Stajnia Malta - AUTH" });
 });
 
 router.post("/login", async (req, res) => {
@@ -36,7 +36,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.patch("/update", [verifyToken], (req, res) => {
+router.put("/update", [verifyToken], (req, res) => {
   if (!req.body || !req.body.password) return res.status(406).json("Password not sent");
   const password = req.body.password;
   const newPasswordHash = bcrypt.hashSync(password, SALT_ROUNDS);

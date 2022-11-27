@@ -36,7 +36,7 @@ const TrainerView = () => {
   const addNewTrainer = (newTrainer, newImages) => {
     let image = newImages.length === 0 ? null : newImages[0];
 
-    if (image === null || image === "" || image === undefined) {
+    if (!image) {
       addNewTrainerError("Profilowe nie zostało wybrane");
       return;
     }
@@ -50,7 +50,7 @@ const TrainerView = () => {
   };
 
   const setNewTrainerDescription = (newTrainer, description) => {
-    if (description === null || description === "" || description === undefined) {
+    if (!description) {
       addNewTrainerError("Nie dodano opisu");
       return;
     }
@@ -63,7 +63,7 @@ const TrainerView = () => {
   };
 
   const setNewTrainerName = (name) => {
-    if (name === null || name === "" || name === undefined || name === "Imię") {
+    if (!name || name === "Imię") {
       addNewTrainerError("Imię nie zostało wybrane");
       return;
     }

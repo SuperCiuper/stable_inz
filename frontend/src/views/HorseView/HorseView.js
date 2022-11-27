@@ -36,7 +36,7 @@ const HorseView = () => {
   const addNewHorse = (newHorse, newImages) => {
     let image = newImages.length === 0 ? null : newImages[0];
 
-    if (image === null || image === "" || image === undefined) {
+    if (!image) {
       addNewHorseError("Profilowe nie zostało wybrane");
       return;
     }
@@ -50,7 +50,7 @@ const HorseView = () => {
   };
 
   const setNewHorseDescription = (newHorse, description) => {
-    if (description === null || description === "" || description === undefined) {
+    if (!description) {
       addNewHorseError("Nie dodano opisu");
       return;
     }
@@ -63,7 +63,7 @@ const HorseView = () => {
   };
 
   const setNewHorseName = (name) => {
-    if (name === null || name === "" || name === undefined || name === "Imię") {
+    if (!name || name === "Imię") {
       addNewHorseError("Imię nie zostało wybrane");
       return;
     }

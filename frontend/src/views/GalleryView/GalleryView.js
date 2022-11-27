@@ -57,7 +57,7 @@ const GalleryView = () => {
       })
     );
 
-    authContext.performDataUpdate("image", "PATCH", updatedImages, fetchUpdatedImages);
+    authContext.performDataUpdate("image", "PUT", updatedImages, fetchUpdatedImages);
   };
 
   const saveImages = (images) => {

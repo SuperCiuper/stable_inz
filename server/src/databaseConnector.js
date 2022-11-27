@@ -445,6 +445,8 @@ const serverStartup = async () => {
   const errDB = await updateFromDatabase();
   if (errDB) return errDB;
 
+  console.log(colorInfo);
+  console.log(contactInfo);
   console.log(imageList);
   console.log(textBlockList);
   console.log(horseList);

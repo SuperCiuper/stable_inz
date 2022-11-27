@@ -85,8 +85,7 @@ export const ImageSelectorContextProvider = ({ children }) => {
                 <div
                   className="selected-image"
                   style={{
-                    visibility:
-                      selectedImages.find((item) => item === image) !== undefined && visibility ? "visible" : "hidden",
+                    visibility: selectedImages.some((item) => item === image) && visibility ? "visible" : "hidden",
                   }}
                 >
                   <i className="pi pi-star-fill" style={{ fontSize: "2rem" }} />

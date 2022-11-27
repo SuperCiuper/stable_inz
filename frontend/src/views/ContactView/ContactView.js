@@ -38,7 +38,7 @@ const ContactView = () => {
   const handleFetch = (name, updatedValue) => {
     let updatedContactInfo = { ...contactInfo };
     updatedContactInfo[name] = updatedValue;
-    authContext.performDataUpdate("contactInfo", "PATCH", updatedContactInfo, fetchContactInfo);
+    authContext.performDataUpdate("contactInfo", "PUT", updatedContactInfo, fetchContactInfo);
   };
 
   const editContactInfo = (name, title) => {

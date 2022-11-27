@@ -27,7 +27,7 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
 
   const saveImage = (newImages = image === null ? null : [...image]) => {
     let newImage = newImages.length === 0 ? null : newImages[0];
-    handleFetch("PATCH", { id: id, description: description, image: newImage });
+    handleFetch("PUT", { id: id, description: description, image: newImage });
   };
 
   const editImage = () => {
@@ -35,7 +35,7 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
   };
 
   const saveDescription = (newDescription = description) => {
-    handleFetch("PATCH", { id: id, description: newDescription, image: image });
+    handleFetch("PUT", { id: id, description: newDescription, image: image });
   };
 
   const editDescription = () => {

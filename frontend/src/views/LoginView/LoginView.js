@@ -12,6 +12,10 @@ const LoginView = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const saveNewPassword = () => {
+    authContext.performDataUpdate("auth/update", "PUT", { password: password }, () => navigate("/"));
+  };
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       if (authContext.isLogged) {
@@ -21,10 +25,6 @@ const LoginView = () => {
       authContext.loginUser(password);
       setPassword("");
     }
-  };
-
-  const saveNewPassword = () => {
-    authContext.performDataUpdate("auth/update", "PATCH", { password: password }, () => navigate("/"));
   };
 
   return (

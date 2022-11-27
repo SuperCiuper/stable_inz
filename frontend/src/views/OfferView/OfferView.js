@@ -44,7 +44,7 @@ const OfferView = () => {
   };
 
   const saveName = (item, newName = "Nazwa") => {
-    handleFetch("PATCH", { ...item, name: newName });
+    handleFetch("PUT", { ...item, name: newName });
   };
 
   const editName = (item) => {
@@ -52,7 +52,7 @@ const OfferView = () => {
   };
 
   const saveImages = (item, newImages = []) => {
-    handleFetch("PATCH", { ...item, images: newImages });
+    handleFetch("PUT", { ...item, images: newImages });
   };
 
   const editImages = (item) => {
@@ -60,7 +60,7 @@ const OfferView = () => {
   };
 
   const saveDescription = (item, newDescription = "Opis") => {
-    handleFetch("PATCH", { ...item, description: newDescription });
+    handleFetch("PUT", { ...item, description: newDescription });
   };
 
   const editDescription = (item) => {
@@ -68,7 +68,7 @@ const OfferView = () => {
   };
 
   const saveForWhom = (item, newForWhom = "Dla kogo") => {
-    handleFetch("PATCH", { ...item, forWhom: newForWhom });
+    handleFetch("PUT", { ...item, forWhom: newForWhom });
   };
 
   const editForWhom = (item) => {
@@ -81,7 +81,7 @@ const OfferView = () => {
   };
 
   const saveProposedPrice = (item, newProposedPrice = "Proponowana cena") => {
-    handleFetch("PATCH", { ...item, proposedPrice: newProposedPrice });
+    handleFetch("PUT", { ...item, proposedPrice: newProposedPrice });
   };
 
   const editProposedPrice = (item) => {

@@ -13,7 +13,7 @@ router.use(fileUpload());
 router.use("/auth", authRouter);
 
 router.post("*", [verifyToken]);
-router.patch("*", [verifyToken]);
+router.put("*", [verifyToken]);
 router.delete("*", [verifyToken]);
 
 const checkNameFree = (name, array) => {
@@ -55,14 +55,14 @@ const checkImages = (images) => {
 };
 
 router.get("/", (req, res) => {
-  res.render("index", { title: "Praca inżynierska - REST API" });
+  res.render("index", { title: "Stajnia Malta - REST API" });
 });
 
 router.get("/colorInfo", (req, res) => {
   return res.json(databaseConnector.getColorInfo());
 });
 
-router.patch("/colorInfo", (req, res) => {
+router.put("/colorInfo", (req, res) => {
   const updatedColorInfo = req.body;
   if (
     !updatedColorInfo ||
@@ -89,7 +89,7 @@ router.get("/contactInfo", (req, res) => {
   return res.json(databaseConnector.getContactInfo());
 });
 
-router.patch("/contactInfo", (req, res) => {
+router.put("/contactInfo", (req, res) => {
   const updatedContactInfo = req.body;
   if (
     !updatedContactInfo ||
@@ -122,7 +122,7 @@ router.post("/textBlock", (req, res) => {
   });
 });
 
-router.patch("/textBlock", (req, res) => {
+router.put("/textBlock", (req, res) => {
   let updatedTextBlock = req.body;
   if (
     !updatedTextBlock ||
@@ -135,7 +135,8 @@ router.patch("/textBlock", (req, res) => {
 
   if ((err = checkId(updatedTextBlock.id, databaseConnector.getTextBlockList(), "Text block")))
     return res.status(406).json(err);
-  if ((err = checkImage(updatedTextBlock.image))) return res.status(406).json(err);
+
+  if (updatedTextBlock.image && (err = checkImage(updatedTextBlock.image))) return res.status(406).json(err);
 
   databaseConnector.updateTextBlock(updatedTextBlock).then((err) => {
     return err ? res.status(500).json(err) : res.sendStatus(200);
@@ -170,7 +171,7 @@ router.post("/horse", (req, res) => {
   });
 });
 
-router.patch("/horse", (req, res) => {
+router.put("/horse", (req, res) => {
   const updatedHorse = req.body;
   if (
     !updatedHorse ||
@@ -218,7 +219,7 @@ router.post("/trainer", (req, res) => {
   });
 });
 
-router.patch("/trainer", (req, res) => {
+router.put("/trainer", (req, res) => {
   const updatedTrainer = req.body;
   if (
     !updatedTrainer ||
@@ -266,7 +267,7 @@ router.post("/offer", (req, res) => {
   });
 });
 
-router.patch("/offer", (req, res) => {
+router.put("/offer", (req, res) => {
   let updatedOffer = req.body;
   if (
     !updatedOffer ||
@@ -314,7 +315,7 @@ router.post("/price", (req, res) => {
   });
 });
 
-router.patch("/price", (req, res) => {
+router.put("/price", (req, res) => {
   let updatedPrice = req.body;
   if (!updatedPrice || !updatedPrice.id || !updatedPrice.name || !updatedPrice.price)
     return res.status(406).json("Mandatory fields not set");
@@ -362,7 +363,7 @@ router.post("/image", (req, res) => {
   });
 });
 
-router.patch("/image", (req, res) => {
+router.put("/image", (req, res) => {
   let images = req.body;
   if (!images || images.length === 0) return res.status(406).json("Image list not sent");
 
