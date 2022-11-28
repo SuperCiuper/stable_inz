@@ -81,7 +81,7 @@ export const AuthContextProvider = ({ children }) => {
       .then((response) => checkResponseOk(response))
       .then(() => {
         callback();
-        toast.current.show({ severity: "success", summary: "Sukces", detail: "Zmiany zostałe zapisane", life: 2000 });
+        toast.current.show({ severity: "success", summary: "Sukces", detail: "Zmiany zostały zapisane", life: 2000 });
       })
       .catch((err) => {
         console.error(`Server response: ${err}`);
