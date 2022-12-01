@@ -7,7 +7,7 @@ router.get("/*", (req, res) => {
 });
 
 /* GET home page if frontend build not loaded */
-router.get("/", (req, res) => {
+router.get("/*", (req, res) => {
 	res.render("error", { title: "Frontend not loaded" });
 });
 

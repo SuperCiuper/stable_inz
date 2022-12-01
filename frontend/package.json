@@ -1,7 +1,7 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
-  "description": "Stable web application - praca inżynierska",
+  "version": "1.0.0",
+  "description": "Stable web application - Stajnia Malta - praca inżynierska",
   "author": "Szymon Hutnik",
   "private": true,
   "dependencies": {
