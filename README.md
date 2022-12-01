@@ -69,7 +69,9 @@ In frontend folder run:
 
 ### Fullstack
 
-Prepare database connection, e.g.:
+Server should be started before running frontend application separately.
+
+Export database connection values, e.g.:
 
 ```sh
   export PGDATABASE=stable
@@ -79,16 +81,24 @@ Prepare database connection, e.g.:
   export PGUSER=$USER
 ```
 
-Deploy:
+Export PRIVATE_KEY, DETA_KEY, GMAP_KEY, REST_API_URL, e.g.:
 
 ```sh
-  REACT_APP_REST_API_URL="http://localhost:3001"
+  export PRIVATE_KEY=private_key
+  export DETA_KEY=deta_key
+  export REACT_APP_GMAP_API_KEY=gmap_key
+  export REACT_APP_REST_API_URL="http://localhost:3001/api/"
+```
+
+In project folder run:
+
+```sh
   npm install
   npm run build
   npm start
 ```
 
-Default address is http://localhost:3001
+Scripts will handle startup. Default address is http://localhost:3001
 
 ESlint on server:
 
