@@ -40,7 +40,7 @@ Export database connection values, e.g.:
 Export keys, e.g.:
 
 ```sh
-  PRIVATE_KEY=private_key
+  export PRIVATE_KEY=private_key
   export DETA_KEY=deta_key
 ```
 
