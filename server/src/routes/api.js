@@ -118,7 +118,7 @@ router.post("/textBlocks", (req, res) => {
     return res.status(406).json("Mandatory fields not set");
 
   databaseConnector.createTextBlock(newTextBlock).then((err) => {
-    return err ? res.status(500).json(err) : res.sendStatus(200);
+    return err ? res.status(500).json(err) : res.sendStatus(201);
   });
 });
 
@@ -167,7 +167,7 @@ router.post("/horses", (req, res) => {
   if ((err = checkImage(newHorse.image))) return res.status(406).json(err);
 
   databaseConnector.createHorse(newHorse).then((err) => {
-    return err ? res.status(500).json(err) : res.sendStatus(200);
+    return err ? res.status(500).json(err) : res.sendStatus(201);
   });
 });
 
@@ -215,7 +215,7 @@ router.post("/trainers", (req, res) => {
   if ((err = checkImage(newTrainer.image))) return res.status(406).json(err);
 
   databaseConnector.createTrainer(newTrainer).then((err) => {
-    return err ? res.status(500).json(err) : res.sendStatus(200);
+    return err ? res.status(500).json(err) : res.sendStatus(201);
   });
 });
 
@@ -263,7 +263,7 @@ router.post("/offers", (req, res) => {
   if ((err = checkNameFree(newOffer.name, databaseConnector.getOfferList()))) return res.status(406).json(err);
 
   databaseConnector.createOffer(newOffer).then((err) => {
-    return err ? res.status(500).json(err) : res.sendStatus(200);
+    return err ? res.status(500).json(err) : res.sendStatus(201);
   });
 });
 
@@ -311,7 +311,7 @@ router.post("/prices", (req, res) => {
   if ((err = checkNameFree(newPrice.name, databaseConnector.getPriceList()))) return res.status(406).json(err);
 
   databaseConnector.createPrice(newPrice).then((err) => {
-    return err ? res.status(500).json(err) : res.sendStatus(200);
+    return err ? res.status(500).json(err) : res.sendStatus(201);
   });
 });
 
@@ -359,7 +359,7 @@ router.post("/images", (req, res) => {
     return res.status(406).json("One of images already exists");
 
   databaseConnector.uploadImages(images).then((err) => {
-    return err ? res.status(500).json(err) : res.sendStatus(200);
+    return err ? res.status(500).json(err) : res.sendStatus(201);
   });
 });
 
