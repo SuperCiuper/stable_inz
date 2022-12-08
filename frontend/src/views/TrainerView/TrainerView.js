@@ -15,13 +15,14 @@ const TrainerView = () => {
   const openTextEditor = useContext(TextEditorContext);
   const [trainerList, setTrainerList] = useState([]);
   const toast = useRef(null);
+  const ENDPOINT = "trainers";
 
   useEffect(() => {
     fetchTrainerList();
   }, []);
 
   const fetchTrainerList = () => {
-    fetch(API_URL + "trainer")
+    fetch(API_URL + ENDPOINT)
       .then((response) => checkResponseOk(response))
       .then((response) => setTrainerList(response))
       .catch((err) => {
@@ -42,7 +43,7 @@ const TrainerView = () => {
     }
 
     authContext.performDataUpdate(
-      "trainer",
+      ENDPOINT,
       "POST",
       { name: newTrainer.name, description: newTrainer.description, image: image },
       fetchTrainerList
@@ -83,7 +84,7 @@ const TrainerView = () => {
           images={item.images}
           description={item.description}
           index={index}
-          personType="trainer"
+          endpoint={ENDPOINT}
           updateParentCallback={fetchTrainerList}
         />
       ))}

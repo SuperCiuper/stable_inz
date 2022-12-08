@@ -28,7 +28,7 @@ const ColorEditor = () => {
         return;
       }
     }
-    authContext.performDataUpdate("colorInfo", "PUT", editedColors, () => {
+    authContext.performDataUpdate("colors", "PUT", editedColors, () => {
       setColorContext({ ...editedColors });
     });
   };

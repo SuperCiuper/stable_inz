@@ -15,13 +15,14 @@ const HorseView = () => {
   const openTextEditor = useContext(TextEditorContext);
   const [horseList, setHorseList] = useState([]);
   const toast = useRef(null);
+  const ENDPOINT = "horses";
 
   useEffect(() => {
     fetchHorseList();
   }, []);
 
   const fetchHorseList = () => {
-    fetch(API_URL + "horse")
+    fetch(API_URL + ENDPOINT)
       .then((response) => checkResponseOk(response))
       .then((response) => setHorseList(response))
       .catch((err) => {
@@ -42,7 +43,7 @@ const HorseView = () => {
     }
 
     authContext.performDataUpdate(
-      "horse",
+      ENDPOINT,
       "POST",
       { name: newHorse.name, description: newHorse.description, image: image },
       fetchHorseList
@@ -83,7 +84,7 @@ const HorseView = () => {
           images={item.images}
           description={item.description}
           index={index}
-          personType="horse"
+          endpoint={ENDPOINT}
           updateParentCallback={fetchHorseList}
         />
       ))}

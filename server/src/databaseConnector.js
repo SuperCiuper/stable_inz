@@ -9,11 +9,11 @@ const detaIntance = Deta(process.env.DETA_KEY);
 const detaImageDrive = detaIntance.Drive("images");
 
 const INTERNAL_SERVER_ERROR_MESSAGE = "Internal server error, contact maintainer";
-const IMAGE_PATH = path.join(__dirname, "../public/api/image/");
+const IMAGE_PATH = path.join(__dirname, "../public/api/images/");
 const DUMMY_IMAGE = "dummyImage.jpg";
-const DUMMY_IMAGE_PATH = "/api/image/" + DUMMY_IMAGE;
+const DUMMY_IMAGE_PATH = "/api/images/" + DUMMY_IMAGE;
 
-var colorInfo = {};
+var colors = {};
 var contactInfo = {};
 var textBlockList = [];
 var imageList = [];
@@ -22,22 +22,22 @@ var trainerList = [];
 var offerList = [];
 var priceList = [];
 
-const getColorInfo = () => {
-  return colorInfo;
+const getColors = () => {
+  return colors;
 };
 
-const updateColorInfo = async (updatedColorInfo) => {
+const updateColors = async (updatedColors) => {
   try {
     await pool.query(
       "UPDATE main_info SET background_main_rgb = $1, background_content_rgb = $2, panel_rgb = $3, header_rgb = $4, details_rgb = $5, button_rgb = $6, highlight_rgb = $7 WHERE id = true",
       [
-        updatedColorInfo.backgroundMain,
-        updatedColorInfo.backgroundContent,
-        updatedColorInfo.panel,
-        updatedColorInfo.header,
-        updatedColorInfo.detail,
-        updatedColorInfo.button,
-        updatedColorInfo.highlight,
+        updatedColors.backgroundMain,
+        updatedColors.backgroundContent,
+        updatedColors.panel,
+        updatedColors.header,
+        updatedColors.detail,
+        updatedColors.button,
+        updatedColors.highlight,
       ]
     );
     return updateFromDatabase();
@@ -425,7 +425,7 @@ const pullDeta = async () => {
 
 const updateFromDatabase = async () => {
   try {
-    colorInfo = await pool.query("SELECT * FROM color_info_view").then((res) => res.rows[0]);
+    colors = await pool.query("SELECT * FROM color_info_view").then((res) => res.rows[0]);
     contactInfo = await pool.query("SELECT * FROM contact_info_view").then((res) => res.rows[0]);
     imageList = await pool.query("SELECT * FROM image_list_view").then((res) => res.rows);
     textBlockList = await pool.query("SELECT * FROM text_block_list_view").then((res) => res.rows);
@@ -445,7 +445,7 @@ const serverStartup = async () => {
   const errDB = await updateFromDatabase();
   if (errDB) return errDB;
 
-  console.log(colorInfo);
+  console.log(colors);
   console.log(contactInfo);
   console.log(imageList);
   console.log(textBlockList);
@@ -459,8 +459,8 @@ const serverStartup = async () => {
 };
 
 module.exports = {
-  getColorInfo,
-  updateColorInfo,
+  getColors,
+  updateColors,
   getContactInfo,
   updateContactInfo,
   getTextBlockList,

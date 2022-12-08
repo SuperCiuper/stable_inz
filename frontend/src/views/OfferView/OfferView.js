@@ -16,9 +16,10 @@ const OfferView = () => {
   const openTextEditor = useContext(TextEditorContext);
   const [offerList, setOfferList] = useState([]);
   const toast = useRef(null);
+  const ENDPOINT = "offers";
 
   const fetchOfferList = () => {
-    fetch(API_URL + "offer")
+    fetch(API_URL + ENDPOINT)
       .then((response) => checkResponseOk(response))
       .then((response) => setOfferList(response))
       .catch((err) => {
@@ -34,13 +35,13 @@ const OfferView = () => {
     if (!image) image = images[0];
     return (
       <div className="image-block">
-        <img src={`${API_URL}image/${image}`} alt={image} />
+        <img src={`${API_URL}images/${image}`} alt={image} />
       </div>
     );
   };
 
   const handleFetch = (method, body) => {
-    authContext.performDataUpdate("offer", method, body, fetchOfferList);
+    authContext.performDataUpdate(ENDPOINT, method, body, fetchOfferList);
   };
 
   const saveName = (item, newName = "Nazwa") => {

@@ -13,9 +13,10 @@ const GalleryView = () => {
   const { openImageSelector, fetchImages } = useContext(ImageSelectorContext);
   const [imageList, setImageList] = useState([]);
   const fileUpload = useRef(null);
+  const ENDPOINT = "images";
 
   const fetchImageList = () => {
-    fetch(API_URL + "image")
+    fetch(API_URL + ENDPOINT)
       .then((response) => checkResponseOk(response))
       .then((response) => {
         /* shuffle images to get different gallery every time */
@@ -43,7 +44,7 @@ const GalleryView = () => {
     const formData = new FormData();
     files.forEach((image) => formData.append("images", image));
 
-    authContext.performDataUpdate("image", "POST", formData, fetchUpdatedImages);
+    authContext.performDataUpdate(ENDPOINT, "POST", formData, fetchUpdatedImages);
     fileUpload.current.clear();
   };
 
@@ -57,11 +58,11 @@ const GalleryView = () => {
       })
     );
 
-    authContext.performDataUpdate("image", "PUT", updatedImages, fetchUpdatedImages);
+    authContext.performDataUpdate(ENDPOINT, "PUT", updatedImages, fetchUpdatedImages);
   };
 
   const saveImages = (images) => {
-    authContext.performDataUpdate("image", "DELETE", images, fetchUpdatedImages);
+    authContext.performDataUpdate(ENDPOINT, "DELETE", images, fetchUpdatedImages);
   };
 
   const changeVisibility = () => {
@@ -115,7 +116,7 @@ const GalleryView = () => {
       {imageList.map((item, index) =>
         item.visible ? (
           <div className="image-container" key={index}>
-            <Image className="image-item" src={`${API_URL}image/${item.image}`} alt={item.image} preview />
+            <Image className="image-item" src={`${API_URL}${ENDPOINT}/${item.image}`} alt={item.image} preview />
           </div>
         ) : (
           ""

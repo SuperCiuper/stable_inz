@@ -21,9 +21,10 @@ const ContactView = () => {
   const { colorContext } = useContext(ColorContext);
   const openTextEditor = useContext(TextEditorContext);
   const [contactInfo, setContactInfo] = useState(defaultContactInfo);
+  const ENDPOINT = "contactInfo";
 
   const fetchContactInfo = () => {
-    fetch(API_URL + "contactInfo")
+    fetch(API_URL + ENDPOINT)
       .then((response) => checkResponseOk(response))
       .then((response) => setContactInfo(response))
       .catch((err) => {
@@ -38,7 +39,7 @@ const ContactView = () => {
   const handleFetch = (name, updatedValue) => {
     let updatedContactInfo = { ...contactInfo };
     updatedContactInfo[name] = updatedValue;
-    authContext.performDataUpdate("contactInfo", "PUT", updatedContactInfo, fetchContactInfo);
+    authContext.performDataUpdate(ENDPOINT, "PUT", updatedContactInfo, fetchContactInfo);
   };
 
   const editContactInfo = (name, title) => {

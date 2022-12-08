@@ -9,9 +9,10 @@ export const ImageSelectorContext = createContext({});
 
 export const ImageSelectorContextProvider = ({ children }) => {
   const [imageList, setImageList] = useState([]);
+  const ENDPOINT = "images";
 
   const fetchImages = () => {
-    fetch(API_URL + "image")
+    fetch(API_URL + ENDPOINT)
       .then((response) => checkResponseOk(response))
       .then(async (response) => {
         await response.forEach((item, index) => {
@@ -81,7 +82,7 @@ export const ImageSelectorContextProvider = ({ children }) => {
                 onClick={image === profileImage ? () => {} : () => onClickImage(image)}
               >
                 {/* eslint-disable-next-line */}
-                <img src={`${API_URL}image/${image}`} alt={`Image ${image} not found`}></img>
+                <img src={`${API_URL}${ENDPOINT}/${image}`} alt={`Image ${image} not found`}></img>
                 <div
                   className="selected-image"
                   style={{

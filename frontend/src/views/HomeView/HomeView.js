@@ -13,9 +13,10 @@ const HomeView = () => {
   const openTextEditor = useContext(TextEditorContext);
   const [textBlockList, setTextBlockList] = useState([]);
   const [rerender, setRerender] = useState(false);
+  const ENDPOINT = "textBlocks";
 
   const fetchTextBlockList = () => {
-    fetch(API_URL + "textBlock")
+    fetch(API_URL + ENDPOINT)
       .then((response) => checkResponseOk(response))
       .then((response) => setTextBlockList(response))
       .catch((err) => {
@@ -37,7 +38,7 @@ const HomeView = () => {
   }, [rerender]);
 
   const addNewTextBlock = (description) => {
-    authContext.performDataUpdate("textBlock", "POST", { description: description, image: null }, fetchTextBlockList);
+    authContext.performDataUpdate(ENDPOINT, "POST", { description: description, image: null }, fetchTextBlockList);
   };
 
   const createNewBlock = () => {

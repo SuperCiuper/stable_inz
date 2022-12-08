@@ -17,7 +17,7 @@ export const ColorContextProvider = ({ children }) => {
   const [colorContext, setColorContext] = useState(defaultColors);
 
   useEffect(() => {
-    fetch(API_URL + "colorInfo")
+    fetch(API_URL + "colors")
       .then((response) => checkResponseOk(response))
       .then((response) => setColorContext(response))
       .catch((err) => {

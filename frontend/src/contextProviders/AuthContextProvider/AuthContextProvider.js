@@ -66,7 +66,7 @@ export const AuthContextProvider = ({ children }) => {
     }
     fetch(
       API_URL + url,
-      url === "image" && method === "POST"
+      url === "images" && method === "POST"
         ? {
             method: "POST",
             headers: { "x-access-token": JSON.parse(authToken) },

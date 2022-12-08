@@ -9,7 +9,7 @@ import { Galleria } from "primereact/galleria";
 import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
 
-const PersonalCard = ({ name, images, description, index, personType, updateParentCallback = () => {} }) => {
+const PersonalCard = ({ name, images, description, index, endpoint, updateParentCallback = () => {} }) => {
   const authContext = useContext(AuthContext);
   const { colorContext } = useContext(ColorContext);
   const { openImageSelector } = useContext(ImageSelectorContext);
@@ -85,7 +85,7 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
   const renderImage = (image = images[0]) => {
     return (
       <div className="personal-image-block">
-        <img src={`${API_URL}image/${image}`} alt={image} />
+        <img src={`${API_URL}images/${image}`} alt={image} />
         {fullscreenButton()}
       </div>
     );
@@ -96,7 +96,7 @@ const PersonalCard = ({ name, images, description, index, personType, updatePare
   });
 
   const handleFetch = (method, body) => {
-    authContext.performDataUpdate(personType, method, body, updateParentCallback);
+    authContext.performDataUpdate(endpoint, method, body, updateParentCallback);
   };
 
   const saveProfileImage = (newImages = images) => {

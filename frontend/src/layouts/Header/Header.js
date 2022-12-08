@@ -60,13 +60,13 @@ const Header = () => {
         </Link>
       </div>
       <div className="button-bar">
-        <HeaderButton pathName={"/main"} buttonName={"Strona główna"} />
-        <HeaderButton pathName={"/horses"} buttonName={"Konie"} />
-        <HeaderButton pathName={"/trainers"} buttonName={"Trenerzy"} />
-        <HeaderButton pathName={"/offer"} buttonName={"Oferta"} />
-        <HeaderButton pathName={"/prices"} buttonName={"Cennik"} />
-        <HeaderButton pathName={"/gallery"} buttonName={"Galeria"} />
-        <HeaderButton pathName={"/contact"} buttonName={"Kontakt"} />
+        <HeaderButton pathName="/main" buttonName="Strona główna" />
+        <HeaderButton pathName="/horses" buttonName="Konie" />
+        <HeaderButton pathName="/trainers" buttonName="Trenerzy" />
+        <HeaderButton pathName="/offer" buttonName="Oferta" />
+        <HeaderButton pathName="/prices" buttonName="Cennik" />
+        <HeaderButton pathName="/gallery" buttonName="Galeria" />
+        <HeaderButton pathName="/contact" buttonName="Kontakt" />
         {authContext.isLogged ? (
           <>
             <div
@@ -92,7 +92,7 @@ const Header = () => {
         ) : (
           ""
         )}
-        {authContext.isLogged ? <HeaderButton pathName={"/logout"} buttonName={"Wyloguj"} /> : ""}
+        {authContext.isLogged ? <HeaderButton pathName="/logout" buttonName="Wyloguj" /> : ""}
       </div>
     </div>
   );

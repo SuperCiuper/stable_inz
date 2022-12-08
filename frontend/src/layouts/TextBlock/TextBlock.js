@@ -10,7 +10,7 @@ const ImageBlock = ({ image }) => {
   return (
     <div className="image-block">
       {/* eslint-disable-next-line */}
-      <img src={`${API_URL}image/${image}`} alt={`Image ${image} not found`}></img>
+      <img src={`${API_URL}images/${image}`} alt={`Image ${image} not found`}></img>
     </div>
   );
 };
@@ -22,7 +22,7 @@ const TextBlock = ({ index, id, image, description, updateParentCallback = () =>
   const openTextEditor = useContext(TextEditorContext);
 
   const handleFetch = (method, body) => {
-    authContext.performDataUpdate("textBlock", method, body, updateParentCallback);
+    authContext.performDataUpdate("textBlocks", method, body, updateParentCallback);
   };
 
   const saveImage = (newImages = image === null ? null : [...image]) => {

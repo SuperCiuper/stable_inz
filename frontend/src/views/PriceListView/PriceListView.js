@@ -13,9 +13,10 @@ const PriceListView = () => {
   const openTextEditor = useContext(TextEditorContext);
   const [priceList, setPriceList] = useState([]);
   const toast = useRef(null);
+  const ENDPOINT = "prices";
 
   const fetchPriceList = () => {
-    fetch(API_URL + "priceList")
+    fetch(API_URL + ENDPOINT)
       .then((response) => checkResponseOk(response))
       .then((response) => setPriceList(response))
       .catch((err) => {
@@ -28,7 +29,7 @@ const PriceListView = () => {
   }, []);
 
   const handleFetch = (method, body) => {
-    authContext.performDataUpdate("price", method, body, fetchPriceList);
+    authContext.performDataUpdate(ENDPOINT, method, body, fetchPriceList);
   };
 
   const saveName = (item, newName = "") => {
@@ -57,7 +58,7 @@ const PriceListView = () => {
 
   const setNewPricePrice = (newPrice, price) => {
     if (!price) {
-      addNewPriceError("Nie dodano opisu");
+      addNewPriceError("Nie dodano ceny");
       return;
     }
     handleFetch("POST", { ...newPrice, price: price });

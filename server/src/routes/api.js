@@ -58,29 +58,29 @@ router.get("/", (req, res) => {
   res.render("index", { title: "Stajnia Malta - REST API" });
 });
 
-router.get("/colorInfo", (req, res) => {
-  return res.json(databaseConnector.getColorInfo());
+router.get("/colors", (req, res) => {
+  return res.json(databaseConnector.getColors());
 });
 
-router.put("/colorInfo", (req, res) => {
-  const updatedColorInfo = req.body;
+router.put("/colors", (req, res) => {
+  const updatedColors = req.body;
   if (
-    !updatedColorInfo ||
-    !updatedColorInfo.backgroundMain ||
-    !updatedColorInfo.backgroundContent ||
-    !updatedColorInfo.panel ||
-    !updatedColorInfo.header ||
-    !updatedColorInfo.detail ||
-    !updatedColorInfo.button ||
-    !updatedColorInfo.highlight
+    !updatedColors ||
+    !updatedColors.backgroundMain ||
+    !updatedColors.backgroundContent ||
+    !updatedColors.panel ||
+    !updatedColors.header ||
+    !updatedColors.detail ||
+    !updatedColors.button ||
+    !updatedColors.highlight
   )
     return res.status(406).json("Mandatory fields not set");
 
   const colorHexRegex = new RegExp("#[0-9a-f]{6}");
-  if (!Object.values(updatedColorInfo).every((value) => colorHexRegex.test(value))) {
+  if (!Object.values(updatedColors).every((value) => colorHexRegex.test(value))) {
     return res.status(406).json("At least one value is not color hex");
   }
-  databaseConnector.updateColorInfo(updatedColorInfo).then((err) => {
+  databaseConnector.updateColors(updatedColors).then((err) => {
     return err ? res.status(500).json(err) : res.sendStatus(200);
   });
 });
@@ -108,11 +108,11 @@ router.put("/contactInfo", (req, res) => {
   });
 });
 
-router.get("/textBlock", (req, res) => {
+router.get("/textBlocks", (req, res) => {
   return res.json(databaseConnector.getTextBlockList());
 });
 
-router.post("/textBlock", (req, res) => {
+router.post("/textBlocks", (req, res) => {
   const newTextBlock = req.body;
   if (!newTextBlock || !newTextBlock.description || !Object.prototype.hasOwnProperty.call(newTextBlock, "image"))
     return res.status(406).json("Mandatory fields not set");
@@ -122,7 +122,7 @@ router.post("/textBlock", (req, res) => {
   });
 });
 
-router.put("/textBlock", (req, res) => {
+router.put("/textBlocks", (req, res) => {
   let updatedTextBlock = req.body;
   if (
     !updatedTextBlock ||
@@ -143,7 +143,7 @@ router.put("/textBlock", (req, res) => {
   });
 });
 
-router.delete("/textBlock", (req, res) => {
+router.delete("/textBlocks", (req, res) => {
   if (!req.body || !req.body.id) return res.status(406).json("Id not provided");
   const deleteId = parseInt(req.body.id);
 
@@ -154,11 +154,11 @@ router.delete("/textBlock", (req, res) => {
   });
 });
 
-router.get("/horse", (req, res) => {
+router.get("/horses", (req, res) => {
   return res.json(databaseConnector.getHorseList());
 });
 
-router.post("/horse", (req, res) => {
+router.post("/horses", (req, res) => {
   const newHorse = req.body;
   if (!newHorse || !newHorse.name || !newHorse.description || !newHorse.image)
     return res.status(406).json("Mandatory fields not set");
@@ -171,7 +171,7 @@ router.post("/horse", (req, res) => {
   });
 });
 
-router.put("/horse", (req, res) => {
+router.put("/horses", (req, res) => {
   const updatedHorse = req.body;
   if (
     !updatedHorse ||
@@ -190,7 +190,7 @@ router.put("/horse", (req, res) => {
   });
 });
 
-router.delete("/horse", (req, res) => {
+router.delete("/horses", (req, res) => {
   if (!req.body || !req.body.name) return res.status(406).json("Name not provided");
   const deleteName = req.body.name;
 
@@ -201,11 +201,11 @@ router.delete("/horse", (req, res) => {
   });
 });
 
-router.get("/trainer", (req, res) => {
+router.get("/trainers", (req, res) => {
   return res.json(databaseConnector.getTrainerList());
 });
 
-router.post("/trainer", (req, res) => {
+router.post("/trainers", (req, res) => {
   const newTrainer = req.body;
   if (!newTrainer || !newTrainer.name || !newTrainer.description || !newTrainer.image)
     return res.status(406).json("Mandatory fields not set");
@@ -219,7 +219,7 @@ router.post("/trainer", (req, res) => {
   });
 });
 
-router.put("/trainer", (req, res) => {
+router.put("/trainers", (req, res) => {
   const updatedTrainer = req.body;
   if (
     !updatedTrainer ||
@@ -240,7 +240,7 @@ router.put("/trainer", (req, res) => {
   });
 });
 
-router.delete("/trainer", (req, res) => {
+router.delete("/trainers", (req, res) => {
   if (!req.body || !req.body.name) return res.status(406).json("Name not provided");
   const deleteName = req.body.name;
 
@@ -251,11 +251,11 @@ router.delete("/trainer", (req, res) => {
   });
 });
 
-router.get("/offer", (req, res) => {
+router.get("/offers", (req, res) => {
   return res.json(databaseConnector.getOfferList());
 });
 
-router.post("/offer", (req, res) => {
+router.post("/offers", (req, res) => {
   const newOffer = req.body;
   if (!newOffer || !newOffer.name || !newOffer.forWhom || !newOffer.description || !newOffer.proposedPrice)
     return res.status(406).json("Mandatory fields not set");
@@ -267,7 +267,7 @@ router.post("/offer", (req, res) => {
   });
 });
 
-router.put("/offer", (req, res) => {
+router.put("/offers", (req, res) => {
   let updatedOffer = req.body;
   if (
     !updatedOffer ||
@@ -289,7 +289,7 @@ router.put("/offer", (req, res) => {
   });
 });
 
-router.delete("/offer", (req, res) => {
+router.delete("/offers", (req, res) => {
   if (!req.body || !req.body.id) return res.status(406).json("Id not provided");
   const deleteId = parseInt(req.body.id);
 
@@ -300,11 +300,11 @@ router.delete("/offer", (req, res) => {
   });
 });
 
-router.get("/priceList", (req, res) => {
+router.get("/prices", (req, res) => {
   return res.json(databaseConnector.getPriceList());
 });
 
-router.post("/price", (req, res) => {
+router.post("/prices", (req, res) => {
   const newPrice = req.body;
   if (!newPrice || !newPrice.name || !newPrice.price) return res.status(406).json("Mandatory fields not set");
 
@@ -315,7 +315,7 @@ router.post("/price", (req, res) => {
   });
 });
 
-router.put("/price", (req, res) => {
+router.put("/prices", (req, res) => {
   let updatedPrice = req.body;
   if (!updatedPrice || !updatedPrice.id || !updatedPrice.name || !updatedPrice.price)
     return res.status(406).json("Mandatory fields not set");
@@ -328,7 +328,7 @@ router.put("/price", (req, res) => {
   });
 });
 
-router.delete("/price", (req, res) => {
+router.delete("/prices", (req, res) => {
   if (!req.body || !req.body.id) return res.status(406).json("Id not provided");
   const deleteId = parseInt(req.body.id);
 
@@ -339,15 +339,15 @@ router.delete("/price", (req, res) => {
   });
 });
 
-router.get("/image", (req, res) => {
+router.get("/images", (req, res) => {
   return res.json(databaseConnector.getImageList());
 });
 
-router.get("/image/:name", (req, res) => {
+router.get("/images/:name", (req, res) => {
   res.redirect(databaseConnector.DUMMY_IMAGE_PATH);
 });
 
-router.post("/image", (req, res) => {
+router.post("/images", (req, res) => {
   if (!req.files || !req.files.images) return res.status(406).json("No images sent");
   let images = req.files.images;
 
@@ -363,7 +363,7 @@ router.post("/image", (req, res) => {
   });
 });
 
-router.put("/image", (req, res) => {
+router.put("/images", (req, res) => {
   let images = req.body;
   if (!images || images.length === 0) return res.status(406).json("Image list not sent");
 
@@ -383,7 +383,7 @@ router.put("/image", (req, res) => {
   });
 });
 
-router.delete("/image", (req, res) => {
+router.delete("/images", (req, res) => {
   const deleteImageNames = req.body;
   if (!deleteImageNames || deleteImageNames.length === 0) return res.status(406).json("No images sent");
 
