@@ -16,11 +16,11 @@ router.get("/", (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    if (!req.body || !req.body.password) return res.status(406).json("Password not sent");
+    if (!req.body || !req.body.password) return res.status(400).json("Password not sent");
     const password = req.body.password;
 
     const passwordIsValid = bcrypt.compareSync(password, await databaseConnector.getPassword());
-    if (!passwordIsValid) return res.status(401).json("Invalid Password!");
+    if (!passwordIsValid) return res.status(406).json("Invalid Password!");
 
     const token = jwt.sign({}, process.env.PRIVATE_KEY, {
       expiresIn: EXPIRATION_TIME,
@@ -37,7 +37,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.put("/update", [verifyToken], (req, res) => {
-  if (!req.body || !req.body.password) return res.status(406).json("Password not sent");
+  if (!req.body || !req.body.password) return res.status(400).json("Password not sent");
   const password = req.body.password;
   const newPasswordHash = bcrypt.hashSync(password, SALT_ROUNDS);
 
